@@ -56,6 +56,27 @@ Update rules:
 
 Return the COMPLETE updated profile.`;
 
+export const EXTRACT_CONTEXT_PROMPT = `Analyze this therapy session and extract any personal facts the patient shared. Return ONLY valid JSON with no markdown, no backticks, no explanation:
+
+{
+  "name": "<patient's name if mentioned, else null>",
+  "age": <number if mentioned, else null>,
+  "pronouns": "<if mentioned or clearly inferable, else null>",
+  "medications": "<if mentioned, e.g. 'Sertraline 50mg', else null>",
+  "diagnoses": "<if mentioned, e.g. 'GAD, panic attacks', else null>",
+  "previousTherapy": "<if mentioned, else null>",
+  "occupation": "<if mentioned, e.g. 'software developer', else null>",
+  "relationships": "<if mentioned, e.g. 'in a relationship', else null>",
+  "livingSituation": "<if mentioned, else null>",
+  "goals": "<if patient stated therapy goals, else null>"
+}
+
+Rules:
+- Only extract what was EXPLICITLY stated or clearly implied
+- Do NOT guess or infer beyond what was said
+- Return null for fields with no information
+- Use the same language the patient used`;
+
 export const PROFILE_CONDENSE_PROMPT = `This patient profile has grown too long. Condense it to under 500 words while preserving ALL critical clinical information.
 
 Current profile:

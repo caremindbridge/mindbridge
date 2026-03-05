@@ -75,7 +75,7 @@ Return ONLY valid JSON with this exact structure:
 {
   "summary": "string - overall summary of the patient's mental health state during this period",
   "moodTrend": "string - description of mood dynamics and changes over the period",
-  "keyThemes": ["string - recurring themes from sessions and mood notes"],
+  "keyThemes": ["string - SHORT plain-text label only, 2-4 words max, NO markdown, e.g. 'Social isolation', 'Suicidal ideation', 'Cognitive distortions'"],
   "concerns": ["string - clinical concerns that need attention"],
   "copingStrategiesUsed": ["string - coping strategies the patient employed"],
   "progressNotes": "string - observable progress or regression compared to baseline",
@@ -84,5 +84,13 @@ Return ONLY valid JSON with this exact structure:
 }
 
 Set riskFlags to null if no concerns, or a descriptive string if there are warning signals (suicidal ideation, self-harm, acute distress, high sustained anxiety/depression).
+
+FORMATTING RULES — string values (except keyThemes, concerns, copingStrategiesUsed arrays which must be plain text) must use Markdown:
+- Use **bold** for emphasis and critical terms
+- Use numbered lists (1. 2. 3.) for sequential recommendations or steps
+- Use bullet lists (- item) for unordered items
+- Separate distinct points or paragraphs with a blank line (\\n\\n)
+- Do NOT write long run-on sentences with inline (1) (2) (3) numbering — use proper list format instead
+- riskFlags: each distinct risk should be its own paragraph starting with **⚠️ [SEVERITY] — [type]:**
 
 Be concise, clinical, and evidence-based. Base all observations strictly on the provided data. Return ONLY the JSON, no other text.`;

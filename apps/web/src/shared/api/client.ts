@@ -6,6 +6,12 @@ import type {
 } from '@mindbridge/types/src/chat';
 import type { MoodEntry, MoodStats } from '@mindbridge/types/src/mood';
 import type {
+  MyProfileDto,
+  PatientContextData,
+  PatientDossierResponse,
+  UpdateTherapistNotesRequest,
+} from '@mindbridge/types/src/profile';
+import type {
   PatientProfileData,
   PatientSummary,
   TherapistReport,
@@ -267,6 +273,32 @@ export function getPatients(): Promise<PatientSummary[]> {
 
 export function getPatientProfile(id: string): Promise<PatientProfileData> {
   return apiClient.get<PatientProfileData>(`/therapist/patients/${id}`);
+}
+
+export function getPatientDossier(patientId: string): Promise<PatientDossierResponse> {
+  return apiClient.get<PatientDossierResponse>(`/therapist/patients/${patientId}/profile`);
+}
+
+export function updateTherapistNotes(
+  patientId: string,
+  notes: string,
+): Promise<{ id: string; therapistNotes: string | null; updatedAt: string }> {
+  const body: UpdateTherapistNotesRequest = { notes };
+  return apiClient.patch(`/therapist/patients/${patientId}/profile/notes`, body);
+}
+
+export function getMyProfile(): Promise<MyProfileDto> {
+  return apiClient.get<MyProfileDto>('/profile/my');
+}
+
+export function getMyContext(): Promise<{ context: PatientContextData | null }> {
+  return apiClient.get<{ context: PatientContextData | null }>('/profile/my/context');
+}
+
+export function updateMyContext(
+  context: PatientContextData,
+): Promise<{ context: PatientContextData }> {
+  return apiClient.put<{ context: PatientContextData }>('/profile/my/context', { context });
 }
 
 export function getMyTherapist(): Promise<unknown> {

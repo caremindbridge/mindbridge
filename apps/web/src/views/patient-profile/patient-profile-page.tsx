@@ -1,23 +1,16 @@
 'use client';
 
+import type { ProfileAnalysis } from '@mindbridge/types/src/therapist';
 import { format, formatDistanceToNow } from 'date-fns';
-import { ArrowLeft } from 'lucide-react';
+import { Activity, ArrowLeft, BarChart3, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { usePatientProfile } from '@/entities/therapist';
-import type { ProfileAnalysis } from '@mindbridge/types/src/therapist';
-import { GenerateReportDialog } from '@/features/report';
 import { usePatientReports, useReport } from '@/entities/report';
+import { usePatientProfile } from '@/entities/therapist';
+import { PatientDossier } from '@/features/profile';
+import { GenerateReportDialog } from '@/features/report';
 import {
   Badge,
   Button,
@@ -25,6 +18,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  MarkdownMessage,
   ScrollArea,
   Separator,
   Skeleton,
@@ -34,7 +28,6 @@ import {
   TabsTrigger,
 } from '@/shared/ui';
 import { AnxietyChart, StatCard } from '@/widgets/patient-dashboard';
-import { BarChart3, TrendingDown, TrendingUp, Activity } from 'lucide-react';
 
 interface PatientProfilePageProps {
   patientId: string;
@@ -151,6 +144,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           <TabsTrigger value="mood">Mood</TabsTrigger>
           <TabsTrigger value="analysis">Analysis</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="dossier">Dossier</TabsTrigger>
         </TabsList>
 
         {/* --- Mood Tab --- */}
@@ -239,6 +233,11 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         <TabsContent value="reports" className="pt-4">
           <ReportsTab patientId={patientId} onGenerate={() => setReportOpen(true)} />
         </TabsContent>
+
+        {/* --- Dossier Tab --- */}
+        <TabsContent value="dossier" className="pt-4">
+          <PatientDossier patientId={patientId} />
+        </TabsContent>
       </Tabs>
 
       <GenerateReportDialog
@@ -276,7 +275,9 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
         {expanded && (
           <div className="mt-3 space-y-2 border-t pt-3">
             {analysis.moodInsight && (
-              <p className="text-sm text-muted-foreground">{analysis.moodInsight}</p>
+              <div className="text-sm text-muted-foreground">
+                <MarkdownMessage content={analysis.moodInsight} />
+              </div>
             )}
             {analysis.keyEmotions && analysis.keyEmotions.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
@@ -286,7 +287,9 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
               </div>
             )}
             {analysis.riskFlags && (
-              <p className="text-xs text-destructive">⚠️ {analysis.riskFlags}</p>
+              <div className="text-xs text-destructive">
+                ⚠️ <MarkdownMessage content={analysis.riskFlags} />
+              </div>
             )}
           </div>
         )}
@@ -330,6 +333,7 @@ function ReportsTab({ patientId, onGenerate }: { patientId: string; onGenerate: 
               createdAt={r.createdAt}
               periodStart={r.periodStart}
               periodEnd={r.periodEnd}
+              initialStatus={r.status}
               expanded={expandedId === r.id}
               onToggle={() => setExpandedId(expandedId === r.id ? null : r.id)}
             />
@@ -345,6 +349,7 @@ function ReportRow({
   createdAt,
   periodStart,
   periodEnd,
+  initialStatus,
   expanded,
   onToggle,
 }: {
@@ -352,17 +357,19 @@ function ReportRow({
   createdAt: string;
   periodStart: string;
   periodEnd: string;
+  initialStatus: string;
   expanded: boolean;
   onToggle: () => void;
 }) {
   const { data: report } = useReport(expanded ? reportId : null);
 
+  const [knownStatus, setKnownStatus] = useState(initialStatus);
+  if (report?.status && report.status !== knownStatus) {
+    setKnownStatus(report.status);
+  }
+
   const statusVariant =
-    report?.status === 'ready'
-      ? 'default'
-      : report?.status === 'error'
-        ? 'destructive'
-        : 'secondary';
+    knownStatus === 'ready' ? 'default' : knownStatus === 'error' ? 'destructive' : 'secondary';
 
   return (
     <Card>
@@ -377,7 +384,7 @@ function ReportRow({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant={statusVariant}>{report?.status ?? 'loading'}</Badge>
+            <Badge variant={statusVariant}>{knownStatus}</Badge>
             <span className="text-xs text-muted-foreground">{expanded ? '▲' : '▼'}</span>
           </div>
         </button>
@@ -390,24 +397,38 @@ function ReportRow({
           </div>
         )}
 
+        {expanded && report?.status === 'error' && (
+          <div className="mt-3 border-t pt-3">
+            <p className="text-xs font-medium text-destructive">Report generation failed</p>
+            {report.errorMessage && (
+              <p className="mt-1 text-xs text-muted-foreground">{report.errorMessage}</p>
+            )}
+          </div>
+        )}
+
         {expanded && report?.status === 'ready' && report.content && (
           <div className="mt-3 space-y-3 border-t pt-3">
-            <p className="text-sm">{report.content.summary}</p>
+            <div className="text-sm">
+              <MarkdownMessage content={report.content.summary} />
+            </div>
             <Separator />
             {report.content.keyThemes.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {report.content.keyThemes.map((t) => (
-                  <Badge key={t} variant="secondary">{t}</Badge>
+                  <Badge key={t} variant="secondary">{t.replace(/\*\*/g, '')}</Badge>
                 ))}
               </div>
             )}
             {report.content.suggestedFocus && (
-              <div className="rounded-md border border-blush-200 bg-blush-50 p-2 text-sm">
-                <strong>Focus:</strong> {report.content.suggestedFocus}
+              <div className="rounded-md border border-blush-200 bg-blush-50 p-3 text-sm">
+                <p className="mb-1 font-semibold">Focus</p>
+                <MarkdownMessage content={report.content.suggestedFocus} />
               </div>
             )}
             {report.content.riskFlags && (
-              <p className="text-sm text-destructive">⚠️ {report.content.riskFlags}</p>
+              <div className="rounded-md border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
+                <MarkdownMessage content={report.content.riskFlags} />
+              </div>
             )}
           </div>
         )}

@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -14,6 +13,7 @@ import {
   CBT_THERAPIST_SYSTEM_PROMPT,
   ClaudeService,
 } from '../claude';
+import { ProfileService } from '../profile/profile.service';
 import { RedisService } from '../redis';
 
 import { Message, MessageRoleEnum } from './entities/message.entity';
@@ -34,6 +34,7 @@ export class ChatService {
     private readonly claudeService: ClaudeService,
     private readonly redisService: RedisService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly profileService: ProfileService,
   ) {}
 
   async createSession(userId: string): Promise<Session> {
@@ -125,18 +126,32 @@ export class ChatService {
     orderIndex: number,
   ): Promise<void> {
     try {
-      const cachedMessages = await this.redisService.getSessionMessages(sessionId);
+      const [cachedMessages, session] = await Promise.all([
+        this.redisService.getSessionMessages(sessionId),
+        this.sessionRepo.findOne({ where: { id: sessionId } }),
+      ]);
+
       const claudeMessages = cachedMessages.map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       }));
 
+      let systemPrompt = CBT_THERAPIST_SYSTEM_PROMPT;
+
+      if (session) {
+        const profile = await this.profileService.getByUserId(session.userId);
+        if (profile) {
+          const profileContext = this.profileService.getFullContext(profile);
+          systemPrompt +=
+            `\n\n--- PATIENT CONTEXT (from previous sessions) ---\n${profileContext}\n--- END PATIENT CONTEXT ---\n\n` +
+            `Use this context to personalize your responses. Reference past themes or progress naturally when relevant, ` +
+            `but do not overwhelm the patient by reciting their full history.`;
+        }
+      }
+
       let fullResponse = '';
 
-      for await (const token of this.claudeService.streamMessage(
-        CBT_THERAPIST_SYSTEM_PROMPT,
-        claudeMessages,
-      )) {
+      for await (const token of this.claudeService.streamMessage(systemPrompt, claudeMessages)) {
         fullResponse += token;
         this.eventEmitter.emit(`chat.${sessionId}`, {
           type: 'token',
@@ -157,9 +172,6 @@ export class ChatService {
         content: fullResponse,
       });
 
-      if (!this.sessionRepo.findOne({ where: { id: sessionId } })) return;
-
-      const session = await this.sessionRepo.findOne({ where: { id: sessionId } });
       if (!session?.title && fullResponse.length > 0) {
         const title = fullResponse.substring(0, 80).replace(/\n/g, ' ').trim();
         await this.sessionRepo.update(sessionId, { title });
@@ -260,6 +272,16 @@ export class ChatService {
     } catch (err) {
       this.logger.error(`Failed to parse analysis for session ${sessionId}:`, err);
       await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Ended });
+    }
+
+    try {
+      const session = await this.sessionRepo.findOne({ where: { id: sessionId } });
+      if (session) {
+        await this.profileService.updateProfile(session.userId, claudeMessages);
+        this.logger.log(`Patient profile updated for user ${session.userId}`);
+      }
+    } catch (err) {
+      this.logger.error(`Failed to update patient profile for session ${sessionId}:`, err);
     }
 
     await this.redisService.clearSessionMessages(sessionId);

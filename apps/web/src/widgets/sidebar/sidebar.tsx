@@ -1,7 +1,7 @@
 'use client';
 
 import { UserRole } from '@mindbridge/types/src/user';
-import { LayoutDashboard, Link2, LogOut, MessageCircle, Settings, Users } from 'lucide-react';
+import { LayoutDashboard, Link2, LogOut, MessageCircle, Settings, UserCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -28,6 +28,7 @@ import {
 const PATIENT_NAV = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
   { label: 'CBT Sessions', href: '/dashboard/chat', icon: MessageCircle },
+  { label: 'About Me', href: '/dashboard/about-me', icon: UserCircle },
 ];
 
 const THERAPIST_NAV = [

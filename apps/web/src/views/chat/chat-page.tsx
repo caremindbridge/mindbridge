@@ -2,7 +2,7 @@
 
 import type { MessageRole } from '@mindbridge/types/src/chat';
 import { format } from 'date-fns';
-import { ArrowLeft, BarChart3 } from 'lucide-react';
+import { ArrowLeft, BarChart3, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -10,7 +10,7 @@ import { useCallback, useState } from 'react';
 import { useSession } from '@/entities/session';
 import { EndSessionButton, SendMessageForm, useChatStream } from '@/features/chat';
 import { MoodCheckIn } from '@/features/mood';
-import { endSession, sendMessage } from '@/shared/api/client';
+import { createSession, endSession, sendMessage } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
 import { Button, Skeleton } from '@/shared/ui';
 import { ChatWindow } from '@/widgets/chat-window';
@@ -56,6 +56,17 @@ export function ChatPage({ sessionId }: ChatPageProps) {
     mutate();
     setShowMoodCheckIn(true);
   }, [sessionId, mutate]);
+
+  const [startingSession, setStartingSession] = useState(false);
+  const handleNewSession = useCallback(async () => {
+    setStartingSession(true);
+    try {
+      const s = await createSession();
+      router.push(`/dashboard/chat/${s.id}`);
+    } catch {
+      setStartingSession(false);
+    }
+  }, [router]);
 
   if (isLoading) {
     return (
@@ -112,6 +123,17 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           )}
         </div>
       </div>
+
+      {/* Session ended banner */}
+      {!isActive && (
+        <div className="flex shrink-0 items-center justify-between border-b bg-muted/40 px-4 py-2.5">
+          <p className="text-sm text-muted-foreground">This session has ended</p>
+          <Button size="sm" onClick={handleNewSession} disabled={startingSession}>
+            <Plus className="mr-1.5 h-3 w-3" />
+            {startingSession ? 'Creating...' : 'New Session'}
+          </Button>
+        </div>
+      )}
 
       {/* Messages */}
       <ChatWindow

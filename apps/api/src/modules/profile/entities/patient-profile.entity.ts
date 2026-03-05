@@ -6,6 +6,21 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+export interface PatientContextData {
+  name?: string;
+  age?: number;
+  pronouns?: string;
+  medications?: string;
+  diagnoses?: string;
+  previousTherapy?: string;
+  occupation?: string;
+  relationships?: string;
+  livingSituation?: string;
+  goals?: string;
+  additionalNotes?: string;
+  updatedAt?: string;
+}
+
 @Entity('patient_profiles')
 export class PatientProfile {
   @PrimaryGeneratedColumn('uuid')
@@ -19,6 +34,9 @@ export class PatientProfile {
 
   @Column('text', { nullable: true })
   therapistNotes!: string | null;
+
+  @Column('jsonb', { nullable: true })
+  patientContext!: PatientContextData | null;
 
   @Column('int', { default: 0 })
   sessionsIncorporated!: number;

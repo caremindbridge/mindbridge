@@ -1,3 +1,6 @@
+import { CurrentUser } from '@common/decorators/current-user.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
+import { RolesGuard } from '@common/guards/roles.guard';
 import {
   Body,
   Controller,
@@ -6,15 +9,15 @@ import {
   HttpCode,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import { CurrentUser } from '@common/decorators/current-user.decorator';
-import { Roles } from '@common/decorators/roles.decorator';
-import { RolesGuard } from '@common/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ProfileService } from '../profile/profile.service';
+
 import { PatientAccessGuard } from './guards/patient-access.guard';
 import { TherapistService } from './therapist.service';
 
@@ -30,10 +33,19 @@ class AcceptInviteDto {
   inviteCode!: string;
 }
 
+class UpdateTherapistNotesDto {
+  @IsString()
+  @MaxLength(2000)
+  notes!: string;
+}
+
 @Controller('therapist')
 @UseGuards(JwtAuthGuard)
 export class TherapistController {
-  constructor(private readonly therapistService: TherapistService) {}
+  constructor(
+    private readonly therapistService: TherapistService,
+    private readonly profileService: ProfileService,
+  ) {}
 
   @Post('invite')
   @UseGuards(RolesGuard)
@@ -81,6 +93,51 @@ export class TherapistController {
     @Param('id', ParseUUIDPipe) patientId: string,
   ) {
     return this.therapistService.disconnectPatient(user.id, patientId);
+  }
+
+  @Get('patients/:id/profile')
+  @UseGuards(RolesGuard, PatientAccessGuard)
+  @Roles('therapist')
+  async getPatientDossier(@Param('id', ParseUUIDPipe) patientId: string) {
+    const profile = await this.profileService.getByUserId(patientId);
+
+    if (!profile) {
+      return {
+        patientId,
+        hasDossier: false,
+        message:
+          'No data yet. Dossier will appear after the patient fills About Me or completes a session.',
+      };
+    }
+
+    const NO_AI = 'No AI sessions yet.';
+
+    return {
+      patientId,
+      hasDossier: true,
+      updatedAt: profile.updatedAt,
+      intake: profile.patientContext ?? null,
+      clinicalProfile:
+        profile.content && profile.content !== NO_AI
+          ? { content: profile.content, sessionsIncorporated: profile.sessionsIncorporated }
+          : null,
+      therapistNotes: profile.therapistNotes,
+    };
+  }
+
+  @Patch('patients/:id/profile/notes')
+  @UseGuards(RolesGuard, PatientAccessGuard)
+  @Roles('therapist')
+  async updateTherapistNotes(
+    @Param('id', ParseUUIDPipe) patientId: string,
+    @Body() dto: UpdateTherapistNotesDto,
+  ) {
+    const profile = await this.profileService.updateTherapistNotes(patientId, dto.notes);
+    return {
+      id: profile.id,
+      therapistNotes: profile.therapistNotes,
+      updatedAt: profile.updatedAt,
+    };
   }
 
   @Get('my-therapist')
