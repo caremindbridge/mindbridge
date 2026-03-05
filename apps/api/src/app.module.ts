@@ -5,13 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import configuration from './config/configuration';
 import { AuthModule } from './modules/auth/auth.module';
-import { EmailModule } from './modules/email/email.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { EmailModule } from './modules/email/email.module';
 import { MoodModule } from './modules/mood/mood.module';
-import { RedisModule } from './modules/redis';
 import { ProfileModule } from './modules/profile/profile.module';
+import { RedisModule } from './modules/redis';
 import { ReportModule } from './modules/report/report.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { TherapistModule } from './modules/therapist/therapist.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -43,6 +44,7 @@ import { UsersModule } from './modules/users/users.module';
     TherapistModule,
     ReportModule,
     ProfileModule,
+    SubscriptionModule,
   ],
 })
 export class AppModule {}

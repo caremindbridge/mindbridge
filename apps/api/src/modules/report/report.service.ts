@@ -1,12 +1,20 @@
-import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 
 import { SessionAnalysis } from '../chat/entities/session-analysis.entity';
 import { THERAPIST_REPORT_SYSTEM_PROMPT } from '../claude';
 import { ClaudeService } from '../claude/claude.service';
 import { Mood } from '../mood/mood.entity';
 import { RedisService } from '../redis/redis.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 import { TherapistService } from '../therapist/therapist.service';
 import { Report } from './report.entity';
 
@@ -30,12 +38,29 @@ export class ReportService {
     private readonly therapistService: TherapistService,
     private readonly claudeService: ClaudeService,
     private readonly redisService: RedisService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   async generate(therapistId: string, dto: GenerateReportDto): Promise<Report> {
     const linked = await this.therapistService.isLinked(therapistId, dto.patientId);
     if (!linked) {
       throw new NotFoundException('Patient not found or not linked');
+    }
+
+    const sub = await this.subscriptionService.getActive(therapistId);
+    if (sub && sub.reportLimit !== null && sub.reportLimit !== -1) {
+      const reportsThisPeriod = await this.reportRepo.count({
+        where: {
+          therapistId,
+          createdAt: MoreThanOrEqual(sub.currentPeriodStart),
+        },
+      });
+      if (reportsThisPeriod >= sub.reportLimit) {
+        throw new ForbiddenException({
+          code: 'report_limit',
+          message: 'Monthly report limit reached. Upgrade your plan for more reports.',
+        });
+      }
     }
 
     const key = `ratelimit:reports:${therapistId}`;

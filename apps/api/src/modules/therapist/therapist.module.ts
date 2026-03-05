@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SessionAnalysis } from '../chat/entities/session-analysis.entity';
 import { Mood } from '../mood/mood.entity';
 import { ProfileModule } from '../profile/profile.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 import { UsersModule } from '../users/users.module';
 
 import { PatientTherapist } from './entities/patient-therapist.entity';
@@ -16,6 +17,7 @@ import { TherapistService } from './therapist.service';
     TypeOrmModule.forFeature([PatientTherapist, Mood, SessionAnalysis]),
     UsersModule,
     ProfileModule,
+    SubscriptionModule,
   ],
   controllers: [TherapistController],
   providers: [TherapistService, PatientAccessGuard],

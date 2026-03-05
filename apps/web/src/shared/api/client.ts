@@ -21,7 +21,7 @@ import Cookies from 'js-cookie';
 
 import { env } from '@/shared/config/env';
 
-class ApiError extends Error {
+export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
@@ -321,4 +321,27 @@ export function getReport(id: string): Promise<TherapistReport> {
 
 export function getPatientReports(patientId: string): Promise<TherapistReport[]> {
   return apiClient.get<TherapistReport[]>(`/reports/patient/${patientId}`);
+}
+
+// === SUBSCRIPTION ===
+
+export function getUsageStatus(sessionId?: string): Promise<unknown> {
+  const params = sessionId ? `?sessionId=${encodeURIComponent(sessionId)}` : '';
+  return apiClient.get<unknown>(`/subscription/usage${params}`);
+}
+
+export function getPlans(): Promise<unknown> {
+  return apiClient.get<unknown>('/subscription/plans');
+}
+
+export function createCheckout(planId: string): Promise<{ url: string | null }> {
+  return apiClient.post<{ url: string | null }>('/subscription/checkout', { planId });
+}
+
+export function createPackCheckout(packId: string): Promise<{ url: string | null }> {
+  return apiClient.post<{ url: string | null }>('/subscription/checkout/pack', { packId });
+}
+
+export function createPortal(): Promise<{ url: string | null }> {
+  return apiClient.post<{ url: string | null }>('/subscription/portal', {});
 }

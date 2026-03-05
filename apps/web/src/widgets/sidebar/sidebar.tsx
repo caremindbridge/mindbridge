@@ -1,14 +1,16 @@
 'use client';
 
 import { UserRole } from '@mindbridge/types/src/user';
-import { LayoutDashboard, Link2, LogOut, MessageCircle, Settings, UserCircle, Users } from 'lucide-react';
+import { CreditCard, LayoutDashboard, Link2, LogOut, MessageCircle, Settings, Sparkles, UserCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import Cookies from 'js-cookie';
 
+import { useUsageStatus } from '@/entities/subscription';
 import { useUser } from '@/entities/user';
+import { UsageBar } from '@/features/subscription';
 import { ThemeToggle } from '@/features/theme';
 import { AcceptInviteDialog } from '@/features/therapist';
 import { cn } from '@/shared/lib/utils';
@@ -29,6 +31,7 @@ const PATIENT_NAV = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
   { label: 'CBT Sessions', href: '/dashboard/chat', icon: MessageCircle },
   { label: 'About Me', href: '/dashboard/about-me', icon: UserCircle },
+  { label: 'Pricing', href: '/pricing', icon: CreditCard, exact: true },
 ];
 
 const THERAPIST_NAV = [
@@ -38,6 +41,7 @@ const THERAPIST_NAV = [
 
 export function Sidebar() {
   const { user } = useUser();
+  const { data: usage } = useUsageStatus();
   const pathname = usePathname();
   const router = useRouter();
   const [acceptOpen, setAcceptOpen] = useState(false);
@@ -99,7 +103,23 @@ export function Sidebar() {
             Connect to Therapist
           </Button>
         )}
+
+        {usage?.status === 'trial' && (
+          <Button
+            variant="soft"
+            asChild
+            className="justify-start gap-3"
+          >
+            <Link href="/pricing">
+              <Sparkles className="h-4 w-4" />
+              Upgrade Plan
+            </Link>
+          </Button>
+        )}
       </nav>
+
+      {/* Usage bar — patients only */}
+      {!isTherapist && <UsageBar />}
 
       {/* Profile */}
       <div className="shrink-0 p-3">

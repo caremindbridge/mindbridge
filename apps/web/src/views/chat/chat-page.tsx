@@ -1,16 +1,21 @@
 'use client';
 
 import type { MessageRole } from '@mindbridge/types/src/chat';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowLeft, BarChart3, Plus } from 'lucide-react';
+import { AlertCircle, AlertTriangle, ArrowLeft, BarChart3, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 
 import { useSession } from '@/entities/session';
+import { useUsageStatus } from '@/entities/subscription';
 import { EndSessionButton, SendMessageForm, useChatStream } from '@/features/chat';
+import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription';
 import { MoodCheckIn } from '@/features/mood';
-import { createSession, endSession, sendMessage } from '@/shared/api/client';
+import { ApiError, createSession, endSession, sendMessage } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
 import { Button, Skeleton } from '@/shared/ui';
 import { ChatWindow } from '@/widgets/chat-window';
@@ -22,7 +27,12 @@ interface ChatPageProps {
 export function ChatPage({ sessionId }: ChatPageProps) {
   const { session, isLoading, mutate } = useSession(sessionId);
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const t = useTranslations('subscription');
   const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
+  const [showSessionLimitModal, setShowSessionLimitModal] = useState(false);
+  const [showMonthlyLimitModal, setShowMonthlyLimitModal] = useState(false);
+  const [showTrialEndedModal, setShowTrialEndedModal] = useState(false);
 
   const isActive = session?.status === 'active';
 
@@ -31,6 +41,8 @@ export function ChatPage({ sessionId }: ChatPageProps) {
     initialMessages: session?.messages || [],
     enabled: isActive,
   });
+
+  const { data: usage } = useUsageStatus(isActive ? sessionId : undefined);
 
   const handleSend = useCallback(
     async (content: string) => {
@@ -44,11 +56,37 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           orderIndex: messages.length,
           createdAt: new Date().toISOString(),
         });
-      } catch {
-        // error handled by API client
+        await queryClient.invalidateQueries({ queryKey: ['usage-status'] });
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 403) {
+          const data = error.data as { code: string; message: string };
+          switch (data.code) {
+            case 'session_limit':
+              setShowSessionLimitModal(true);
+              break;
+            case 'monthly_limit':
+              setShowMonthlyLimitModal(true);
+              break;
+            case 'trial_expired':
+              setShowTrialEndedModal(true);
+              break;
+            case 'no_subscription':
+              router.push('/pricing');
+              break;
+            case 'subscription_expired':
+              router.push('/pricing');
+              break;
+            case 'payment_failed':
+              router.push('/dashboard/settings');
+              toast.error(t('paymentFailed'));
+              break;
+            default:
+              toast.error(data.message || 'Failed to send message');
+          }
+        }
       }
     },
-    [sessionId, messages.length, addUserMessage],
+    [sessionId, messages.length, addUserMessage, queryClient, router],
   );
 
   const handleEnd = useCallback(async () => {
@@ -124,6 +162,25 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         </div>
       </div>
 
+      {/* Payment warning banner */}
+      {isActive && usage?.paymentWarning && (
+        <div className="flex shrink-0 items-center gap-2 border-b bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <span className="flex-1">{t('paymentFailed')}</span>
+          <Link href="/dashboard/settings" className="font-medium underline">
+            {t('updateCard')}
+          </Link>
+        </div>
+      )}
+
+      {/* Grace period banner */}
+      {isActive && usage?.grace && (
+        <div className="flex shrink-0 items-center gap-2 border-b bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          {t('graceMessage', { remaining: usage.graceRemaining ?? 0 })}
+        </div>
+      )}
+
       {/* Session ended banner */}
       {!isActive && (
         <div className="flex shrink-0 items-center justify-between border-b bg-muted/40 px-4 py-2.5">
@@ -141,6 +198,13 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         isStreaming={isStreaming}
       />
 
+      {/* Session counter */}
+      {usage?.session && isActive && (
+        <div className="shrink-0 border-t px-4 py-1.5 text-center text-xs text-muted-foreground">
+          {usage.session.used}/{usage.session.limit} {t('messagesInSession')}
+        </div>
+      )}
+
       {/* Input */}
       {isActive && <SendMessageForm onSend={handleSend} disabled={isStreaming} />}
 
@@ -149,6 +213,22 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         open={showMoodCheckIn}
         onComplete={() => { setShowMoodCheckIn(false); router.push('/dashboard'); }}
         onSkip={() => { setShowMoodCheckIn(false); router.push('/dashboard'); }}
+      />
+
+      <SessionLimitModal
+        open={showSessionLimitModal}
+        onClose={() => setShowSessionLimitModal(false)}
+        sessionLimit={usage?.session?.limit ?? 0}
+      />
+      <MonthlyLimitModal
+        open={showMonthlyLimitModal}
+        onClose={() => setShowMonthlyLimitModal(false)}
+        usage={usage}
+      />
+      <TrialEndedModal
+        open={showTrialEndedModal}
+        onClose={() => setShowTrialEndedModal(false)}
+        usage={usage}
       />
     </div>
   );

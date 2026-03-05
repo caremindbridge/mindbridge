@@ -24,4 +24,18 @@ export default () => ({
     resendApiKey: process.env.RESEND_API_KEY,
   },
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY,
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    prices: {
+      lite: process.env.STRIPE_PRICE_LITE,
+      standard: process.env.STRIPE_PRICE_STANDARD,
+      premium: process.env.STRIPE_PRICE_PREMIUM,
+      therapist_solo: process.env.STRIPE_PRICE_THERAPIST_SOLO,
+      therapist_practice: process.env.STRIPE_PRICE_THERAPIST_PRACTICE,
+      pack_50: process.env.STRIPE_PRICE_PACK_50,
+      pack_150: process.env.STRIPE_PRICE_PACK_150,
+      pack_400: process.env.STRIPE_PRICE_PACK_400,
+    },
+  },
 });

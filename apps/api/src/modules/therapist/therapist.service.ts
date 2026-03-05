@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { Repository } from 'typeorm';
 import { SessionAnalysis } from '../chat/entities/session-analysis.entity';
 import { Mood } from '../mood/mood.entity';
 import { RedisService } from '../redis/redis.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 import { UserRoleEnum } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { PatientTherapist } from './entities/patient-therapist.entity';
@@ -63,6 +65,7 @@ export class TherapistService {
     private readonly analysisRepo: Repository<SessionAnalysis>,
     private readonly usersService: UsersService,
     private readonly redisService: RedisService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   async invitePatient(therapistId: string, email: string): Promise<{ inviteCode: string }> {
@@ -89,6 +92,24 @@ export class TherapistService {
     if (pending) {
       if (pending.inviteCode) await this.redisService.deleteInviteCode(pending.inviteCode);
       await this.linkRepo.remove(pending);
+    }
+
+    // Check therapist's patient limit
+    const therapistSub = await this.subscriptionService.getActive(therapistId);
+    if (
+      therapistSub?.patientLimit !== null &&
+      therapistSub?.patientLimit !== undefined &&
+      therapistSub.patientLimit >= 0
+    ) {
+      const activeCount = await this.linkRepo.count({
+        where: { therapistId, status: 'active' },
+      });
+      if (activeCount >= therapistSub.patientLimit) {
+        throw new ForbiddenException({
+          code: 'patient_limit',
+          message: 'Patient limit reached for your plan',
+        });
+      }
     }
 
     const code = generateCode();
@@ -130,6 +151,16 @@ export class TherapistService {
     await this.linkRepo.save(link);
 
     await this.redisService.deleteInviteCode(inviteCode);
+
+    // Upgrade patient to standard plan if on a lesser plan (therapist-sponsored)
+    const currentSub = await this.subscriptionService.getActive(patientId);
+    const isUnderStandard =
+      !currentSub ||
+      currentSub.plan === 'trial' ||
+      currentSub.plan === 'lite';
+    if (isUnderStandard) {
+      await this.subscriptionService.upgradePlan(patientId, 'standard');
+    }
 
     return link;
   }

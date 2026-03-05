@@ -335,7 +335,7 @@ function parseAIProfile(content: string): {
     const raw = match?.[1]?.trim();
     if (!raw) return undefined;
     // strip leading bullet if single line
-    return raw.replace(/^[\-•*]\s*/, '').trim() || undefined;
+    return raw.replace(/^[-•*]\s*/, '').trim() || undefined;
   };
 
   return {

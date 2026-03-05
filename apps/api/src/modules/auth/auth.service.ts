@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 
 import { EmailService } from '../email/email.service';
 import { RedisService } from '../redis/redis.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 import { User, UserRoleEnum } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly redisService: RedisService,
     private readonly emailService: EmailService,
     private readonly configService: ConfigService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   async register(dto: {
@@ -42,6 +44,9 @@ export class AuthService {
       role: dto.role,
       name: dto.name,
     });
+
+    const trialPlan = user.role === UserRoleEnum.Therapist ? 'therapist_trial' : 'trial';
+    await this.subscriptionService.createTrial(user.id, trialPlan);
 
     return { access_token: this.generateToken(user) };
   }
@@ -175,6 +180,14 @@ export class AuthService {
     user.password = await bcrypt.hash(newPassword, 10);
     await this.usersService.save(user);
     await this.redisService.deleteResetToken(token);
+  }
+
+  async ensureTrialExists(user: User): Promise<void> {
+    const existing = await this.subscriptionService.getActive(user.id);
+    if (!existing) {
+      const plan = user.role === UserRoleEnum.Therapist ? 'therapist_trial' : 'trial';
+      await this.subscriptionService.createTrial(user.id, plan);
+    }
   }
 
   generateToken(user: User): string {

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -15,6 +16,7 @@ import {
 } from '../claude';
 import { ProfileService } from '../profile/profile.service';
 import { RedisService } from '../redis';
+import { UsageService } from '../subscription/usage.service';
 
 import { Message, MessageRoleEnum } from './entities/message.entity';
 import { SessionAnalysis } from './entities/session-analysis.entity';
@@ -35,6 +37,7 @@ export class ChatService {
     private readonly redisService: RedisService,
     private readonly eventEmitter: EventEmitter2,
     private readonly profileService: ProfileService,
+    private readonly usageService: UsageService,
   ) {}
 
   async createSession(userId: string): Promise<Session> {
@@ -92,6 +95,15 @@ export class ChatService {
       throw new BadRequestException('Session is not active');
     }
 
+    const check = await this.usageService.canSendMessage(userId, sessionId);
+    if (!check.allowed) {
+      throw new ForbiddenException({
+        code: check.reason,
+        message: this.getLimitMessage(check.reason),
+        usage: check.usage,
+      });
+    }
+
     const locked = await this.redisService.acquireStreamingLock(sessionId);
     if (!locked) {
       throw new BadRequestException('Assistant is still responding');
@@ -107,6 +119,8 @@ export class ChatService {
     });
     await this.messageRepo.save(userMessage);
 
+    await this.usageService.recordMessage(userId);
+
     await this.redisService.appendSessionMessage(sessionId, { role: 'user', content });
 
     this.streamAssistantResponse(sessionId, messageCount + 1).catch((err) => {
@@ -119,6 +133,18 @@ export class ChatService {
     });
 
     return userMessage;
+  }
+
+  private getLimitMessage(reason?: string): string {
+    switch (reason) {
+      case 'no_subscription': return 'No active subscription. Please choose a plan.';
+      case 'trial_expired': return 'Your trial has ended. Upgrade to continue.';
+      case 'monthly_limit': return 'Monthly message limit reached.';
+      case 'session_limit': return 'Session message limit reached. Please start a new session.';
+      case 'payment_failed': return 'Payment failed. Please update your payment method.';
+      case 'subscription_expired': return 'Your subscription has expired. Please renew to continue.';
+      default: return 'Message limit reached.';
+    }
   }
 
   private async streamAssistantResponse(

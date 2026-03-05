@@ -1,3 +1,4 @@
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
   Controller,
   Post,
@@ -23,8 +24,9 @@ import {
 } from 'class-validator';
 import type { Request, Response } from 'express';
 
-import { CurrentUser } from '@common/decorators/current-user.decorator';
+
 import { User, UserRoleEnum } from '../users/user.entity';
+
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -180,6 +182,7 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   async googleCallback(@Req() req: Request, @Res() res: Response) {
     const user = req.user as User;
+    await this.authService.ensureTrialExists(user);
     const token = this.authService.generateToken(user);
     const frontendUrl =
       this.configService.get<string>('frontendUrl') ?? 'http://localhost:3000';

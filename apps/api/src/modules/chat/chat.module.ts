@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ClaudeModule } from '../claude';
 import { ProfileModule } from '../profile/profile.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 import { ChatSseController } from './chat-sse.controller';
 import { ChatController } from './chat.controller';
@@ -16,6 +17,7 @@ import { Session } from './entities/session.entity';
     TypeOrmModule.forFeature([Session, Message, SessionAnalysis]),
     ClaudeModule,
     ProfileModule,
+    SubscriptionModule,
   ],
   controllers: [ChatController, ChatSseController],
   providers: [ChatService],

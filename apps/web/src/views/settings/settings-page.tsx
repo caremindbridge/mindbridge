@@ -9,6 +9,7 @@ import {
   PreferencesSection,
   ProfileSection,
   SecuritySection,
+  SubscriptionSection,
   TherapistConnectionSection,
 } from '@/features/settings';
 
@@ -28,6 +29,7 @@ export function SettingsPage() {
         {/* Left column */}
         <div className="space-y-5">
           <ProfileSection user={user} onUpdated={mutate} />
+          <SubscriptionSection />
           <SecuritySection user={user} />
           {!isTherapist && <TherapistConnectionSection />}
           {isTherapist && <PracticeSection />}
