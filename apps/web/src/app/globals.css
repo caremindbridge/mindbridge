@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'streamdown/styles.css';
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.message-bubble {
+  animation: message-in 0.25s ease-out;
+}
+
+/* === LANDING FADE-IN === */
+.fade-section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === SKELETON SHIMMER === */
+[data-slot='skeleton'] {
+  background: linear-gradient(
+    90deg,
+    hsl(25 20% 93%) 25%,
+    hsl(25 25% 96%) 50%,
+    hsl(25 20% 93%) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.dark [data-slot='skeleton'] {
+  background: linear-gradient(
+    90deg,
+    hsl(20 8% 14%) 25%,
+    hsl(20 10% 18%) 50%,
+    hsl(20 8% 14%) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@layer base {
+  :root {
+    /* === BACKGROUNDS === */
+    --background: 30 30% 98%;
+    --foreground: 20 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 15% 15%;
+
+    /* === PRIMARY — Soft Blush === */
+    --primary: 15 45% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* === SECONDARY === */
+    --secondary: 25 20% 93%;
+    --secondary-foreground: 20 15% 25%;
+
+    /* === MUTED === */
+    --muted: 25 15% 94%;
+    --muted-foreground: 25 10% 50%;
+
+    /* === ACCENT — Soft Blush fills === */
+    --accent: 15 50% 94%;
+    --accent-foreground: 15 45% 35%;
+
+    /* === DESTRUCTIVE === */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 25 18% 88%;
+    --input: 25 18% 88%;
+    --ring: 15 45% 58%;
+
+    /* === RADIUS === */
+    --radius: 0.75rem;
+
+    /* === CHART COLORS === */
+    --chart-1: 15 45% 58%;
+    --chart-2: 35 75% 55%;
+    --chart-3: 240 40% 58%;
+    --chart-4: 152 45% 45%;
+    --chart-5: 0 60% 55%;
+
+    /* === SIDEBAR === */
+    --sidebar-background: 25 22% 96%;
+    --sidebar-foreground: 20 15% 25%;
+    --sidebar-border: 25 18% 90%;
+    --sidebar-accent: 15 50% 94%;
+    --sidebar-accent-foreground: 15 45% 40%;
+    --sidebar-primary: 15 45% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-ring: 15 45% 58%;
+
+    /* === SOFT BLUSH PALETTE === */
+    --blush-50: 15 55% 97%;
+    --blush-100: 15 50% 94%;
+    --blush-200: 15 50% 87%;
+    --blush-300: 15 55% 75%;
+    --blush-400: 15 50% 65%;
+    --blush-500: 15 45% 58%;
+    --blush-600: 15 40% 48%;
+    --blush-700: 15 38% 38%;
+    --blush-800: 15 33% 28%;
+    --blush-900: 15 30% 18%;
+  }
+
+  .dark {
+    /* === DARK THEME — Warm Dark === */
+    --background: 20 12% 9%;
+    --foreground: 25 15% 88%;
+
+    --card: 20 10% 12%;
+    --card-foreground: 25 15% 88%;
+
+    --popover: 20 10% 12%;
+    --popover-foreground: 25 15% 88%;
+
+    --primary: 15 45% 62%;
+    --primary-foreground: 20 15% 10%;
+
+    --secondary: 20 10% 16%;
+    --secondary-foreground: 25 12% 75%;
+
+    --muted: 20 8% 15%;
+    --muted-foreground: 25 10% 55%;
+
+    --accent: 15 25% 16%;
+    --accent-foreground: 15 40% 75%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 10% 18%;
+    --input: 20 10% 18%;
+    --ring: 15 45% 62%;
+
+    --chart-1: 15 45% 65%;
+    --chart-2: 35 75% 60%;
+    --chart-3: 240 40% 65%;
+    --chart-4: 152 40% 50%;
+    --chart-5: 0 50% 55%;
+
+    --sidebar-background: 20 12% 7%;
+    --sidebar-foreground: 25 12% 75%;
+    --sidebar-border: 20 10% 16%;
+    --sidebar-accent: 15 20% 15%;
+    --sidebar-accent-foreground: 15 40% 72%;
+    --sidebar-primary: 15 45% 62%;
+    --sidebar-primary-foreground: 20 15% 10%;
+    --sidebar-ring: 15 45% 62%;
+
+    --blush-50: 15 15% 14%;
+    --blush-100: 15 15% 17%;
+    --blush-200: 15 18% 22%;
+    --blush-300: 15 25% 32%;
+    --blush-400: 15 35% 45%;
+    --blush-500: 15 45% 62%;
+    --blush-600: 15 45% 68%;
+    --blush-700: 15 50% 75%;
+    --blush-800: 15 50% 82%;
+    --blush-900: 15 55% 90%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* === SMOOTH TRANSITIONS === */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* === SELECTION COLOR === */
+::selection {
+  background-color: hsl(15 55% 75% / 0.25);
+  color: inherit;
+}
+
+/* === SLIM SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(25 15% 82%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(25 15% 72%);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(20 8% 22%);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(20 8% 30%);
+}

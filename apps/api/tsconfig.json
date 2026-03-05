@@ -1,0 +1,12 @@
+{
+  "extends": "@mindbridge/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@app/*": ["./src/*"],
+      "@common/*": ["./src/common/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}
