@@ -2,9 +2,9 @@
 
 import { SessionStatus } from '@mindbridge/types/src/chat';
 import { format } from 'date-fns';
-import { BarChart3, MessageCircle, Trash2 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { BarChart3, MessageCircle, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -12,7 +12,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useSessions } from '@/entities/session';
 import { StartSessionButton } from '@/features/chat';
-import { deleteSession } from '@/shared/api/client';
+import { createSession, deleteSession } from '@/shared/api/client';
+import { useMediaQuery } from '@/shared/lib/use-media-query';
 import {
   Badge,
   Button,
@@ -23,6 +24,31 @@ import {
   CardTitle,
   Skeleton,
 } from '@/shared/ui';
+
+function MobileFab() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleStart = async () => {
+    setLoading(true);
+    try {
+      const session = await createSession();
+      router.push(`/dashboard/chat/${session.id}`);
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleStart}
+      disabled={loading}
+      className="fixed z-40 right-4 bottom-[calc(88px+env(safe-area-inset-bottom,0px))] flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg active:scale-90 transition-transform disabled:opacity-50"
+    >
+      <Plus className="h-5 w-5" />
+    </button>
+  );
+}
 
 function anxietyBadgeClass(level: number): string {
   if (level <= 3) return 'border-green-200 bg-green-50 text-green-700';
@@ -42,6 +68,7 @@ export function ChatSessionsPage() {
   const { data, isLoading } = useSessions();
   const qc = useQueryClient();
   const router = useRouter();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (e: React.MouseEvent, sessionId: string) => {
@@ -57,14 +84,18 @@ export function ChatSessionsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{t('sessionsTitle')}</h1>
-          <p className="text-muted-foreground">{t('sessionsSubtitle')}</p>
+    <div className="flex-1 overflow-y-auto pb-24 lg:pb-6">
+
+      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      {isDesktop && (
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">{t('sessionsTitle')}</h1>
+            <p className="text-muted-foreground">{t('sessionsSubtitle')}</p>
+          </div>
+          <StartSessionButton />
         </div>
-        <StartSessionButton />
-      </div>
+      )}
 
       {isLoading && (
         <div className="grid gap-4">
@@ -146,6 +177,10 @@ export function ChatSessionsPage() {
           ))}
         </div>
       )}
+      </div>
+
+      {/* FAB — new session (mobile only) */}
+      {!isDesktop && <MobileFab />}
     </div>
   );
 }

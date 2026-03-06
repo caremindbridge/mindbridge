@@ -60,18 +60,18 @@ export function ProfileSection({ user, onUpdated }: ProfileSectionProps) {
           </div>
 
           {/* Name */}
-          <div className="flex items-center justify-between gap-4 px-5 py-3">
-            <p className="shrink-0 text-sm font-medium">{t('name')}</p>
+          <div className="px-5 py-3 space-y-2">
+            <p className="text-xs font-medium text-muted-foreground">{t('name')}</p>
             <div className="flex items-center gap-2">
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t('namePlaceholder')}
-                className="h-8 w-36 text-sm"
+                className="h-9 flex-1 text-sm"
               />
               <Button
                 size="sm"
-                className="h-8"
+                className="h-9 shrink-0"
                 onClick={handleSave}
                 disabled={saving || name.trim() === (user.name ?? '')}
               >

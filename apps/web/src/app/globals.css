@@ -252,6 +252,47 @@
   color: inherit;
 }
 
+/* === PWA / iOS FIXES === */
+
+/* iOS PWA: fix min-height */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Prevent overscroll bounce */
+html,
+body {
+  overscroll-behavior: none;
+}
+
+/* Remove tap highlight on interactive elements */
+a,
+button,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth momentum scrolling on iOS */
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Disable text selection on navigation bars */
+nav,
+[role='tablist'] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* PWA standalone: account for status bar */
+@media all and (display-mode: standalone) {
+  html {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
 /* === SLIM SCROLLBAR === */
 ::-webkit-scrollbar {
   width: 6px;

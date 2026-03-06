@@ -4,8 +4,8 @@ import type { MessageRole } from '@mindbridge/types/src/chat';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { AlertCircle, AlertTriangle, ArrowLeft, BarChart3, Plus } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
@@ -13,8 +13,8 @@ import { toast } from 'sonner';
 import { useSession } from '@/entities/session';
 import { useUsageStatus } from '@/entities/subscription';
 import { EndSessionButton, SendMessageForm, useChatStream } from '@/features/chat';
-import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription';
 import { MoodCheckIn } from '@/features/mood';
+import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription';
 import { ApiError, createSession, endSession, sendMessage } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
 import { Button, Skeleton } from '@/shared/ui';
@@ -132,8 +132,8 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
-      {/* Header */}
-      <div className="flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm">
+      {/* Desktop header */}
+      <div className="hidden lg:flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="shrink-0" asChild>
             <Link href="/dashboard/chat">
@@ -165,6 +165,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           )}
         </div>
       </div>
+      {/* End desktop header */}
 
       {/* Payment warning banner */}
       {isActive && usage?.paymentWarning && (

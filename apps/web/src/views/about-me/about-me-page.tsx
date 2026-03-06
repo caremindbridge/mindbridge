@@ -89,22 +89,27 @@ export function AboutMePage() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="space-y-4">
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-44 w-full rounded-xl" />
-            <Skeleton className="h-44 w-full rounded-xl" />
-            <Skeleton className="h-44 w-full rounded-xl" />
+      <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+  
+        <div className="p-4 md:p-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-44 w-full rounded-xl" />
+              <Skeleton className="h-44 w-full rounded-xl" />
+              <Skeleton className="h-44 w-full rounded-xl" />
+            </div>
+            <Skeleton className="h-80 w-full rounded-xl" />
           </div>
-          <Skeleton className="h-80 w-full rounded-xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6">
+    <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+
+      <div className="p-4 md:p-6 space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Title */}
         <div>
@@ -221,6 +226,7 @@ export function AboutMePage() {
         </Card>
 
       </form>
+      </div>
     </div>
   );
 }

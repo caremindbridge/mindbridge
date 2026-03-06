@@ -75,9 +75,11 @@ export function DashboardPage() {
         : t('stableTrend');
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-5">
+    <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+
+      <div className="p-4 md:p-6 space-y-4 md:space-y-5 pb-6">
       {/* ── Greeting ── */}
-      <h1 className="text-2xl font-bold tracking-tight">
+      <h1 className="text-xl md:text-2xl font-bold tracking-tight">
         {firstName ? t('greetingWithName', { name: firstName }) : t('greetingDefault')}
       </h1>
 
@@ -232,6 +234,7 @@ export function DashboardPage() {
           sessions={sessionsData?.sessions ?? []}
           isLoading={sessionsLoading}
         />
+      </div>
       </div>
     </div>
   );

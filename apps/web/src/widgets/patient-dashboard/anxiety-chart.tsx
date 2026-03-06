@@ -54,11 +54,12 @@ export function AnxietyChart({ analyses }: AnxietyChartProps) {
         <CardTitle>{t('anxietyDepression')}</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="w-full overflow-hidden">
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} ticks={[0, 3, 6, 10]} />
+            <XAxis dataKey="date" tick={{ fontSize: 12 }} minTickGap={40} />
+            <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} ticks={[0, 3, 6, 10]} width={28} />
             <Tooltip />
             <Legend />
             <ReferenceLine
@@ -93,6 +94,7 @@ export function AnxietyChart({ analyses }: AnxietyChartProps) {
             />
           </AreaChart>
         </ResponsiveContainer>
+        </div>
         <div className="mt-2 flex gap-4 text-xs text-muted-foreground">
           <span>
             <span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-400" />

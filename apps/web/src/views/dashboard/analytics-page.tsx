@@ -20,11 +20,13 @@ export function AnalyticsPage() {
   const { data: metrics } = useMoodMetrics(from);
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+    <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+
+      <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{t('analyticsTitle')}</h1>
-          <p className="text-sm text-muted-foreground">{t('analyticsSubtitle')}</p>
+          <h1 className="hidden lg:block text-2xl font-bold">{t('analyticsTitle')}</h1>
+          <p className="hidden lg:block text-sm text-muted-foreground">{t('analyticsSubtitle')}</p>
         </div>
         <Tabs value={period} onValueChange={(v) => setPeriod(v as 'week' | 'month')}>
           <TabsList>
@@ -53,6 +55,7 @@ export function AnalyticsPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

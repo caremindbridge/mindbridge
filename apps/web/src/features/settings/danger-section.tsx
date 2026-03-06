@@ -1,28 +1,18 @@
 'use client';
 
 import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
 
 import { deleteAccount } from '@/shared/api/client';
-import {
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  Input,
-  Label,
-} from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Button, Card, CardContent, Input, Label } from '@/shared/ui';
 
 export function DangerSection() {
   const t = useTranslations('settings');
+  const tc = useTranslations('common');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState('');
@@ -55,16 +45,18 @@ export function DangerSection() {
           </p>
           <div className="divide-y divide-border/50">
             <div className="flex items-center justify-between px-5 py-4">
-              <div>
+              <div className="min-w-0 mr-3">
                 <p className="text-sm font-medium">{t('exportData')}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">{t('exportComingSoon')}</p>
               </div>
-              <Button variant="outline" size="sm" disabled>{t('exportData')}</Button>
+              <Button variant="outline" size="sm" disabled className="shrink-0">
+                {t('exportData')}
+              </Button>
             </div>
 
             <div className="flex items-center justify-between px-5 py-4">
               <p className="text-sm font-medium">{t('deleteAccount')}</p>
-              <Button variant="destructive" size="sm" onClick={() => setOpen(true)}>
+              <Button variant="destructive" size="sm" onClick={() => setOpen(true)} className="shrink-0">
                 {t('deleteAccount')}
               </Button>
             </div>
@@ -72,12 +64,13 @@ export function DangerSection() {
         </CardContent>
       </Card>
 
-      <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t('deleteConfirmTitle')}</DialogTitle>
-            <DialogDescription>{t('deleteConfirmDescription')}</DialogDescription>
-          </DialogHeader>
+      <BottomSheet
+        open={open}
+        onOpenChange={(v) => { if (!v) handleClose(); }}
+        title={t('deleteConfirmTitle')}
+      >
+        <div className="space-y-4 pb-2">
+          <p className="text-sm text-muted-foreground">{t('deleteConfirmDescription')}</p>
           <div className="space-y-2">
             <Label htmlFor="del-confirm">{t('deleteConfirmPlaceholder')}</Label>
             <Input
@@ -88,8 +81,7 @@ export function DangerSection() {
               className="font-mono"
             />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleClose} disabled={deleting}>Cancel</Button>
+          <div className="flex flex-col gap-2 pt-1">
             <Button
               variant="destructive"
               onClick={handleDelete}
@@ -97,9 +89,12 @@ export function DangerSection() {
             >
               {deleting ? t('deleting') : t('deleteConfirmButton')}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <Button variant="outline" onClick={handleClose} disabled={deleting}>
+              {tc('cancel')}
+            </Button>
+          </div>
+        </div>
+      </BottomSheet>
     </>
   );
 }

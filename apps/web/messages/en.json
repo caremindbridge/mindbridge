@@ -132,7 +132,10 @@
     "settings": "Settings",
     "connectToTherapist": "Connect to Therapist",
     "analytics": "Analytics",
-    "logout": "Logout"
+    "logout": "Logout",
+    "home": "Home",
+    "sessions": "Sessions",
+    "profile": "Profile"
   },
   "dashboard": {
     "title": "Dashboard",

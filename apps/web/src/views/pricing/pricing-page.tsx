@@ -173,8 +173,8 @@ export function PricingPage() {
         </div>
 
         {/* Billing toggle */}
-        <div className="mb-8 flex items-center justify-center">
-          <div className="relative flex items-center gap-3">
+        <div className="mb-8 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-3">
             <span
               className={cn(
                 'text-sm',
@@ -206,12 +206,11 @@ export function PricingPage() {
             >
               {t('yearly')}
             </span>
+          </div>
+          <div className={cn('transition-opacity', billingCycle !== 'yearly' && 'invisible')}>
             <Badge
               variant="secondary"
-              className={cn(
-                'absolute left-full ml-2 whitespace-nowrap border-emerald-200 bg-emerald-50 text-xs text-emerald-700',
-                billingCycle !== 'yearly' && 'invisible',
-              )}
+              className="whitespace-nowrap border-emerald-200 bg-emerald-50 text-xs text-emerald-700"
             >
               {t('save33')}
             </Badge>
@@ -257,17 +256,21 @@ export function PricingPage() {
                   <button
                     key={pack.id}
                     onClick={() => handleBuyPack(pack.id)}
-                    className="rounded-xl border p-4 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
+                    className="relative rounded-xl border p-3 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
                   >
+                    {pack.popular && (
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">
+                        {t('popular')}
+                      </span>
+                    )}
+                    {pack.bestValue && (
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground">
+                        Best Value
+                      </span>
+                    )}
                     <div className="text-lg font-bold">{pack.messages}</div>
                     <div className="text-xs text-muted-foreground">{t('messages')}</div>
                     <div className="mt-1 text-sm font-semibold">{formatPrice(pack.price)}</div>
-                    {pack.popular && <Badge className="mt-1 text-[10px]">{t('popular')}</Badge>}
-                    {pack.bestValue && (
-                      <Badge variant="secondary" className="mt-1 text-[10px]">
-                        Best Value
-                      </Badge>
-                    )}
                   </button>
                 ))}
               </div>

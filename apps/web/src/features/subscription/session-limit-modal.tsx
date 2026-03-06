@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button, Dialog, DialogContent, DialogTitle } from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Button } from '@/shared/ui';
 
 interface Props {
   open: boolean;
@@ -21,10 +22,9 @@ export function SessionLimitModal({ open, onClose, sessionLimit }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm text-center">
-        <div className="text-3xl">💬</div>
-        <DialogTitle>{t('sessionLimitTitle')}</DialogTitle>
+    <BottomSheet open={open} onOpenChange={onClose} title={t('sessionLimitTitle')}>
+      <div className="text-center pb-2">
+        <div className="text-3xl mb-3">💬</div>
         <p className="text-sm text-muted-foreground">
           {t('sessionLimitDescription', { limit: sessionLimit })}
         </p>
@@ -36,7 +36,7 @@ export function SessionLimitModal({ open, onClose, sessionLimit }: Props) {
             {t('newSession')}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </BottomSheet>
   );
 }

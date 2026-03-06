@@ -6,8 +6,9 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { createPackCheckout } from '@/shared/api/client';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Badge, Button, Separator } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
-import { Badge, Button, Dialog, DialogContent, DialogTitle, Separator } from '@/shared/ui';
 
 interface Props {
   open: boolean;
@@ -42,13 +43,14 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
     : '';
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogTitle>{t('monthlyLimitTitle')}</DialogTitle>
-        <p className="text-sm text-muted-foreground">{t('monthlyLimitDescription')}</p>
-        {resetDate && (
-          <p className="text-xs text-muted-foreground">{t('resetsOn', { date: resetDate })}</p>
-        )}
+    <BottomSheet open={open} onOpenChange={onClose} title={t('monthlyLimitTitle')}>
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm text-muted-foreground">{t('monthlyLimitDescription')}</p>
+          {resetDate && (
+            <p className="text-xs text-muted-foreground mt-1">{t('resetsOn', { date: resetDate })}</p>
+          )}
+        </div>
 
         <Separator />
 
@@ -59,7 +61,7 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
               key={pack.id}
               onClick={() => handleBuyPack(pack.id)}
               className={cn(
-                'flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50',
+                'flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 active:bg-muted/50',
                 pack.popular && 'border-primary/50 bg-primary/5',
               )}
             >
@@ -79,10 +81,10 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
 
         <Separator />
 
-        <Button variant="outline" className="w-full" asChild>
+        <Button variant="outline" className="w-full" asChild onClick={onClose}>
           <Link href="/pricing">{t('upgradePlan')}</Link>
         </Button>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </BottomSheet>
   );
 }

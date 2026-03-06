@@ -5,14 +5,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { useCreateMood } from '@/entities/mood';
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Textarea,
-} from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Button, Textarea } from '@/shared/ui';
 
 interface MoodCheckInProps {
   sessionId: string;
@@ -70,11 +64,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onSkip(); }}>
-      <DialogContent className="max-w-md p-6">
-        <DialogHeader>
-          <DialogTitle>{t('title')}</DialogTitle>
-        </DialogHeader>
+    <BottomSheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onSkip(); }} title={t('title')}>
 
         {/* Mood Scale */}
         <div className="space-y-2">
@@ -144,7 +134,6 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
             {t('skip')}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+    </BottomSheet>
   );
 }

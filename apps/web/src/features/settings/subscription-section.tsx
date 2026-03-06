@@ -123,7 +123,7 @@ export function SubscriptionSection() {
                 </div>
               </div>
             )}
-            <div className="flex gap-2 px-5 py-4">
+            <div className="flex flex-wrap gap-2 px-5 py-4">
               <Button variant="outline" size="sm" asChild>
                 <Link href="/pricing">
                   {usage.status === 'trial' ? ts('choosePlan') : ts('changePlan')}
@@ -229,7 +229,7 @@ export function SubscriptionSection() {
                   </div>
                 </div>
               )}
-              <div className="flex gap-2 px-5 py-4">
+              <div className="flex flex-wrap gap-2 px-5 py-4">
                 <Button variant="outline" size="sm" asChild>
                   <Link href="/pricing">
                     {personalUsage.status === 'trial' ? ts('choosePlan') : ts('changePlan')}

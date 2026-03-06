@@ -52,11 +52,12 @@ export function MoodChart({ from, to }: MoodChartProps) {
         <CardTitle>{t('moodOverTime')}</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="w-full overflow-hidden">
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis domain={[1, 10]} tick={{ fontSize: 12 }} ticks={[1, 3, 5, 7, 10]} />
+            <XAxis dataKey="date" tick={{ fontSize: 12 }} minTickGap={40} />
+            <YAxis domain={[1, 10]} tick={{ fontSize: 12 }} ticks={[1, 3, 5, 7, 10]} width={28} />
             <Tooltip />
             <Line
               type="monotone"
@@ -69,6 +70,7 @@ export function MoodChart({ from, to }: MoodChartProps) {
             />
           </LineChart>
         </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );

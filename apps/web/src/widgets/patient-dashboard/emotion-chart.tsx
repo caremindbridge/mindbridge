@@ -76,6 +76,7 @@ export function EmotionChart({ from, to }: EmotionChartProps) {
         <CardTitle>{t('emotionDistribution')}</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="w-full overflow-hidden">
         <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 32, top: 4, bottom: 4 }}>
             <XAxis type="number" hide />
@@ -95,6 +96,7 @@ export function EmotionChart({ from, to }: EmotionChartProps) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );

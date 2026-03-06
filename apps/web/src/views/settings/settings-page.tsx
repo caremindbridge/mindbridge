@@ -21,8 +21,10 @@ export function SettingsPage() {
   const isTherapist = user.role === 'therapist';
 
   return (
-    <div className="flex-1 overflow-y-auto p-6">
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight">{t('title')}</h1>
+    <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+
+      <div className="p-4 md:p-6">
+      <h1 className="mb-6 hidden lg:block text-2xl font-semibold tracking-tight">{t('title')}</h1>
 
       <div className="grid gap-5 lg:grid-cols-2">
         {/* Left column */}
@@ -38,6 +40,7 @@ export function SettingsPage() {
           <PreferencesSection />
           <DangerSection />
         </div>
+      </div>
       </div>
     </div>
   );

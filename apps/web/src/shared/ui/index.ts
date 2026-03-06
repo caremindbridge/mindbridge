@@ -1,4 +1,5 @@
 export { Avatar, AvatarImage, AvatarFallback } from './avatar';
+export { BottomSheet } from './bottom-sheet';
 export { MarkdownMessage } from './markdown-message';
 export { Badge, badgeVariants } from './badge';
 export type { BadgeProps } from './badge';

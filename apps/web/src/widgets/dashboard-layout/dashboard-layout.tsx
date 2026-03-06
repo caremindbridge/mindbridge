@@ -1,15 +1,15 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { useUser } from '@/entities/user';
-import { MobileGate } from '@/features/mobile-gate/mobile-gate';
 import { SubscriptionBanner } from '@/features/subscription';
+import { useMediaQuery } from '@/shared/lib/use-media-query';
+import { MobileTabBar } from '@/widgets/mobile-nav/mobile-tab-bar';
 import { Sidebar } from '@/widgets/sidebar';
 
 function StripeReturnHandler() {
@@ -41,6 +41,12 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, isLoading, error } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
+  // Hide tab bar and use full-height layout inside active chat sessions
+  const inChat =
+    /^\/dashboard\/chat\/[^/]+$/.test(pathname) && !pathname.endsWith('/analysis');
 
   useEffect(() => {
     if (!isLoading && !user && error) {
@@ -60,18 +66,34 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return null;
   }
 
-  return (
-    <MobileGate>
+  if (isDesktop) {
+    return (
       <div className="flex h-screen bg-background">
         <Sidebar />
         <main className="flex flex-1 flex-col overflow-hidden pl-64">
           <SubscriptionBanner />
+
           <Suspense>
             <StripeReturnHandler />
           </Suspense>
           {children}
         </main>
       </div>
-    </MobileGate>
+    );
+  }
+
+  // Mobile layout
+  return (
+    <div className="flex flex-col bg-background" style={{ height: '100dvh' }}>
+      <SubscriptionBanner />
+      <Suspense>
+        <StripeReturnHandler />
+      </Suspense>
+      <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        {children}
+      </main>
+      {/* Fixed — floats over content for liquid glass effect */}
+      <MobileTabBar hide={inChat} />
+    </div>
   );
 }

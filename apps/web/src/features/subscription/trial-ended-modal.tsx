@@ -4,7 +4,8 @@ import type { UsageStatus } from '@mindbridge/types/src/subscription';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-import { Button, Dialog, DialogContent, DialogTitle } from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Button } from '@/shared/ui';
 
 interface Props {
   open: boolean;
@@ -16,10 +17,9 @@ export function TrialEndedModal({ open, onClose, usage }: Props) {
   const t = useTranslations('subscription');
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md text-center">
+    <BottomSheet open={open} onOpenChange={onClose} title={t('trialEndedTitle')}>
+      <div className="text-center pb-2">
         <div className="mb-3 text-4xl">🌿</div>
-        <DialogTitle>{t('trialEndedTitle')}</DialogTitle>
         <p className="mb-4 text-sm text-muted-foreground">{t('trialEndedDescription')}</p>
 
         <div className="mb-4 grid grid-cols-2 gap-3">
@@ -33,10 +33,10 @@ export function TrialEndedModal({ open, onClose, usage }: Props) {
           </div>
         </div>
 
-        <Button className="w-full" asChild>
+        <Button className="w-full" asChild onClick={onClose}>
           <Link href="/pricing">{t('choosePlan')}</Link>
         </Button>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </BottomSheet>
   );
 }

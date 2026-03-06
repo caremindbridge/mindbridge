@@ -132,7 +132,10 @@
     "settings": "Настройки",
     "connectToTherapist": "Терапевт",
     "analytics": "Аналитика",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "home": "Главная",
+    "sessions": "Сессии",
+    "profile": "Профиль"
   },
   "dashboard": {
     "title": "Дашборд",
