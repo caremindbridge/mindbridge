@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 
 import { useUsageStatus } from '@/entities/subscription';
 import { cn } from '@/shared/lib/utils';
-import { Button } from '@/shared/ui';
 
 export function UsageBar() {
   const { data: usage } = useUsageStatus();
@@ -54,12 +53,10 @@ export function UsageBar() {
         </div>
       )}
 
-      {(isLow || status === 'trial') && (
-        <Button variant="ghost" size="sm" className="mt-2 h-7 w-full text-xs" asChild>
-          <Link href="/pricing">
-            {status === 'trial' ? t('choosePlan') : t('getMore')}
-          </Link>
-        </Button>
+      {isLow && (
+        <Link href="/pricing" className="mt-2 block text-center text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+          {t('getMore')}
+        </Link>
       )}
     </div>
   );

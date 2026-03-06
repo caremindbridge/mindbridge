@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -20,6 +21,8 @@ interface AcceptInviteDialogProps {
 }
 
 export function AcceptInviteDialog({ open, onClose }: AcceptInviteDialogProps) {
+  const t = useTranslations('therapist');
+  const tc = useTranslations('common');
   const [code, setCode] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,9 +41,9 @@ export function AcceptInviteDialog({ open, onClose }: AcceptInviteDialogProps) {
     try {
       await accept.mutateAsync(code.trim().toUpperCase());
       setSuccess(true);
-      toast.success('Connected to therapist!');
+      toast.success(t('connectedSuccess'));
     } catch {
-      setError('Invalid or expired invite code. Please check and try again.');
+      setError(t('invalidCode'));
     }
   };
 
@@ -48,27 +51,27 @@ export function AcceptInviteDialog({ open, onClose }: AcceptInviteDialogProps) {
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Connect to Therapist</DialogTitle>
+          <DialogTitle>{t('connectTherapist')}</DialogTitle>
         </DialogHeader>
 
         {success ? (
           <div className="space-y-4 text-center">
             <div className="text-4xl">✅</div>
-            <p className="font-medium">Connected!</p>
+            <p className="font-medium">{t('connected')}</p>
             <p className="text-sm text-muted-foreground">
-              You are now linked to your therapist.
+              {t('connectedDesc')}
             </p>
             <Button className="w-full" onClick={handleClose}>
-              Close
+              {tc('close')}
             </Button>
           </div>
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Enter the 8-character code your therapist provided.
+              {t('enterCode')}
             </p>
             <div className="space-y-2">
-              <Label htmlFor="invite-code">Invite code</Label>
+              <Label htmlFor="invite-code">{t('inviteCode')}</Label>
               <Input
                 id="invite-code"
                 placeholder="XXXXXXXX"
@@ -86,10 +89,10 @@ export function AcceptInviteDialog({ open, onClose }: AcceptInviteDialogProps) {
                 onClick={handleSubmit}
                 disabled={accept.isPending || code.length !== 8}
               >
-                {accept.isPending ? 'Connecting...' : 'Connect'}
+                {accept.isPending ? t('connecting') : t('connect')}
               </Button>
               <Button variant="outline" onClick={handleClose} disabled={accept.isPending}>
-                Cancel
+                {tc('cancel')}
               </Button>
             </div>
           </div>

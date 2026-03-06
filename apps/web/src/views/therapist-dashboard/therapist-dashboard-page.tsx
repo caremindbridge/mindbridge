@@ -3,6 +3,7 @@
 import type { PatientSummary } from '@mindbridge/types/src/therapist';
 import { formatDistanceToNow } from 'date-fns';
 import { Search, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -38,9 +39,10 @@ function PatientCard({
   patient: PatientSummary;
   onClick: () => void;
 }) {
+  const t = useTranslations('therapist');
   const lastSeen = patient.lastActivity
     ? formatDistanceToNow(new Date(patient.lastActivity), { addSuffix: true })
-    : 'Never';
+    : t('never');
 
   return (
     <Card
@@ -57,14 +59,14 @@ function PatientCard({
             {patient.riskFlags && (
               <p className="mt-0.5 text-xs text-destructive">⚠️ {patient.riskFlags}</p>
             )}
-            <p className="mt-0.5 text-xs text-muted-foreground">Last activity: {lastSeen}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t('lastActivity')} {lastSeen}</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Badge variant="secondary">
-              Mood {patient.avgMood != null ? patient.avgMood.toFixed(1) : '—'}
+              {t('moodBadge')} {patient.avgMood != null ? patient.avgMood.toFixed(1) : '—'}
             </Badge>
             <Badge variant={anxietyVariant(patient.anxietyLevel)}>
-              Anxiety {patient.anxietyLevel ?? '—'}
+              {t('anxietyBadge')} {patient.anxietyLevel ?? '—'}
             </Badge>
           </div>
         </div>
@@ -74,6 +76,8 @@ function PatientCard({
 }
 
 export function TherapistDashboardPage() {
+  const t = useTranslations('therapist');
+  const tc = useTranslations('common');
   const { data: patients, isLoading, error, refetch } = usePatients();
   const router = useRouter();
   const [search, setSearch] = useState('');
@@ -88,7 +92,7 @@ export function TherapistDashboardPage() {
   );
 
   if (error) {
-    return <ErrorCard message={error.message} onRetry={() => refetch()} />;
+    return <ErrorCard message={error.message} retryLabel={tc('tryAgain')} onRetry={() => refetch()} />;
   }
 
   return (
@@ -96,18 +100,18 @@ export function TherapistDashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">
-            My Patients ({isLoading ? '…' : (patients?.length ?? 0)})
+            {t('myPatients')} ({isLoading ? '…' : (patients?.length ?? 0)})
           </h1>
-          <p className="text-muted-foreground">Manage your connected patients</p>
+          <p className="text-muted-foreground">{t('managePatients')}</p>
         </div>
-        <Button onClick={() => setInviteOpen(true)}>Invite Patient</Button>
+        <Button onClick={() => setInviteOpen(true)}>{t('invitePatient')}</Button>
       </div>
 
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search by email..."
+          placeholder={t('searchPatients')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
@@ -127,11 +131,11 @@ export function TherapistDashboardPage() {
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Users className="mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="mb-2 text-lg font-medium">
-            {search ? 'No patients match your search' : 'No patients yet'}
+            {search ? t('noMatch') : t('noPatients')}
           </h3>
           {!search && (
             <p className="mb-4 max-w-sm text-sm text-muted-foreground">
-              Invite your first patient using their email address.
+              {t('inviteFirst')}
             </p>
           )}
         </div>

@@ -41,6 +41,27 @@ export class SubscriptionService {
     });
   }
 
+  private static readonly THERAPIST_PLANS = [
+    'therapist_trial',
+    'therapist_solo',
+    'therapist_practice',
+    'therapist_clinic',
+  ];
+
+  async getActiveByType(userId: string, planType: 'patient' | 'therapist'): Promise<Subscription | null> {
+    const all = await this.subRepo.find({
+      where: { userId, status: In(['trial', 'active', 'past_due', 'cancelled']) },
+      order: { createdAt: 'DESC' },
+    });
+    return (
+      all.find((s) =>
+        planType === 'therapist'
+          ? SubscriptionService.THERAPIST_PLANS.includes(s.plan)
+          : !SubscriptionService.THERAPIST_PLANS.includes(s.plan),
+      ) ?? null
+    );
+  }
+
   async upgradePlan(
     userId: string,
     planId: PatientPlanId | TherapistPlanId,

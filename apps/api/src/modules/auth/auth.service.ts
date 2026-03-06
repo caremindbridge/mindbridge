@@ -1,8 +1,9 @@
-import { randomBytes } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -48,6 +49,11 @@ export class AuthService {
     const trialPlan = user.role === UserRoleEnum.Therapist ? 'therapist_trial' : 'trial';
     await this.subscriptionService.createTrial(user.id, trialPlan);
 
+    // Email verification is temporarily disabled
+    // this.sendVerification(user.id, user.email).catch((err) =>
+    //   this.logger.error('Failed to send verification email', err),
+    // );
+
     return { access_token: this.generateToken(user) };
   }
 
@@ -69,6 +75,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    // Reset activeMode on login so therapists always start in therapist mode
+    if (user.role === UserRoleEnum.Therapist && user.activeMode !== null) {
+      await this.usersService.updateActiveMode(user.id, null);
+      await this.redisService.clearActiveMode(user.id);
+    }
+
     return { access_token: this.generateToken(user) };
   }
 
@@ -78,6 +90,7 @@ export class AuthService {
     name: string | null;
     avatar: string | null;
     role: string;
+    activeMode: string;
     provider: string | null;
     emailVerified: boolean;
     createdAt: Date;
@@ -93,10 +106,31 @@ export class AuthService {
       name: user.name,
       avatar: user.avatar,
       role: user.role,
+      activeMode: user.activeMode ?? user.role,
       provider: user.provider,
       emailVerified: user.emailVerified,
       createdAt: user.createdAt,
     };
+  }
+
+  async switchMode(userId: string, mode: 'therapist' | 'patient'): Promise<{ activeMode: string }> {
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+    if (user.role !== UserRoleEnum.Therapist) {
+      throw new ForbiddenException('Only therapists can switch modes');
+    }
+
+    if (mode === 'patient') {
+      const patientSub = await this.subscriptionService.getActiveByType(userId, 'patient');
+      if (!patientSub) {
+        await this.subscriptionService.createTrial(userId, 'trial');
+      }
+    }
+
+    await this.usersService.updateActiveMode(userId, mode);
+    await this.redisService.clearActiveMode(userId);
+
+    return { activeMode: mode };
   }
 
   async forgotPassword(email: string): Promise<void> {
@@ -188,6 +222,36 @@ export class AuthService {
       const plan = user.role === UserRoleEnum.Therapist ? 'therapist_trial' : 'trial';
       await this.subscriptionService.createTrial(user.id, plan);
     }
+    // Reset activeMode on OAuth login so therapists always start in therapist mode
+    if (user.role === UserRoleEnum.Therapist && user.activeMode !== null) {
+      await this.usersService.updateActiveMode(user.id, null);
+      await this.redisService.clearActiveMode(user.id);
+    }
+  }
+
+  async checkVerifyRateLimit(key: string): Promise<number> {
+    return this.redisService.incrementRateLimit(key, 120);
+  }
+
+  async sendVerification(userId: string, email: string): Promise<void> {
+    const token = randomUUID();
+    await this.redisService.setVerificationToken(token, userId);
+    const frontendUrl =
+      this.configService.get<string>('frontendUrl') ?? 'http://localhost:3000';
+    const verifyUrl = `${frontendUrl}/auth/verified?token=${token}`;
+    await this.emailService.sendVerificationEmail(email, verifyUrl);
+  }
+
+  async verifyEmail(token: string): Promise<void> {
+    const userId = await this.redisService.getVerificationToken(token);
+    if (!userId) throw new BadRequestException('Invalid or expired verification link');
+
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new BadRequestException('User not found');
+
+    user.emailVerified = true;
+    await this.usersService.save(user);
+    await this.redisService.deleteVerificationToken(token);
   }
 
   generateToken(user: User): string {

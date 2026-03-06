@@ -31,6 +31,7 @@ export function useMyProfile() {
   return useQuery({
     queryKey: ['my-profile'],
     queryFn: getMyProfile,
+    staleTime: 5 * 60 * 1000,
   });
 }
 
@@ -38,6 +39,7 @@ export function useMyContext() {
   return useQuery({
     queryKey: ['my-context'],
     queryFn: getMyContext,
+    staleTime: 5 * 60 * 1000,
   });
 }
 

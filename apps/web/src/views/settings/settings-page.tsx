@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useUser } from '@/entities/user';
 import {
   DangerSection,
-  PracticeSection,
   PreferencesSection,
   ProfileSection,
   SecuritySection,
@@ -32,7 +31,6 @@ export function SettingsPage() {
           <SubscriptionSection />
           <SecuritySection user={user} />
           {!isTherapist && <TherapistConnectionSection />}
-          {isTherapist && <PracticeSection />}
         </div>
 
         {/* Right column */}

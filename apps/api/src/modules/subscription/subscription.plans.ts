@@ -7,6 +7,7 @@ export const PLANS = {
     trialDays: 7,
     price: 0,
     stripePriceId: null,
+    stripeYearlyPriceId: null,
   },
   lite: {
     type: 'patient' as const,
@@ -14,7 +15,9 @@ export const PLANS = {
     sessionMessageLimit: 30,
     trialDays: 0,
     price: 999,
+    yearlyPrice: 7990,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
   standard: {
     type: 'patient' as const,
@@ -22,7 +25,9 @@ export const PLANS = {
     sessionMessageLimit: 50,
     trialDays: 0,
     price: 1999,
+    yearlyPrice: 15990,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
   premium: {
     type: 'patient' as const,
@@ -30,7 +35,9 @@ export const PLANS = {
     sessionMessageLimit: 80,
     trialDays: 0,
     price: 3999,
+    yearlyPrice: 31990,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
 
   // === Therapist Plans ===
@@ -41,6 +48,7 @@ export const PLANS = {
     trialDays: 14,
     price: 0,
     stripePriceId: null,
+    stripeYearlyPriceId: null,
   },
   therapist_solo: {
     type: 'therapist' as const,
@@ -48,7 +56,9 @@ export const PLANS = {
     reportLimit: 10,
     trialDays: 0,
     price: 2900,
+    yearlyPrice: 23200,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
   therapist_practice: {
     type: 'therapist' as const,
@@ -56,7 +66,9 @@ export const PLANS = {
     reportLimit: -1,
     trialDays: 0,
     price: 5900,
+    yearlyPrice: 47200,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
   therapist_clinic: {
     type: 'therapist' as const,
@@ -65,8 +77,11 @@ export const PLANS = {
     trialDays: 0,
     pricePerSeat: 3900,
     stripePriceId: null as string | null,
+    stripeYearlyPriceId: null as string | null,
   },
 } as const;
+
+export const YEARLY_DISCOUNT_PERCENT = 33;
 
 export type PlanId = keyof typeof PLANS;
 export type PatientPlanId = 'trial' | 'lite' | 'standard' | 'premium';

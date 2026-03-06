@@ -14,6 +14,7 @@ import {
 } from '@/shared/ui';
 import { LogoutButton } from '@/features/auth';
 import { LanguageSwitcher } from '@/features/locale';
+import { Logo } from '@/shared/ui/logo';
 
 interface HeaderProps {
   user: UserDto | null;
@@ -26,7 +27,7 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-2">
-        <h1 className="text-xl font-bold tracking-tight">MindBridge</h1>
+        <Logo size="default" />
       </div>
 
       <div className="flex items-center gap-4">

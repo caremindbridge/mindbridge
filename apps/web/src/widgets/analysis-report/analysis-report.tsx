@@ -11,6 +11,7 @@ import {
   Lightbulb,
   Target,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import {
@@ -40,6 +41,7 @@ const frequencyColors: Record<string, 'default' | 'secondary' | 'destructive'> =
 };
 
 export function AnalysisReport({ analysis }: AnalysisReportProps) {
+  const t = useTranslations('analysis');
   const [copied, setCopied] = useState(false);
 
   const copyBrief = async () => {
@@ -51,11 +53,11 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
   return (
     <Tabs defaultValue="distortions" className="space-y-4">
       <TabsList className="grid w-full grid-cols-5">
-        <TabsTrigger value="distortions">Distortions</TabsTrigger>
-        <TabsTrigger value="emotions">Emotions</TabsTrigger>
-        <TabsTrigger value="themes">Themes</TabsTrigger>
-        <TabsTrigger value="progress">Progress</TabsTrigger>
-        <TabsTrigger value="therapist">For Therapist</TabsTrigger>
+        <TabsTrigger value="distortions">{t('distortions')}</TabsTrigger>
+        <TabsTrigger value="emotions">{t('emotions')}</TabsTrigger>
+        <TabsTrigger value="themes">{t('themes')}</TabsTrigger>
+        <TabsTrigger value="progress">{t('progress')}</TabsTrigger>
+        <TabsTrigger value="therapist">{t('forTherapist')}</TabsTrigger>
       </TabsList>
 
       {/* Cognitive Distortions */}
@@ -65,7 +67,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Brain className="mx-auto mb-2 h-8 w-8" />
-                No cognitive distortions identified in this session.
+                {t('noDistortions')}
               </CardContent>
             </Card>
           ) : (
@@ -98,7 +100,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Heart className="mx-auto mb-2 h-8 w-8" />
-                No emotional data tracked for this session.
+                {t('noEmotions')}
               </CardContent>
             </Card>
           ) : (
@@ -116,10 +118,10 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
                   <Progress value={point.intensity * 10} className="h-2" />
                   <div className="space-y-1 text-sm">
                     <p>
-                      <span className="font-medium">Moment:</span> {point.moment}
+                      <span className="font-medium">{t('moment')}:</span> {point.moment}
                     </p>
                     <p>
-                      <span className="font-medium">Trigger:</span> {point.trigger}
+                      <span className="font-medium">{t('trigger')}:</span> {point.trigger}
                     </p>
                   </div>
                 </CardContent>
@@ -135,12 +137,12 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Target className="h-4 w-4" />
-              Themes
+              {t('themesTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {analysis.themes.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No themes identified.</p>
+              <p className="text-sm text-muted-foreground">{t('noThemes')}</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {analysis.themes.map((theme, i) => (
@@ -157,12 +159,12 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <AlertTriangle className="h-4 w-4" />
-              Triggers
+              {t('triggersTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {analysis.triggers.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No triggers identified.</p>
+              <p className="text-sm text-muted-foreground">{t('noTriggers')}</p>
             ) : (
               <ul className="list-inside list-disc space-y-1 text-sm">
                 {analysis.triggers.map((trigger, i) => (
@@ -180,7 +182,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <CheckCircle className="h-4 w-4" />
-              Progress Summary
+              {t('progressSummary')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -192,12 +194,12 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Lightbulb className="h-4 w-4" />
-              Recommendations
+              {t('recommendationsTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {analysis.recommendations.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No recommendations.</p>
+              <p className="text-sm text-muted-foreground">{t('noRecommendations')}</p>
             ) : (
               <ul className="list-inside list-disc space-y-2 text-sm">
                 {analysis.recommendations.map((rec, i) => (
@@ -213,7 +215,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <BookOpen className="h-4 w-4" />
-                Homework
+                {t('homeworkTitle')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -233,14 +235,12 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
           <CardHeader>
             <div className="flex items-start justify-between">
               <div>
-                <CardTitle className="text-base">Therapist Brief</CardTitle>
-                <CardDescription>
-                  Professional summary for a human therapist reviewing this session
-                </CardDescription>
+                <CardTitle className="text-base">{t('therapistBrief')}</CardTitle>
+                <CardDescription>{t('therapistBriefDesc')}</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={copyBrief}>
                 <ClipboardCopy className="mr-2 h-3 w-3" />
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? t('copied') : t('copy')}
               </Button>
             </div>
           </CardHeader>

@@ -1,6 +1,7 @@
 'use client';
 
 import { User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef } from 'react';
 
 import type { ChatMessage } from '@/features/chat';
@@ -76,6 +77,7 @@ function TypingIndicator() {
 }
 
 export function ChatWindow({ messages, isStreaming }: ChatWindowProps) {
+  const t = useTranslations('chat');
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -97,11 +99,8 @@ export function ChatWindow({ messages, isStreaming }: ChatWindowProps) {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blush-100 text-3xl">
               🌿
             </div>
-            <h3 className="mb-2 text-lg font-medium text-foreground">Start your CBT session</h3>
-            <p className="max-w-sm text-sm">
-              Send a message to begin. I&apos;ll guide you through a cognitive behavioral therapy
-              conversation.
-            </p>
+            <h3 className="mb-2 text-lg font-medium text-foreground">{t('chatEmptyTitle')}</h3>
+            <p className="max-w-sm text-sm">{t('chatEmptyDesc')}</p>
           </div>
         )}
 

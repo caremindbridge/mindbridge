@@ -19,7 +19,10 @@ export function SubscriptionBanner() {
   const t = useTranslations('subscription');
   const [dismissed, setDismissed] = useState<BannerType | null>(null);
 
-  if (!user || user.role === UserRole.THERAPIST || !usage) return null;
+  // Hide for therapists in therapist mode; show in patient mode (they have patient subscription)
+  const isTherapistMode =
+    user?.role === UserRole.THERAPIST && (user.activeMode ?? 'therapist') === 'therapist';
+  if (!user || isTherapistMode || !usage) return null;
 
   let type: BannerType | null = null;
   let message = '';

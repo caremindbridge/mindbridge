@@ -5,22 +5,34 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl;
 
-  // Redirect to login if accessing dashboard without a token
-  if (pathname.startsWith('/dashboard') && !token) {
-    const loginUrl = new URL('/login', request.url);
-    return NextResponse.redirect(loginUrl);
-  }
+  // Determine base response
+  let response: NextResponse;
 
-  // Redirect to dashboard if accessing auth pages with a token
-  if ((pathname === '/login' || pathname === '/register') && token) {
+  if (pathname.startsWith('/dashboard') && !token) {
+    response = NextResponse.redirect(new URL('/login', request.url));
+  } else if ((pathname === '/login' || pathname === '/register') && token) {
     const role = request.cookies.get('role')?.value;
     const dest = role === 'therapist' ? '/dashboard/therapist' : '/dashboard';
-    return NextResponse.redirect(new URL(dest, request.url));
+    response = NextResponse.redirect(new URL(dest, request.url));
+  } else {
+    response = NextResponse.next();
   }
 
-  return NextResponse.next();
+  // Auto-detect locale on first visit (if cookie not set)
+  const localeCookie = request.cookies.get('locale')?.value;
+  if (!localeCookie || !['en', 'ru'].includes(localeCookie)) {
+    const acceptLang = request.headers.get('accept-language') || '';
+    const detected = acceptLang.toLowerCase().includes('ru') ? 'ru' : 'en';
+    response.cookies.set('locale', detected, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+    });
+  }
+
+  return response;
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)', '/'],
 };

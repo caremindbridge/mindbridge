@@ -174,7 +174,7 @@ export class TherapistService {
 
   async getPatients(therapistId: string) {
     const links = await this.linkRepo.find({
-      where: { therapistId },
+      where: { therapistId, status: 'active' },
       relations: ['patient'],
       order: { createdAt: 'DESC' },
     });

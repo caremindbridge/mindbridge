@@ -1,21 +1,23 @@
 'use client';
 
 import { UserRole } from '@mindbridge/types/src/user';
-import { CreditCard, LayoutDashboard, Link2, LogOut, MessageCircle, Settings, Sparkles, UserCircle, Users } from 'lucide-react';
+import { BarChart3, LayoutDashboard, Link2, LogOut, MessageCircle, Settings, UserCircle, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import Cookies from 'js-cookie';
 
-import { useUsageStatus } from '@/entities/subscription';
 import { useUser } from '@/entities/user';
+import { ModeSwitcher } from '@/features/auth';
 import { UsageBar } from '@/features/subscription';
 import { ThemeToggle } from '@/features/theme';
 import { AcceptInviteDialog } from '@/features/therapist';
 import { cn } from '@/shared/lib/utils';
 import {
   Avatar,
+  Logo,
   AvatarFallback,
   AvatarImage,
   Button,
@@ -28,22 +30,22 @@ import {
 } from '@/shared/ui';
 
 const PATIENT_NAV = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
-  { label: 'CBT Sessions', href: '/dashboard/chat', icon: MessageCircle },
-  { label: 'About Me', href: '/dashboard/about-me', icon: UserCircle },
-  { label: 'Pricing', href: '/pricing', icon: CreditCard, exact: true },
-];
+  { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard, exact: true },
+  { key: 'cbtSessions', href: '/dashboard/chat', icon: MessageCircle },
+  { key: 'analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  { key: 'aboutMe', href: '/dashboard/about-me', icon: UserCircle },
+] as const;
 
 const THERAPIST_NAV = [
-  { label: 'My Patients', href: '/dashboard/therapist', icon: Users, exact: true },
-  { label: 'Settings', href: '/dashboard/settings', icon: Settings },
-];
+  { key: 'myPatients', href: '/dashboard/therapist', icon: Users, exact: true },
+  { key: 'settings', href: '/dashboard/settings', icon: Settings },
+] as const;
 
 export function Sidebar() {
   const { user } = useUser();
-  const { data: usage } = useUsageStatus();
   const pathname = usePathname();
   const router = useRouter();
+  const tn = useTranslations('nav');
   const [acceptOpen, setAcceptOpen] = useState(false);
 
   const handleLogout = () => {
@@ -51,8 +53,11 @@ export function Sidebar() {
     router.push('/login');
   };
 
-  const isTherapist = user?.role === UserRole.THERAPIST;
-  const navItems = isTherapist ? THERAPIST_NAV : PATIENT_NAV;
+  // If activeMode not set (old backend or null), therapists default to therapist mode
+  const isTherapistMode = user?.role === UserRole.THERAPIST
+    ? (user.activeMode ?? 'therapist') === 'therapist'
+    : false;
+  const navItems = isTherapistMode ? THERAPIST_NAV : PATIENT_NAV;
 
   const displayName = user?.name ?? user?.email ?? '';
   const initials = (user?.name?.charAt(0) ?? user?.email?.charAt(0) ?? '?').toUpperCase();
@@ -61,11 +66,23 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border/50 bg-sidebar">
       {/* Logo */}
       <div className="flex h-14 shrink-0 items-center justify-between px-4">
-        <span className="text-lg font-bold tracking-tight">MindBridge</span>
+        <Logo size="default" />
         <ThemeToggle />
       </div>
 
       <div className="mx-4 border-t" />
+
+      {/* Mode switcher — therapists only */}
+      {user?.role === UserRole.THERAPIST && (
+        <div className="px-3 pt-2 pb-1">
+          <ModeSwitcher />
+          {!isTherapistMode && (
+            <p className="mt-1 px-3 text-[10px] text-muted-foreground">
+              Personal Mode
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
@@ -87,39 +104,27 @@ export function Sidebar() {
             >
               <Link href={item.href}>
                 <item.icon className="h-4 w-4" />
-                {item.label}
+                {tn(item.key)}
               </Link>
             </Button>
           );
         })}
 
-        {!isTherapist && (
+        {!isTherapistMode && (
           <Button
             variant="ghost"
-            className="justify-start gap-3"
+            className="justify-start gap-3 overflow-hidden"
             onClick={() => setAcceptOpen(true)}
           >
-            <Link2 className="h-4 w-4" />
-            Connect to Therapist
+            <Link2 className="h-4 w-4 shrink-0" />
+            <span className="truncate">{tn('connectToTherapist')}</span>
           </Button>
         )}
 
-        {usage?.status === 'trial' && (
-          <Button
-            variant="soft"
-            asChild
-            className="justify-start gap-3"
-          >
-            <Link href="/pricing">
-              <Sparkles className="h-4 w-4" />
-              Upgrade Plan
-            </Link>
-          </Button>
-        )}
       </nav>
 
       {/* Usage bar — patients only */}
-      {!isTherapist && <UsageBar />}
+      {!isTherapistMode && <UsageBar />}
 
       {/* Profile */}
       <div className="shrink-0 p-3">
@@ -140,30 +145,36 @@ export function Sidebar() {
               </div>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="top" align="start" className="w-56">
+          <DropdownMenuContent side="top" align="start" className="w-60">
             <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">{displayName}</p>
-                <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <div className="flex min-w-0 flex-col gap-0.5 overflow-hidden">
+                {user?.name ? (
+                  <>
+                    <p className="truncate text-sm font-medium">{user.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                  </>
+                ) : (
+                  <p className="truncate text-sm font-medium">{user?.email}</p>
+                )}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild className="cursor-pointer gap-2">
               <Link href="/dashboard/settings">
                 <Settings className="h-4 w-4" />
-                Settings
+                {tn('settings')}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="cursor-pointer gap-2">
               <LogOut className="h-4 w-4" />
-              Logout
+              {tn('logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      {!isTherapist && (
+      {!isTherapistMode && (
         <AcceptInviteDialog open={acceptOpen} onClose={() => setAcceptOpen(false)} />
       )}
     </aside>

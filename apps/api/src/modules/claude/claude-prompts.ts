@@ -60,14 +60,26 @@ Return ONLY valid JSON with this exact structure:
   "therapistBrief": "string - professional summary for a human therapist reviewing this session, including clinical observations and suggested follow-up areas",
   "anxietyLevel": "number 0-10 - estimated anxiety level based on mentions of worry, physical symptoms, catastrophizing, avoidance",
   "depressionLevel": "number 0-10 - estimated depression level based on hopelessness, loss of interest, low energy, poor self-esteem, sadness",
-  "keyEmotions": ["string - top 3 emotions observed, choose from: anxiety, sadness, joy, calm, irritation, fear, anger, hope, loneliness, gratitude"],
-  "keyTopics": ["string - 2 to 4 main discussion topics such as work, relationships, sleep, self-esteem, family, health, finances"],
+  "keyEmotions": ["string - top 3 emotions observed. MUST use ONLY these exact English identifiers regardless of session language: anxiety, sadness, joy, calm, irritation, fear, anger, hope, loneliness, gratitude"],
+  "keyTopics": ["string - 2 to 4 main discussion topics. Write in the SAME language as the patient's messages."],
   "copingStrategies": ["string - coping strategies mentioned or practiced, e.g. breathing exercises, cognitive reframing, journaling, exercise"],
   "riskFlags": "null if no concerns, or a string describing warning signals such as suicidal ideation, self-harm mentions, or acute crisis",
   "moodInsight": "string - 1 to 2 sentence personal observation about the patient's emotional state suitable for their own dashboard"
 }
 
-Analyze the session thoroughly. Respond in the same language as the session conversation. Return ONLY the JSON, no other text.`;
+LANGUAGE RULES (strictly enforced):
+- keyEmotions values MUST always be from the fixed English list above — never translate them
+- ALL other text fields MUST be in the same language as the patient's messages. Never mix languages.
+- If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
+- cognitiveDistortions.type MUST also use the patient's language. Russian translations to use:
+  Catastrophizing → Катастрофизация | All-or-Nothing Thinking → Чёрно-белое мышление
+  Mind Reading → Чтение мыслей | Fortune Telling → Предсказание будущего
+  Emotional Reasoning → Эмоциональное рассуждение | Overgeneralization → Сверхобобщение
+  Labeling → Навешивание ярлыков | Should Statements → Долженствование
+  Personalization → Персонализация | Mental Filter → Ментальный фильтр
+  Discounting the Positive → Обесценивание позитивного | Jumping to Conclusions → Поспешные выводы
+
+Analyze the session thoroughly. Return ONLY the JSON, no other text.`;
 
 export const THERAPIST_REPORT_SYSTEM_PROMPT = `You are a clinical psychology analyst. Based on the provided patient data (mood entries and CBT session analyses for a given period), generate a structured therapist report.
 

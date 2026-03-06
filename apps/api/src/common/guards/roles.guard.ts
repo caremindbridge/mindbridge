@@ -12,6 +12,17 @@ export class RolesGuard implements CanActivate {
     ]);
     if (!roles) return true;
     const { user } = context.switchToHttp().getRequest();
-    return roles.includes(user?.role);
+
+    // Therapists always retain access to therapist-only endpoints regardless of active mode
+    if (user?.role === 'therapist' && roles.includes('therapist')) return true;
+
+    // Therapists can access patient-only endpoints — data is always scoped to user.id (JWT),
+    // so there is no security risk. activeMode is not available here because the interceptor
+    // that enriches it runs after guards.
+    if (user?.role === 'therapist' && roles.includes('patient')) return true;
+
+    // Regular role check
+    const effectiveRole: string = user?.activeMode ?? user?.role;
+    return roles.includes(effectiveRole);
   }
 }

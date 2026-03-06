@@ -98,6 +98,18 @@ export class RedisService implements OnModuleDestroy {
     return count;
   }
 
+  async setVerificationToken(token: string, userId: string): Promise<void> {
+    await this.client.set(`verify:${token}`, userId, 'EX', 86400);
+  }
+
+  async getVerificationToken(token: string): Promise<string | null> {
+    return this.client.get(`verify:${token}`);
+  }
+
+  async deleteVerificationToken(token: string): Promise<void> {
+    await this.client.del(`verify:${token}`);
+  }
+
   async setResetToken(token: string, userId: string): Promise<void> {
     await this.client.set(`reset:${token}`, userId, 'EX', 3600);
   }
@@ -108,5 +120,17 @@ export class RedisService implements OnModuleDestroy {
 
   async deleteResetToken(token: string): Promise<void> {
     await this.client.del(`reset:${token}`);
+  }
+
+  async getActiveMode(userId: string): Promise<string | null> {
+    return this.client.get(`user:mode:${userId}`);
+  }
+
+  async setActiveMode(userId: string, mode: string): Promise<void> {
+    await this.client.set(`user:mode:${userId}`, mode, 'EX', 300);
+  }
+
+  async clearActiveMode(userId: string): Promise<void> {
+    await this.client.del(`user:mode:${userId}`);
   }
 }

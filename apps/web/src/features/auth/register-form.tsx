@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,28 +14,33 @@ import { UserRole } from '@mindbridge/types/src/user';
 import { getMe, register as registerApi } from '@/shared/api/client';
 import {
   Button,
-  Input,
-  Label,
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
+  Input,
+  Label,
 } from '@/shared/ui';
 
-const registerSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['patient', 'therapist']).default('patient'),
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = {
+  email: string;
+  password: string;
+  role: 'patient' | 'therapist';
+};
 
 export function RegisterForm() {
+  const t = useTranslations('auth');
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const registerSchema = z.object({
+    email: z.string().email(t('emailInvalid')),
+    password: z.string().min(6, t('passwordMinLength')),
+    role: z.enum(['patient', 'therapist']).default('patient'),
+  });
 
   const {
     register,
@@ -57,8 +63,8 @@ export function RegisterForm() {
       Cookies.set('token', response.access_token, { expires: 7 });
       const me = await getMe();
       router.push(me.role === UserRole.THERAPIST ? '/dashboard/therapist' : '/dashboard');
-    } catch (err) {
-      setServerError(err instanceof Error ? err.message : 'Registration failed');
+    } catch {
+      setServerError(t('registrationFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -67,8 +73,8 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-        <CardDescription>Enter your email and password to get started</CardDescription>
+        <CardTitle className="text-2xl font-bold">{t('createAccountTitle')}</CardTitle>
+        <CardDescription>{t('createAccountDescription')}</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
@@ -78,7 +84,7 @@ export function RegisterForm() {
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('email')}</Label>
             <Input
               id="email"
               type="email"
@@ -90,7 +96,7 @@ export function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t('password')}</Label>
             <Input
               id="password"
               type="password"
@@ -102,7 +108,7 @@ export function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label>Account type</Label>
+            <Label>{t('accountType')}</Label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
@@ -113,7 +119,7 @@ export function RegisterForm() {
                     : 'border-input bg-background hover:bg-accent'
                 }`}
               >
-                Patient
+                {t('patient')}
               </button>
               <button
                 type="button"
@@ -124,19 +130,19 @@ export function RegisterForm() {
                     : 'border-input bg-background hover:bg-accent'
                 }`}
               >
-                Therapist
+                {t('therapist')}
               </button>
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating account...' : 'Create account'}
+            {isSubmitting ? t('creatingAccount') : t('register')}
           </Button>
           <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
+            {t('hasAccount')}{' '}
             <Link href="/login" className="text-primary underline-offset-4 hover:underline">
-              Sign in
+              {t('login')}
             </Link>
           </p>
         </CardFooter>

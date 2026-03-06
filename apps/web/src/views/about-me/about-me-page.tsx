@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Brain } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -42,6 +40,8 @@ export function AboutMePage() {
   const { data: myProfile } = useMyProfile();
   const updateContext = useUpdateMyContext();
 
+  const c = contextData?.context;
+
   const {
     register,
     handleSubmit,
@@ -49,27 +49,20 @@ export function AboutMePage() {
     formState: { isDirty, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {},
+    values: {
+      name: c?.name ?? '',
+      age: c?.age ?? ('' as unknown as number),
+      pronouns: c?.pronouns ?? '',
+      medications: c?.medications ?? '',
+      diagnoses: c?.diagnoses ?? '',
+      previousTherapy: c?.previousTherapy ?? '',
+      occupation: c?.occupation ?? '',
+      relationships: c?.relationships ?? '',
+      livingSituation: c?.livingSituation ?? '',
+      goals: c?.goals ?? '',
+      additionalNotes: c?.additionalNotes ?? '',
+    },
   });
-
-  useEffect(() => {
-    if (contextData?.context) {
-      const c = contextData.context;
-      reset({
-        name: c.name ?? '',
-        age: c.age ?? ('' as unknown as number),
-        pronouns: c.pronouns ?? '',
-        medications: c.medications ?? '',
-        diagnoses: c.diagnoses ?? '',
-        previousTherapy: c.previousTherapy ?? '',
-        occupation: c.occupation ?? '',
-        relationships: c.relationships ?? '',
-        livingSituation: c.livingSituation ?? '',
-        goals: c.goals ?? '',
-        additionalNotes: c.additionalNotes ?? '',
-      });
-    }
-  }, [contextData, reset]);
 
   const onSubmit = async (values: FormValues) => {
     try {

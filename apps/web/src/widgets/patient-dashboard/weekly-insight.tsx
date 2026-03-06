@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@/shared/ui';
 
 interface WeeklyInsightProps {
@@ -8,10 +10,11 @@ interface WeeklyInsightProps {
 }
 
 export function WeeklyInsight({ insight, topics }: WeeklyInsightProps) {
+  const t = useTranslations('dashboard');
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Insights</CardTitle>
+        <CardTitle>{t('insights')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {insight ? (
@@ -20,13 +23,13 @@ export function WeeklyInsight({ insight, topics }: WeeklyInsightProps) {
           </p>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Complete a CBT session to see personalized insights.
+            {t('noInsight')}
           </p>
         )}
         {topics.length > 0 && (
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Top Topics
+              {t('topTopics')}
             </p>
             <div className="flex flex-wrap gap-2">
               {topics.map(({ topic, count }) => (

@@ -9,9 +9,11 @@ export class ClaudeService {
   private readonly logger = new Logger(ClaudeService.name);
 
   constructor(private readonly configService: ConfigService) {
-    this.client = new Anthropic({
-      apiKey: this.configService.get<string>('anthropic.apiKey'),
-    });
+    const apiKey = this.configService.get<string>('anthropic.apiKey');
+    if (!apiKey) {
+      this.logger.warn('ANTHROPIC_API_KEY is not set — AI features will be unavailable');
+    }
+    this.client = new Anthropic({ apiKey: apiKey || 'not-configured' });
     this.model = this.configService.get<string>('anthropic.model')!;
   }
 

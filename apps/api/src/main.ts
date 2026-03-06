@@ -1,11 +1,9 @@
 import { HttpExceptionFilter } from '@common/filters/http-exception.filter';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
-
 import { AppModule } from './app.module';
-
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -13,15 +11,21 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  // Global prefix — all routes under /api (except health check at /)
+  app.setGlobalPrefix('api', { exclude: ['/'] });
+
   app.enableCors({
     origin: configService.get<string>('frontendUrl') ?? 'http://localhost:3000',
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Locale'],
   });
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      forbidNonWhitelisted: true,
     }),
   );
 
@@ -29,8 +33,9 @@ async function bootstrap() {
 
   const port = configService.get<number>('port', 3001);
 
-  await app.listen(port);
-  logger.log(`Application is running on http://localhost:${port}`);
+  // 0.0.0.0 required for Railway/Docker — localhost won't bind correctly
+  await app.listen(port, '0.0.0.0');
+  logger.log(`API running on port ${port}`);
 }
 
 bootstrap();

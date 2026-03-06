@@ -37,6 +37,9 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   providerId!: string | null;
 
+  @Column({ type: 'varchar', length: 20, nullable: true, default: null })
+  activeMode!: 'therapist' | 'patient' | null;
+
   @Column({ type: 'boolean', default: false })
   emailVerified!: boolean;
 

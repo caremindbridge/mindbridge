@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
+import { Logo } from '@/shared/ui/logo';
+
 import { useUser } from '@/entities/user/model';
+import { AuthLocaleToggle } from '@/features/locale';
 import { ThemeToggle } from '@/features/theme';
 import { Button } from '@/shared/ui/button';
 
@@ -29,8 +32,8 @@ export function LandingHeader() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          MindBridge
+        <Link href="/">
+          <Logo size="default" />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -49,6 +52,7 @@ export function LandingHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <AuthLocaleToggle />
           <ThemeToggle />
           {!isLoading && (
             <>

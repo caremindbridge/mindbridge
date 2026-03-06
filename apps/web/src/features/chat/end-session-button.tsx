@@ -1,6 +1,7 @@
 'use client';
 
 import { Square } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import {
@@ -20,6 +21,8 @@ interface EndSessionButtonProps {
 }
 
 export function EndSessionButton({ onEnd, disabled }: EndSessionButtonProps) {
+  const t = useTranslations('chat');
+  const tc = useTranslations('common');
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -38,23 +41,20 @@ export function EndSessionButton({ onEnd, disabled }: EndSessionButtonProps) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" disabled={disabled}>
           <Square className="mr-2 h-3 w-3" />
-          End Session
+          {t('endSession')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>End Session?</DialogTitle>
-          <DialogDescription>
-            This will end the current CBT session and generate an analysis of your conversation. You
-            won&apos;t be able to send more messages after ending.
-          </DialogDescription>
+          <DialogTitle>{t('endSessionTitle')}</DialogTitle>
+          <DialogDescription>{t('endSessionDesc')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
-            Cancel
+            {tc('cancel')}
           </Button>
           <Button onClick={handleEnd} disabled={loading}>
-            {loading ? 'Ending...' : 'End Session'}
+            {loading ? t('ending') : t('endSession')}
           </Button>
         </DialogFooter>
       </DialogContent>

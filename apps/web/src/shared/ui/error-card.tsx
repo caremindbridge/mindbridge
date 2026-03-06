@@ -7,10 +7,11 @@ import { Card, CardContent } from './card';
 
 interface ErrorCardProps {
   message?: string;
+  retryLabel?: string;
   onRetry?: () => void;
 }
 
-export function ErrorCard({ message = 'Something went wrong', onRetry }: ErrorCardProps) {
+export function ErrorCard({ message = 'Something went wrong', retryLabel = 'Try Again', onRetry }: ErrorCardProps) {
   return (
     <Card className="border-destructive/20 bg-destructive/5">
       <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
@@ -18,7 +19,7 @@ export function ErrorCard({ message = 'Something went wrong', onRetry }: ErrorCa
         <p className="text-sm text-destructive">{message}</p>
         {onRetry && (
           <Button variant="outline" size="sm" onClick={onRetry}>
-            Try Again
+            {retryLabel}
           </Button>
         )}
       </CardContent>

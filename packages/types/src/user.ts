@@ -9,6 +9,7 @@ export interface UserDto {
   name: string | null;
   avatar: string | null;
   role: UserRole;
+  activeMode: 'therapist' | 'patient';
   provider: string | null;
   emailVerified: boolean;
   createdAt: string;

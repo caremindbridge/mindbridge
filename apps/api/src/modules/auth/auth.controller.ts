@@ -7,6 +7,7 @@ import {
   Delete,
   Body,
   HttpCode,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -96,6 +97,18 @@ class DeleteAccountDto {
   confirmation!: string;
 }
 
+class VerifyEmailDto {
+  @IsString()
+  @IsNotEmpty()
+  token!: string;
+}
+
+class SwitchModeDto {
+  @IsString()
+  @IsIn(['therapist', 'patient'])
+  mode!: 'therapist' | 'patient';
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -122,6 +135,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async getMe(@CurrentUser() user: { id: string; email: string }) {
     return this.authService.getMe(user.id);
+  }
+
+  @Patch('me/mode')
+  @UseGuards(JwtAuthGuard)
+  async switchMode(@CurrentUser() user: { id: string }, @Body() dto: SwitchModeDto) {
+    return this.authService.switchMode(user.id, dto.mode);
   }
 
   @Patch('me')
@@ -169,6 +188,30 @@ export class AuthController {
     await this.authService.resetPassword(dto.token, dto.newPassword);
     return { message: 'Password has been reset successfully.' };
   }
+
+  // ─── Email Verification (temporarily disabled) ────────────────────
+
+  // @Post('verify-email')
+  // @HttpCode(200)
+  // async verifyEmail(@Body() dto: VerifyEmailDto) {
+  //   await this.authService.verifyEmail(dto.token);
+  //   return { message: 'Email verified successfully' };
+  // }
+
+  // @Post('resend-verification')
+  // @UseGuards(JwtAuthGuard)
+  // @HttpCode(200)
+  // async resendVerification(
+  //   @CurrentUser() user: { id: string; email: string; emailVerified?: boolean },
+  // ) {
+  //   const rateLimitKey = `ratelimit:verify:${user.id}`;
+  //   const count = await this.authService.checkVerifyRateLimit(rateLimitKey);
+  //   if (count > 1) {
+  //     return { message: 'Verification email already sent. Check your inbox.' };
+  //   }
+  //   await this.authService.sendVerification(user.id, user.email);
+  //   return { message: 'Verification email sent' };
+  // }
 
   // ─── Google OAuth ──────────────────────────────────────────────────
 

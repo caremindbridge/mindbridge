@@ -1,34 +1,24 @@
 'use client';
 
+import { useState } from 'react';
+
 import type { UserDto } from '@mindbridge/types/src/user';
 import { Check, ChevronDown } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
-import { useUsageStatus } from '@/entities/subscription';
+import { usePlans, useUsageStatus } from '@/entities/subscription';
 import { useUser } from '@/entities/user';
 import { createCheckout, createPackCheckout } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/ui';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@/shared/ui';
 
 interface PatientPlan {
   id: string;
   name: string;
-  price: number;
-  monthlyMessageLimit: number;
-  sessionMessageLimit: number;
+  monthlyPrice: number;
+  yearlyPrice: number;
   features: string[];
   popular?: boolean;
 }
@@ -36,10 +26,9 @@ interface PatientPlan {
 interface TherapistPlan {
   id: string;
   name: string;
-  price?: number;
-  pricePerSeat?: number;
-  patientLimit: number;
-  reportLimit: number;
+  monthlyPrice?: number;
+  yearlyPrice?: number;
+  monthlyPricePerSeat?: number;
   features: string[];
   popular?: boolean;
 }
@@ -56,61 +45,54 @@ interface PlansData {
   patient: PatientPlan[];
   therapist: TherapistPlan[];
   messagePacks: MessagePack[];
+  yearlyDiscountPercent: number;
 }
 
-// Static plan data — mirrors backend plans controller
-const PLANS: PlansData = {
+const STATIC_PLANS: PlansData = {
   patient: [
     {
       id: 'lite',
       name: 'Lite',
-      price: 999,
-      monthlyMessageLimit: 200,
-      sessionMessageLimit: 30,
+      monthlyPrice: 999,
+      yearlyPrice: 7990,
       features: ['200 messages/month', '30 per session', 'Full dashboard', 'AI analysis', 'Therapist connection'],
     },
     {
       id: 'standard',
       name: 'Standard',
-      price: 1999,
-      monthlyMessageLimit: 500,
-      sessionMessageLimit: 50,
+      monthlyPrice: 1999,
+      yearlyPrice: 15990,
       features: ['500 messages/month', '50 per session', 'Full dashboard', 'AI analysis', 'Therapist connection'],
       popular: true,
     },
     {
       id: 'premium',
       name: 'Premium',
-      price: 3999,
-      monthlyMessageLimit: 1500,
-      sessionMessageLimit: 80,
-      features: ['1,500 messages/month', '80 per session', 'Full dashboard', 'AI analysis', 'Therapist connection', 'Priority responses'],
+      monthlyPrice: 3999,
+      yearlyPrice: 31990,
+      features: ['1,500 messages/month', '80 per session', 'Full dashboard', 'AI analysis', 'Priority responses'],
     },
   ],
   therapist: [
     {
       id: 'therapist_solo',
       name: 'Solo',
-      price: 2900,
-      patientLimit: 10,
-      reportLimit: 10,
+      monthlyPrice: 2900,
+      yearlyPrice: 23200,
       features: ['10 patients', '10 AI reports/month', 'Patient dossiers', 'Mira instructions'],
     },
     {
       id: 'therapist_practice',
       name: 'Practice',
-      price: 5900,
-      patientLimit: 30,
-      reportLimit: -1,
+      monthlyPrice: 5900,
+      yearlyPrice: 47200,
       features: ['30 patients', 'Unlimited reports', 'Patient dossiers', 'Mira instructions'],
       popular: true,
     },
     {
       id: 'therapist_clinic',
       name: 'Clinic',
-      pricePerSeat: 3900,
-      patientLimit: -1,
-      reportLimit: -1,
+      monthlyPricePerSeat: 3900,
       features: ['Unlimited patients', 'Unlimited reports', 'Leadership dashboard', 'Custom branding'],
     },
   ],
@@ -119,6 +101,7 @@ const PLANS: PlansData = {
     { id: 'pack_150', messages: 150, price: 699, popular: true },
     { id: 'pack_400', messages: 400, price: 1499, bestValue: true },
   ],
+  yearlyDiscountPercent: 33,
 };
 
 function formatPrice(cents: number): string {
@@ -130,16 +113,29 @@ export function PricingPage() {
   const t = useTranslations('pricing');
   const { user } = useUser();
   const { data: usage } = useUsageStatus();
+  const { data: rawPlans } = usePlans();
 
-  const currentPlan = usage?.plan;
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [showTherapist, setShowTherapist] = useState(false);
+
+  const plans = (rawPlans as PlansData | undefined) ?? STATIC_PLANS;
+  const currentPlan = (usage as { plan?: string } | undefined)?.plan;
+
+  const isTherapist = user
+    ? (user.activeMode ?? user.role) === 'therapist'
+    : showTherapist;
 
   const handleSelectPlan = async (planId: string) => {
+    if (planId === 'therapist_clinic') {
+      window.open('mailto:hello@mindbridge.app?subject=Clinic%20Plan', '_blank');
+      return;
+    }
     if (!user) {
       window.location.href = '/register';
       return;
     }
     try {
-      const { url } = await createCheckout(planId);
+      const { url } = await createCheckout(planId, billingCycle);
       if (url) window.location.href = url;
       else toast.info(t('comingSoon'));
     } catch {
@@ -166,42 +162,98 @@ export function PricingPage() {
       <PricingHeader user={user} />
 
       <div className="mx-auto max-w-5xl px-4 py-12">
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-          <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">
+            {isTherapist ? t('titleTherapist') : t('titlePatient')}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            {isTherapist ? t('subtitleTherapist') : t('subtitlePatient')}
+          </p>
         </div>
 
-        <Tabs defaultValue="patient" className="space-y-8">
-          <TabsList className="mx-auto grid w-64 grid-cols-2">
-            <TabsTrigger value="patient">{t('forMe')}</TabsTrigger>
-            <TabsTrigger value="therapist">{t('forTherapists')}</TabsTrigger>
-          </TabsList>
+        {/* Billing toggle */}
+        <div className="mb-8 flex items-center justify-center">
+          <div className="relative flex items-center gap-3">
+            <span
+              className={cn(
+                'text-sm',
+                billingCycle === 'monthly' ? 'font-medium' : 'text-muted-foreground',
+              )}
+            >
+              {t('monthly')}
+            </span>
+            <button
+              aria-label="Toggle billing cycle"
+              onClick={() => setBillingCycle((b) => (b === 'monthly' ? 'yearly' : 'monthly'))}
+              className={cn(
+                'relative h-6 w-11 flex-shrink-0 rounded-full transition-colors overflow-hidden',
+                billingCycle === 'yearly' ? 'bg-primary' : 'bg-muted',
+              )}
+            >
+              <span
+                className={cn(
+                  'absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform',
+                  billingCycle === 'yearly' ? 'translate-x-[20px]' : 'translate-x-0',
+                )}
+              />
+            </button>
+            <span
+              className={cn(
+                'text-sm',
+                billingCycle === 'yearly' ? 'font-medium' : 'text-muted-foreground',
+              )}
+            >
+              {t('yearly')}
+            </span>
+            <Badge
+              variant="secondary"
+              className={cn(
+                'absolute left-full ml-2 whitespace-nowrap border-emerald-200 bg-emerald-50 text-xs text-emerald-700',
+                billingCycle !== 'yearly' && 'invisible',
+              )}
+            >
+              {t('save33')}
+            </Badge>
+          </div>
+        </div>
 
-          {/* Patient plans */}
-          <TabsContent value="patient" className="space-y-8">
+        {/* Plan cards */}
+        {isTherapist ? (
+          <div className="grid gap-4 md:grid-cols-3">
+            {plans.therapist.map((plan) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan}
+                billingCycle={billingCycle}
+                isCurrent={currentPlan === plan.id}
+                isClinic={plan.id === 'therapist_clinic'}
+                onSelect={handleSelectPlan}
+              />
+            ))}
+          </div>
+        ) : (
+          <>
             <div className="grid gap-4 md:grid-cols-3">
-              {PLANS.patient.map((plan) => (
+              {plans.patient.map((plan) => (
                 <PlanCard
                   key={plan.id}
-                  name={plan.name}
-                  price={formatPrice(plan.price)}
-                  period="/mo"
-                  features={plan.features}
-                  popular={plan.popular}
+                  plan={plan}
+                  billingCycle={billingCycle}
                   isCurrent={currentPlan === plan.id}
                   isClinic={false}
-                  onSelect={() => handleSelectPlan(plan.id)}
+                  onSelect={handleSelectPlan}
                 />
               ))}
             </div>
 
-            {/* Message packs */}
-            <div>
+            {/* Message packs — patients only */}
+            <div className="mt-10">
               <h3 className="mb-4 text-center text-sm font-medium text-muted-foreground">
                 {t('messagePacks')}
               </h3>
               <div className="mx-auto grid max-w-lg grid-cols-3 gap-3">
-                {PLANS.messagePacks.map((pack) => (
+                {plans.messagePacks.map((pack) => (
                   <button
                     key={pack.id}
                     onClick={() => handleBuyPack(pack.id)}
@@ -223,32 +275,20 @@ export function PricingPage() {
                 {t('packsNeverExpire')}
               </p>
             </div>
-          </TabsContent>
+          </>
+        )}
 
-          {/* Therapist plans */}
-          <TabsContent value="therapist" className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-3">
-              {PLANS.therapist.map((plan) => (
-                <PlanCard
-                  key={plan.id}
-                  name={plan.name}
-                  price={plan.pricePerSeat ? formatPrice(plan.pricePerSeat) : formatPrice(plan.price ?? 0)}
-                  period={plan.pricePerSeat ? '/seat/mo' : '/mo'}
-                  features={plan.features}
-                  popular={plan.popular}
-                  isCurrent={currentPlan === plan.id}
-                  isClinic={plan.id === 'therapist_clinic'}
-                  onSelect={() =>
-                    plan.id === 'therapist_clinic'
-                      ? window.open('mailto:hello@mindbridge.app?subject=Clinic%20Plan', '_blank')
-                      : handleSelectPlan(plan.id)
-                  }
-                />
-              ))}
-            </div>
-            <p className="text-center text-sm text-muted-foreground">{t('patientsGetStandard')}</p>
-          </TabsContent>
-        </Tabs>
+        {/* Role switcher for unauthenticated users */}
+        {!user && (
+          <div className="mt-10 text-center">
+            <button
+              onClick={() => setShowTherapist((s) => !s)}
+              className="text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-primary"
+            >
+              {isTherapist ? t('areYouPatient') : t('areYouTherapist')}
+            </button>
+          </div>
+        )}
 
         <FAQ />
       </div>
@@ -260,13 +300,13 @@ function PricingHeader({ user }: { user: UserDto | null }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          MindBridge
+        <Link href="/">
+          <Logo size="default" />
         </Link>
         <nav className="flex items-center gap-2">
           {user ? (
             <Button size="sm" asChild>
-              <Link href={user.role === 'therapist' ? '/dashboard/therapist' : '/dashboard'}>
+              <Link href={user.activeMode === 'therapist' ? '/dashboard/therapist' : '/dashboard'}>
                 Dashboard
               </Link>
             </Button>
@@ -286,37 +326,74 @@ function PricingHeader({ user }: { user: UserDto | null }) {
   );
 }
 
-interface PlanCardProps {
+interface PlanData {
+  id: string;
   name: string;
-  price: string;
-  period: string;
+  monthlyPrice?: number;
+  yearlyPrice?: number;
+  monthlyPricePerSeat?: number;
   features: string[];
   popular?: boolean;
-  isCurrent: boolean;
-  isClinic: boolean;
-  onSelect: () => void;
 }
 
-function PlanCard({ name, price, period, features, popular, isCurrent, isClinic, onSelect }: PlanCardProps) {
+interface PlanCardProps {
+  plan: PlanData;
+  billingCycle: 'monthly' | 'yearly';
+  isCurrent: boolean;
+  isClinic: boolean;
+  onSelect: (planId: string) => void;
+}
+
+function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCardProps) {
   const t = useTranslations('pricing');
 
+  const monthlyPrice = plan.monthlyPrice ?? 0;
+  const yearlyPrice = plan.yearlyPrice ?? 0;
+  const monthlyIfYearly = yearlyPrice > 0 ? Math.round(yearlyPrice / 12) : 0;
+  const savedPerYear = monthlyPrice * 12 - yearlyPrice;
+  const showYearly = billingCycle === 'yearly' && yearlyPrice > 0 && !plan.monthlyPricePerSeat;
+
   return (
-    <Card className={cn('relative', popular && 'border-primary shadow-md')}>
-      {popular && (
+    <Card className={cn('relative', plan.popular && 'border-primary shadow-md')}>
+      {plan.popular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
           <Badge>{t('popular')}</Badge>
         </div>
       )}
       <CardHeader className="pb-2 text-center">
-        <CardTitle className="text-lg">{name}</CardTitle>
-        <div className="mt-1">
-          <span className="text-3xl font-bold">{price}</span>
-          <span className="text-sm text-muted-foreground">{period}</span>
+        <CardTitle className="text-lg">{plan.name}</CardTitle>
+        <div className="mt-2">
+          {plan.monthlyPricePerSeat ? (
+            <>
+              <span className="text-3xl font-bold">
+                {formatPrice(plan.monthlyPricePerSeat)}
+              </span>
+              <span className="text-sm text-muted-foreground">/seat/mo</span>
+            </>
+          ) : showYearly ? (
+            <>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-sm text-muted-foreground line-through">
+                  {formatPrice(monthlyPrice)}
+                </span>
+                <span className="text-3xl font-bold">{formatPrice(monthlyIfYearly)}</span>
+              </div>
+              <div className="text-xs text-muted-foreground">{t('billedYearly')}</div>
+              <div className="mt-1 text-xs font-medium text-emerald-600">
+                {formatPrice(yearlyPrice)}/year — save {formatPrice(savedPerYear)}
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="text-3xl font-bold">{formatPrice(monthlyPrice)}</span>
+              <span className="text-sm text-muted-foreground">/mo</span>
+            </>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <ul className="space-y-2">
-          {features.map((feature, i) => (
+          {plan.features.map((feature, i) => (
             <li key={i} className="flex items-start gap-2 text-sm">
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               <span>{feature}</span>
@@ -325,9 +402,9 @@ function PlanCard({ name, price, period, features, popular, isCurrent, isClinic,
         </ul>
         <Button
           className="w-full"
-          variant={popular ? 'default' : 'outline'}
+          variant={plan.popular ? 'default' : 'outline'}
           disabled={isCurrent}
-          onClick={onSelect}
+          onClick={() => onSelect(plan.id)}
         >
           {isCurrent ? t('currentPlan') : isClinic ? t('contactUs') : t('choosePlan')}
         </Button>

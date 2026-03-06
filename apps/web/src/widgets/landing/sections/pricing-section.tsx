@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 import { useFadeIn } from '@/shared/hooks/use-fade-in';
+import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 
 export function PricingSection() {
@@ -13,22 +14,34 @@ export function PricingSection() {
 
   const plans = [
     {
-      title: t('freeTitle'),
-      price: t('freePrice'),
-      period: t('freePeriod'),
-      features: [t('freeF1'), t('freeF2'), t('freeF3')],
-      cta: t('freeCta'),
+      title: t('liteTitle'),
+      price: t('litePrice'),
+      period: t('litePeriod'),
+      features: [t('liteF1'), t('liteF2'), t('liteF3'), t('liteF4')],
+      cta: t('liteCta'),
       href: '/register',
       highlight: false,
+      popular: false,
     },
     {
-      title: t('proTitle'),
-      price: t('proPrice'),
-      period: t('proPeriod'),
-      features: [t('proF1'), t('proF2'), t('proF3'), t('proF4')],
-      cta: t('proCta'),
+      title: t('standardTitle'),
+      price: t('standardPrice'),
+      period: t('standardPeriod'),
+      features: [t('standardF1'), t('standardF2'), t('standardF3'), t('standardF4')],
+      cta: t('standardCta'),
       href: '/register',
       highlight: true,
+      popular: true,
+    },
+    {
+      title: t('premiumTitle'),
+      price: t('premiumPrice'),
+      period: t('premiumPeriod'),
+      features: [t('premiumF1'), t('premiumF2'), t('premiumF3'), t('premiumF4')],
+      cta: t('premiumCta'),
+      href: '/register',
+      highlight: false,
+      popular: false,
     },
   ];
 
@@ -39,16 +52,21 @@ export function PricingSection() {
           {t('title')}
         </h2>
 
-        <div className="grid max-w-2xl gap-5 sm:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.title}
-              className={`rounded-xl border p-6 ${
+              className={`relative rounded-xl border p-6 ${
                 plan.highlight
                   ? 'border-primary/40 bg-primary/5 shadow-soft-md'
                   : 'border-border/50 bg-card shadow-soft'
               }`}
             >
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <Badge>{t('popular')}</Badge>
+                </div>
+              )}
               <p className="mb-1 font-semibold text-foreground">{plan.title}</p>
               <div className="mb-5 flex items-baseline gap-1">
                 <span className="font-serif text-4xl font-medium text-foreground">{plan.price}</span>
@@ -71,7 +89,15 @@ export function PricingSection() {
           ))}
         </div>
 
-        <p className="mt-6 text-sm text-muted-foreground">{t('note')}</p>
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">{t('note')}</p>
+          <Link
+            href="/pricing"
+            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+          >
+            {t('viewAllPlans')}
+          </Link>
+        </div>
       </div>
     </section>
   );

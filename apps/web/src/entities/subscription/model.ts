@@ -5,10 +5,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getPlans, getUsageStatus } from '@/shared/api/client';
 
-export function useUsageStatus(sessionId?: string) {
+export function useUsageStatus(sessionId?: string, planType?: 'patient' | 'therapist') {
   return useQuery({
-    queryKey: ['usage-status', sessionId],
-    queryFn: () => getUsageStatus(sessionId) as Promise<UsageStatus>,
+    queryKey: ['usage-status', sessionId, planType],
+    queryFn: () => getUsageStatus(sessionId, planType) as Promise<UsageStatus>,
     refetchInterval: 60000,
   });
 }

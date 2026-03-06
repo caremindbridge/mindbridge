@@ -25,10 +25,11 @@ interface ChatPageProps {
 }
 
 export function ChatPage({ sessionId }: ChatPageProps) {
-  const { session, isLoading, mutate } = useSession(sessionId);
+  const { data: session, isLoading } = useSession(sessionId);
   const router = useRouter();
   const queryClient = useQueryClient();
   const t = useTranslations('subscription');
+  const tc = useTranslations('chat');
   const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
   const [showSessionLimitModal, setShowSessionLimitModal] = useState(false);
   const [showMonthlyLimitModal, setShowMonthlyLimitModal] = useState(false);
@@ -81,7 +82,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
               toast.error(t('paymentFailed'));
               break;
             default:
-              toast.error(data.message || 'Failed to send message');
+              toast.error(data.message);
           }
         }
       }
@@ -91,9 +92,12 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
   const handleEnd = useCallback(async () => {
     await endSession(sessionId);
-    mutate();
+    queryClient.invalidateQueries({ queryKey: ['session', sessionId] });
+    queryClient.invalidateQueries({ queryKey: ['sessions'] });
+    queryClient.invalidateQueries({ queryKey: ['mood-metrics'] });
+    queryClient.invalidateQueries({ queryKey: ['mood-stats'] });
     setShowMoodCheckIn(true);
-  }, [sessionId, mutate]);
+  }, [sessionId, queryClient]);
 
   const [startingSession, setStartingSession] = useState(false);
   const handleNewSession = useCallback(async () => {
@@ -118,9 +122,9 @@ export function ChatPage({ sessionId }: ChatPageProps) {
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-muted-foreground">Session not found</p>
+        <p className="text-muted-foreground">{tc('sessionNotFound')}</p>
         <Button variant="link" asChild className="mt-2">
-          <Link href="/dashboard/chat">Back to sessions</Link>
+          <Link href="/dashboard/chat">{tc('backToSessions')}</Link>
         </Button>
       </div>
     );
@@ -137,7 +141,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
             </Link>
           </Button>
           <div>
-            <p className="text-sm font-semibold leading-none">CBT Session</p>
+            <p className="text-sm font-semibold leading-none">{tc('cbtSession')}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {format(new Date(session.createdAt), 'MMM d, yyyy · HH:mm')}
             </p>
@@ -155,7 +159,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
             <Button variant="outline" size="sm" asChild>
               <Link href={`/dashboard/chat/${sessionId}/analysis`}>
                 <BarChart3 className="mr-2 h-3 w-3" />
-                View Analysis
+                {tc('viewAnalysis')}
               </Link>
             </Button>
           )}
@@ -184,10 +188,10 @@ export function ChatPage({ sessionId }: ChatPageProps) {
       {/* Session ended banner */}
       {!isActive && (
         <div className="flex shrink-0 items-center justify-between border-b bg-muted/40 px-4 py-2.5">
-          <p className="text-sm text-muted-foreground">This session has ended</p>
+          <p className="text-sm text-muted-foreground">{tc('sessionEnded')}</p>
           <Button size="sm" onClick={handleNewSession} disabled={startingSession}>
             <Plus className="mr-1.5 h-3 w-3" />
-            {startingSession ? 'Creating...' : 'New Session'}
+            {startingSession ? tc('creating') : tc('newSession')}
           </Button>
         </div>
       )}
@@ -198,10 +202,13 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         isStreaming={isStreaming}
       />
 
-      {/* Session counter */}
-      {usage?.session && isActive && (
-        <div className="shrink-0 border-t px-4 py-1.5 text-center text-xs text-muted-foreground">
-          {usage.session.used}/{usage.session.limit} {t('messagesInSession')}
+      {/* Session limit hint — only appears when close to the limit */}
+      {isActive && usage?.session && (() => {
+        const remaining = usage.session.limit - usage.session.used;
+        return remaining > 0 && remaining <= 5;
+      })() && (
+        <div className="shrink-0 px-4 py-1.5 text-center text-xs text-muted-foreground/70">
+          {t('sessionMessagesLeft', { count: usage.session.limit - usage.session.used })}
         </div>
       )}
 

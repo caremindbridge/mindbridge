@@ -1,14 +1,16 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { YEARLY_DISCOUNT_PERCENT } from './subscription.plans';
 import type { MessagePackId, PatientPlanId, TherapistPlanId } from './subscription.plans';
 import { StripeService } from './stripe.service';
 import { UsageService } from './usage.service';
 
 class CheckoutDto {
   planId!: PatientPlanId | TherapistPlanId;
+  billing?: 'monthly' | 'yearly';
 }
 
 class PackCheckoutDto {
@@ -26,20 +28,38 @@ export class SubscriptionController {
   @Get('usage')
   @UseGuards(JwtAuthGuard)
   async getUsage(
-    @CurrentUser() user: { id: string },
+    @CurrentUser() user: { id: string; role: string; activeMode?: string },
     @Query('sessionId') sessionId?: string,
+    @Query('planType') planType?: 'patient' | 'therapist',
   ) {
-    return this.usageService.getStatus(user.id, sessionId);
+    const effectivePlanType: 'patient' | 'therapist' =
+      planType ?? (user.role === 'therapist' && user.activeMode !== 'patient' ? 'therapist' : 'patient');
+    return this.usageService.getStatus(user.id, sessionId, effectivePlanType);
   }
 
   @Get('plans')
-  getPlans() {
+  getPlans(@Req() req: { headers: { authorization?: string } }) {
+    let userRole: string | null = null;
+    const auth = req.headers?.authorization;
+    if (auth?.startsWith('Bearer ')) {
+      try {
+        const payloadB64 = auth.slice(7).split('.')[1];
+        const decoded = JSON.parse(
+          Buffer.from(payloadB64, 'base64url').toString('utf-8'),
+        ) as { role?: string };
+        userRole = decoded.role ?? null;
+      } catch {
+        /* unauthenticated */
+      }
+    }
+
     return {
       patient: [
         {
           id: 'lite',
           name: 'Lite',
-          price: 999,
+          monthlyPrice: 999,
+          yearlyPrice: 7990,
           monthlyMessageLimit: 200,
           sessionMessageLimit: 30,
           features: [
@@ -53,7 +73,8 @@ export class SubscriptionController {
         {
           id: 'standard',
           name: 'Standard',
-          price: 1999,
+          monthlyPrice: 1999,
+          yearlyPrice: 15990,
           monthlyMessageLimit: 500,
           sessionMessageLimit: 50,
           popular: true,
@@ -68,7 +89,8 @@ export class SubscriptionController {
         {
           id: 'premium',
           name: 'Premium',
-          price: 3999,
+          monthlyPrice: 3999,
+          yearlyPrice: 31990,
           monthlyMessageLimit: 1500,
           sessionMessageLimit: 80,
           features: [
@@ -85,7 +107,8 @@ export class SubscriptionController {
         {
           id: 'therapist_solo',
           name: 'Solo',
-          price: 2900,
+          monthlyPrice: 2900,
+          yearlyPrice: 23200,
           patientLimit: 10,
           reportLimit: 10,
           features: ['10 patients', '10 AI reports/month', 'Patient dossiers', 'Mira instructions'],
@@ -93,7 +116,8 @@ export class SubscriptionController {
         {
           id: 'therapist_practice',
           name: 'Practice',
-          price: 5900,
+          monthlyPrice: 5900,
+          yearlyPrice: 47200,
           patientLimit: 30,
           reportLimit: -1,
           popular: true,
@@ -107,7 +131,7 @@ export class SubscriptionController {
         {
           id: 'therapist_clinic',
           name: 'Clinic',
-          pricePerSeat: 3900,
+          monthlyPricePerSeat: 3900,
           patientLimit: -1,
           reportLimit: -1,
           features: [
@@ -123,6 +147,8 @@ export class SubscriptionController {
         { id: 'pack_150', messages: 150, price: 699, popular: true },
         { id: 'pack_400', messages: 400, price: 1499, bestValue: true },
       ],
+      yearlyDiscountPercent: YEARLY_DISCOUNT_PERCENT,
+      userRole,
     };
   }
 
@@ -139,6 +165,7 @@ export class SubscriptionController {
       dto.planId,
       `${frontendUrl}/dashboard?upgraded=true`,
       `${frontendUrl}/dashboard?canceled=1`,
+      dto.billing ?? 'monthly',
     );
   }
 

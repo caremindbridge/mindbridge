@@ -8,6 +8,7 @@ import { Suspense, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { useUser } from '@/entities/user';
+import { MobileGate } from '@/features/mobile-gate/mobile-gate';
 import { SubscriptionBanner } from '@/features/subscription';
 import { Sidebar } from '@/widgets/sidebar';
 
@@ -60,15 +61,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar />
-      <main className="flex flex-1 flex-col overflow-hidden pl-64">
-        <SubscriptionBanner />
-        <Suspense>
-          <StripeReturnHandler />
-        </Suspense>
-        {children}
-      </main>
-    </div>
+    <MobileGate>
+      <div className="flex h-screen bg-background">
+        <Sidebar />
+        <main className="flex flex-1 flex-col overflow-hidden pl-64">
+          <SubscriptionBanner />
+          <Suspense>
+            <StripeReturnHandler />
+          </Suspense>
+          {children}
+        </main>
+      </div>
+    </MobileGate>
   );
 }

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
+import { Logo } from '@/shared/ui/logo';
+
 export function LandingFooter() {
   const t = useTranslations('landing.footer');
 
@@ -9,7 +11,7 @@ export function LandingFooter() {
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
-            <p className="text-lg font-bold tracking-tight">MindBridge</p>
+            <Logo size="default" />
             <p className="text-sm text-muted-foreground">{t('tagline')}</p>
           </div>
 

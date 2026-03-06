@@ -18,7 +18,7 @@ export default () => ({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackUrl:
-      process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3001/auth/google/callback',
+      process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3001/api/auth/google/callback',
   },
   email: {
     resendApiKey: process.env.RESEND_API_KEY,
@@ -36,6 +36,11 @@ export default () => ({
       pack_50: process.env.STRIPE_PRICE_PACK_50,
       pack_150: process.env.STRIPE_PRICE_PACK_150,
       pack_400: process.env.STRIPE_PRICE_PACK_400,
+      lite_yearly: process.env.STRIPE_PRICE_LITE_YEARLY,
+      standard_yearly: process.env.STRIPE_PRICE_STANDARD_YEARLY,
+      premium_yearly: process.env.STRIPE_PRICE_PREMIUM_YEARLY,
+      therapist_solo_yearly: process.env.STRIPE_PRICE_THERAPIST_SOLO_YEARLY,
+      therapist_practice_yearly: process.env.STRIPE_PRICE_THERAPIST_PRACTICE_YEARLY,
     },
   },
 });

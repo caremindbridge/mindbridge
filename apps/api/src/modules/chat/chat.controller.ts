@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   ParseUUIDPipe,
   Post,
@@ -58,8 +59,9 @@ export class ChatController {
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: { id: string },
     @Body() body: SendMessageBodyDto,
+    @Headers('x-locale') locale?: string,
   ) {
-    return this.chatService.sendMessage(id, user.id, body.content);
+    return this.chatService.sendMessage(id, user.id, body.content, locale ?? 'en');
   }
 
   @Post('sessions/:id/end')

@@ -1,20 +1,23 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { env } from '@/shared/config/env';
 import { Button } from '@/shared/ui';
 
 export function GoogleSignInButton() {
+  const t = useTranslations('auth');
   return (
     <Button
       type="button"
       variant="outline"
       className="w-full gap-3"
       onClick={() => {
-        window.location.href = `${env.apiUrl}/auth/google`;
+        window.location.href = `${env.apiUrl}/api/auth/google`;
       }}
     >
       <GoogleIcon />
-      Continue with Google
+      {t('continueWithGoogle')}
     </Button>
   );
 }

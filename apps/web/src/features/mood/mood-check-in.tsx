@@ -22,17 +22,17 @@ interface MoodCheckInProps {
 }
 
 const EMOTIONS = [
-  { value: 'anxiety', label: 'Anxiety', emoji: '😰' },
-  { value: 'sadness', label: 'Sadness', emoji: '😢' },
-  { value: 'joy', label: 'Joy', emoji: '😊' },
-  { value: 'calm', label: 'Calm', emoji: '😌' },
-  { value: 'irritation', label: 'Irritation', emoji: '😤' },
-  { value: 'fear', label: 'Fear', emoji: '😨' },
-  { value: 'anger', label: 'Anger', emoji: '😠' },
-  { value: 'hope', label: 'Hope', emoji: '🤞' },
-  { value: 'loneliness', label: 'Loneliness', emoji: '😔' },
-  { value: 'gratitude', label: 'Gratitude', emoji: '🙏' },
-];
+  { value: 'anxiety', key: 'emotionAnxiety', emoji: '😰' },
+  { value: 'sadness', key: 'emotionSadness', emoji: '😢' },
+  { value: 'joy', key: 'emotionJoy', emoji: '😊' },
+  { value: 'calm', key: 'emotionCalm', emoji: '😌' },
+  { value: 'irritation', key: 'emotionIrritation', emoji: '😤' },
+  { value: 'fear', key: 'emotionFear', emoji: '😨' },
+  { value: 'anger', key: 'emotionAnger', emoji: '😠' },
+  { value: 'hope', key: 'emotionHope', emoji: '🤞' },
+  { value: 'loneliness', key: 'emotionLoneliness', emoji: '😔' },
+  { value: 'gratitude', key: 'emotionGratitude', emoji: '🙏' },
+] as const;
 
 function moodEmoji(v: number): string {
   if (v <= 2) return '😔';
@@ -104,7 +104,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">{t('emotionsOptional')}</p>
           <div className="flex flex-wrap gap-2">
-            {EMOTIONS.map(({ value: v, label, emoji }) => (
+            {EMOTIONS.map(({ value: v, key, emoji }) => (
               <button
                 key={v}
                 type="button"
@@ -115,7 +115,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
                     : 'border-input bg-background hover:bg-accent'
                 }`}
               >
-                {emoji} {label}
+                {emoji} {t(key)}
               </button>
             ))}
           </div>

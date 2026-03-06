@@ -1,187 +1,392 @@
 'use client';
 
 import { UserRole } from '@mindbridge/types/src/user';
-import { subDays } from 'date-fns';
-import { BarChart3, Flame, MessageSquare, TrendingUp } from 'lucide-react';
+import { format, isToday, isYesterday, startOfDay, subDays } from 'date-fns';
+import { BarChart3, Brain, Flame, Heart, MessageCircle, Wind } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { Line, LineChart, ResponsiveContainer } from 'recharts';
 
 import { useMoodMetrics } from '@/entities/dashboard';
-import { useMoodStats } from '@/entities/mood';
+import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
+import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
-import { Button, ErrorCard, Skeleton, Tabs, TabsList, TabsTrigger } from '@/shared/ui';
-import {
-  AnxietyChart,
-  EmotionChart,
-  MoodChart,
-  StatCard,
-  WeeklyInsight,
-} from '@/widgets/patient-dashboard';
+import { cn } from '@/shared/lib/utils';
+import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/shared/ui';
+
+const QUICK_MOODS = [
+  { emoji: '😰', value: 2 },
+  { emoji: '😔', value: 4 },
+  { emoji: '😐', value: 6 },
+  { emoji: '🙂', value: 8 },
+  { emoji: '😊', value: 10 },
+] as const;
+
+function isValidInsight(s: string | null | undefined): s is string {
+  if (!s) return false;
+  if (
+    s.includes('Unable to') ||
+    s.includes('Please provide') ||
+    s.includes('therapy session transcript')
+  )
+    return false;
+  return s.length >= 20;
+}
 
 export function DashboardPage() {
+  const t = useTranslations('dashboard');
   const { user } = useUser();
   const router = useRouter();
-  const [period, setPeriod] = useState<'week' | 'month'>('week');
+  const [moodLogged, setMoodLogged] = useState(false);
 
   useEffect(() => {
-    if (user?.role === UserRole.THERAPIST) {
+    if (user?.role === UserRole.THERAPIST && (user.activeMode ?? 'therapist') === 'therapist') {
       router.push('/dashboard/therapist');
     }
   }, [user, router]);
 
-  const from = useMemo(
-    () => subDays(new Date(), period === 'week' ? 7 : 30).toISOString(),
-    [period],
+  const from7d = useMemo(() => startOfDay(subDays(new Date(), 7)).toISOString(), []);
+
+  const { data: stats, isLoading: statsLoading } = useMoodStats();
+  const { data: metrics, isLoading: metricsLoading } = useMoodMetrics(from7d);
+  const { data: moods } = useMoods(from7d);
+  const { data: sessionsData, isLoading: sessionsLoading } = useSessions(1, 3);
+  const { mutate: logMood, isPending: logging } = useCreateMood();
+
+  const insight = useMemo(() => {
+    const raw = metrics?.latestInsight;
+    return isValidInsight(raw) ? raw : null;
+  }, [metrics]);
+
+  const sparkData = useMemo(
+    () => (moods ? [...moods].reverse().map((m) => ({ v: m.value })) : []),
+    [moods],
   );
 
-  const { data: stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useMoodStats();
-  const { data: metrics, isLoading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useMoodMetrics(from);
+  const firstName = user?.name?.split(' ')[0] ?? null;
 
-  const isLoading = statsLoading || metricsLoading;
-  const hasData =
-    (stats?.totalEntries ?? 0) > 0 || (metrics?.analyses?.length ?? 0) > 0;
-
-  if (statsError || metricsError) {
-    return (
-      <ErrorCard
-        message={(statsError ?? metricsError)?.message}
-        onRetry={() => { refetchStats(); refetchMetrics(); }}
-      />
-    );
-  }
-
-  if (!isLoading && !hasData) {
-    return <EmptyDashboard />;
-  }
-
-  const username = user?.email?.split('@')[0] ?? '';
-  const trendValue =
-    stats?.trend === 'improving' ? 'up' : stats?.trend === 'declining' ? 'down' : 'stable';
   const trendLabel =
     stats?.trend === 'improving'
-      ? 'Improving'
+      ? t('improvingTrend')
       : stats?.trend === 'declining'
-        ? 'Declining'
-        : 'Stable';
+        ? t('decliningTrend')
+        : t('stableTrend');
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          Welcome back{username ? `, ${username}` : ''}!
-        </h1>
-        <Tabs value={period} onValueChange={(v) => setPeriod(v as 'week' | 'month')}>
-          <TabsList>
-            <TabsTrigger value="week">Week</TabsTrigger>
-            <TabsTrigger value="month">Month</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+    <div className="flex-1 overflow-y-auto p-6 space-y-5">
+      {/* ── Greeting ── */}
+      <h1 className="text-2xl font-bold tracking-tight">
+        {firstName ? t('greetingWithName', { name: firstName }) : t('greetingDefault')}
+      </h1>
 
-      {/* Stat Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* ── Quick Mood Check-in ── */}
+      <Card>
+        <CardContent className="py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">{t('howAreYou')}</p>
+              {moodLogged && (
+                <p className="mt-0.5 text-xs text-emerald-600">{t('checkedInToday')}</p>
+              )}
+            </div>
+            <div className="flex gap-3">
+              {QUICK_MOODS.map(({ emoji, value }) => (
+                <button
+                  key={value}
+                  type="button"
+                  disabled={logging}
+                  onClick={() => logMood({ value }, { onSuccess: () => setMoodLogged(true) })}
+                  className="text-2xl transition-transform hover:scale-125 active:scale-95 disabled:opacity-50"
+                  title={`${value}/10`}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+            <Link
+              href="/dashboard/chat"
+              className="text-sm text-primary underline-offset-4 hover:underline whitespace-nowrap"
+            >
+              {t('tellMiraMore')}
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Progress Stats ── */}
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         {statsLoading ? (
-          Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-[100px] rounded-xl" />
-          ))
+          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)
         ) : (
           <>
             <StatCard
-              icon={<MessageSquare className="h-4 w-4" />}
-              label="Mood Entries"
-              value={stats?.totalEntries ?? 0}
-            />
-            <StatCard
-              icon={<BarChart3 className="h-4 w-4" />}
-              label="Avg Mood"
+              label={t('avgMood')}
               value={stats?.average ? stats.average.toFixed(1) : '—'}
-              description="out of 10"
+              sub={t('avgMoodDesc')}
             />
             <StatCard
-              icon={<Flame className="h-4 w-4" />}
-              label="Streak"
-              value={`${stats?.streak ?? 0} days`}
+              label={t('sessions')}
+              value={sessionsData?.total ?? (sessionsLoading ? '…' : '0')}
             />
             <StatCard
-              icon={<TrendingUp className="h-4 w-4" />}
-              label="Trend"
+              label={t('streak')}
+              value={t('streakDays', { count: stats?.streak ?? 0 })}
+              icon={<Flame className="h-3.5 w-3.5 text-amber-500" />}
+            />
+            <StatCard
+              label={t('trend')}
               value={trendLabel}
-              trend={trendValue}
+              trend={stats?.trend}
+              extra={
+                sparkData.length > 1 ? (
+                  <div className="mt-2 h-8">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={sparkData}>
+                        <Line
+                          type="monotone"
+                          dataKey="v"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : null
+              }
             />
           </>
         )}
       </div>
 
-      {/* Mood Chart */}
-      <MoodChart from={from} />
+      {/* ── Mira's Insight ── */}
+      <Card className={cn(insight && 'border-blush-200 bg-blush-50/30')}>
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+            <Brain className="h-4 w-4 text-primary" />
+            {t('miraInsight')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {metricsLoading ? (
+            <Skeleton className="h-12 w-full" />
+          ) : insight ? (
+            <p className="text-sm leading-relaxed text-foreground/80">{insight}</p>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-muted-foreground">{t('defaultInsight')}</p>
+              <Button asChild size="sm" variant="soft">
+                <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {/* Middle row */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <EmotionChart from={from} />
-        <WeeklyInsight
-          insight={metrics?.latestInsight ?? null}
-          topics={metrics?.topTopics ?? []}
+      {/* ── Quick Actions ── */}
+      <div>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {t('quickActions')}
+        </p>
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+          <ActionCard
+            href="/dashboard/chat"
+            icon={<MessageCircle className="h-5 w-5" />}
+            label={t('talkToMira')}
+            primary
+          />
+          <ActionCard
+            href="/dashboard/analytics"
+            icon={<BarChart3 className="h-5 w-5" />}
+            label={t('detailedAnalytics')}
+          />
+          <ActionCard
+            icon={<Heart className="h-5 w-5" />}
+            label={t('thoughtJournal')}
+            comingSoon={t('comingSoon')}
+          />
+          <ActionCard
+            icon={<Wind className="h-5 w-5" />}
+            label={t('breathingExercise')}
+            comingSoon={t('comingSoon')}
+          />
+        </div>
+      </div>
+
+      {/* ── Recent Sessions ── */}
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {t('recentSessions')}
+          </p>
+          <Link
+            href="/dashboard/chat"
+            className="text-sm text-primary underline-offset-4 hover:underline"
+          >
+            {t('allSessions')}
+          </Link>
+        </div>
+        <RecentSessionsList
+          sessions={sessionsData?.sessions ?? []}
+          isLoading={sessionsLoading}
         />
       </div>
-
-      {/* Bottom row */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <AnxietyChart analyses={metrics?.analyses ?? []} />
-        {metricsLoading ? (
-          <Skeleton className="h-[370px] rounded-xl" />
-        ) : (
-          <TopEmotionsCard topEmotions={metrics?.topEmotions ?? []} />
-        )}
-      </div>
     </div>
   );
 }
 
-function TopEmotionsCard({
-  topEmotions,
+function StatCard({
+  label,
+  value,
+  sub,
+  icon,
+  trend,
+  extra,
 }: {
-  topEmotions: Array<{ emotion: string; count: number }>;
+  label: string;
+  value: string | number;
+  sub?: string;
+  icon?: React.ReactNode;
+  trend?: string;
+  extra?: React.ReactNode;
 }) {
-  if (!topEmotions.length) return null;
-
-  const max = topEmotions[0]?.count ?? 1;
-
   return (
-    <div className="rounded-xl border bg-card p-6 shadow-sm">
-      <p className="mb-4 font-semibold">Top Emotions from Sessions</p>
-      <div className="space-y-3">
-        {topEmotions.map(({ emotion, count }) => (
-          <div key={emotion} className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="capitalize">{emotion}</span>
-              <span className="text-muted-foreground">{count}</span>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-2 rounded-full bg-primary"
-                style={{ width: `${(count / max) * 100}%` }}
-              />
-            </div>
-          </div>
+    <div className="rounded-xl border bg-card p-4 shadow-sm">
+      <p className="mb-1 text-xs text-muted-foreground">{label}</p>
+      <div className="flex items-center gap-1.5">
+        {icon}
+        <p
+          className={cn(
+            'text-xl font-bold',
+            trend === 'improving' && 'text-emerald-600',
+            trend === 'declining' && 'text-rose-500',
+          )}
+        >
+          {value}
+        </p>
+      </div>
+      {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}
+      {extra}
+    </div>
+  );
+}
+
+function ActionCard({
+  href,
+  icon,
+  label,
+  primary,
+  comingSoon,
+}: {
+  href?: string;
+  icon: React.ReactNode;
+  label: string;
+  primary?: boolean;
+  comingSoon?: string;
+}) {
+  const inner = (
+    <div
+      className={cn(
+        'relative flex flex-col items-start gap-2 rounded-xl border p-4 transition-colors',
+        primary
+          ? 'border-primary/20 bg-primary/5 hover:bg-primary/10'
+          : comingSoon
+            ? 'cursor-default border-border/50 bg-muted/30'
+            : 'border-border bg-card hover:bg-muted/30',
+      )}
+    >
+      <div className={cn('text-muted-foreground', primary && 'text-primary')}>{icon}</div>
+      <p className={cn('text-sm font-medium', comingSoon && 'text-muted-foreground')}>{label}</p>
+      {comingSoon && (
+        <span className="absolute right-2 top-2 rounded-full bg-muted px-1.5 py-px text-[10px] text-muted-foreground">
+          {comingSoon}
+        </span>
+      )}
+    </div>
+  );
+
+  if (href) return <Link href={href}>{inner}</Link>;
+  return inner;
+}
+
+function RecentSessionsList({
+  sessions,
+  isLoading,
+}: {
+  sessions: Array<{ id: string; status: string; title?: string | null; createdAt: string }>;
+  isLoading: boolean;
+}) {
+  const t = useTranslations('dashboard');
+  const tc = useTranslations('chat');
+  if (isLoading) {
+    return (
+      <div className="space-y-2">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-14 rounded-xl" />
         ))}
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-function EmptyDashboard() {
+  if (!sessions.length) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
+          <p className="text-sm text-muted-foreground">{t('noSessionsYet')}</p>
+          <Button asChild size="sm">
+            <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="mb-4 text-5xl">🌱</div>
-      <h2 className="mb-2 text-2xl font-bold">Your journey starts here</h2>
-      <p className="mb-6 max-w-md text-muted-foreground">
-        Start your first CBT session with Mira to begin tracking your mental health journey.
-      </p>
-      <Button asChild>
-        <Link href="/dashboard/chat">Start a Session</Link>
-      </Button>
+    <div className="space-y-3">
+      {sessions.map((s) => {
+        const d = new Date(s.createdAt);
+        const dateLabel = isToday(d) ? t('today') : isYesterday(d) ? t('yesterday') : format(d, 'MMM d');
+        const title = s.title ?? tc('cbtSession');
+        const isCompleted = s.status === 'completed';
+        return (
+          <Link
+            key={s.id}
+            href={`/dashboard/chat/${s.id}`}
+            className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 transition-colors hover:bg-muted/30"
+          >
+            <div>
+              <p className="text-sm font-medium">{title}</p>
+              <p className="text-xs text-muted-foreground">{dateLabel}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  'rounded-full px-2 py-0.5 text-xs font-medium',
+                  s.status === 'active'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-muted text-muted-foreground',
+                )}
+              >
+                {s.status === 'active' ? tc('statusActive') : tc('statusCompleted')}
+              </span>
+              {isCompleted && (
+                <span
+                  role="link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = `/dashboard/chat/${s.id}/analysis`;
+                  }}
+                  className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {tc('viewAnalysis')}
+                </span>
+              )}
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }

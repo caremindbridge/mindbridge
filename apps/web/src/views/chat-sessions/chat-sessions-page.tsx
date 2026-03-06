@@ -3,9 +3,12 @@
 import { SessionStatus } from '@mindbridge/types/src/chat';
 import { format } from 'date-fns';
 import { BarChart3, MessageCircle, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useSessions } from '@/entities/session';
 import { StartSessionButton } from '@/features/chat';
@@ -34,16 +37,10 @@ const statusColors: Record<string, 'default' | 'secondary' | 'outline' | 'destru
   [SessionStatus.Completed]: 'secondary',
 };
 
-const statusLabels: Record<string, string> = {
-  [SessionStatus.Active]: 'Active',
-  [SessionStatus.Ended]: 'Ended',
-  [SessionStatus.Analyzing]: 'Analyzing...',
-  [SessionStatus.Completed]: 'Completed',
-};
-
-
 export function ChatSessionsPage() {
-  const { data, isLoading, mutate } = useSessions();
+  const t = useTranslations('chat');
+  const { data, isLoading } = useSessions();
+  const qc = useQueryClient();
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -53,7 +50,7 @@ export function ChatSessionsPage() {
     setDeletingId(sessionId);
     try {
       await deleteSession(sessionId);
-      mutate();
+      qc.invalidateQueries({ queryKey: ['sessions'] });
     } finally {
       setDeletingId(null);
     }
@@ -63,10 +60,8 @@ export function ChatSessionsPage() {
     <div className="flex-1 overflow-y-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">CBT Sessions</h1>
-          <p className="text-muted-foreground">
-            Your cognitive behavioral therapy conversations
-          </p>
+          <h1 className="text-2xl font-bold">{t('sessionsTitle')}</h1>
+          <p className="text-muted-foreground">{t('sessionsSubtitle')}</p>
         </div>
         <StartSessionButton />
       </div>
@@ -83,9 +78,9 @@ export function ChatSessionsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <MessageCircle className="mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium">No sessions yet</h3>
+            <h3 className="mb-2 text-lg font-medium">{t('noSessionsTitle')}</h3>
             <p className="mb-4 max-w-sm text-sm text-muted-foreground">
-              Start a new CBT session to begin working through your thoughts with AI guidance.
+              {t('noSessionsDesc')}
             </p>
             <StartSessionButton />
           </CardContent>
@@ -101,13 +96,13 @@ export function ChatSessionsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-base">
-                        CBT Session · {format(new Date(session.createdAt), 'MMM d, yyyy')}
+                        {t('cbtSession')} · {format(new Date(session.createdAt), 'MMM d, yyyy')}
                       </CardTitle>
                       <CardDescription>{format(new Date(session.createdAt), 'HH:mm')}</CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant={statusColors[session.status]}>
-                        {statusLabels[session.status]}
+                        {t(`status${session.status.charAt(0).toUpperCase() + session.status.slice(1)}` as 'statusActive')}
                       </Badge>
                       {session.status === SessionStatus.Analyzing && (
                         <span className="h-4 w-16 animate-pulse rounded bg-muted" />
@@ -117,7 +112,7 @@ export function ChatSessionsPage() {
                           <span
                             className={`rounded-full border px-2 py-0.5 text-xs font-medium ${anxietyBadgeClass(session.analysis.anxietyLevel)}`}
                           >
-                            Anxiety {session.analysis.anxietyLevel}/10
+                            {t('anxiety')} {session.analysis.anxietyLevel}/10
                           </span>
                         )}
                       {session.status === SessionStatus.Completed && (

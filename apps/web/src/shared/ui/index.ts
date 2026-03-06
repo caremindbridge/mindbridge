@@ -62,3 +62,4 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
 export { Textarea } from './textarea';
 export type { TextareaProps } from './textarea';
 export { ErrorCard } from './error-card';
+export { Logo } from './logo';

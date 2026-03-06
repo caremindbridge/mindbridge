@@ -38,10 +38,14 @@ export class StripeService {
     planId: PatientPlanId | TherapistPlanId,
     successUrl: string,
     cancelUrl: string,
+    billing: 'monthly' | 'yearly' = 'monthly',
   ): Promise<{ url: string | null; message?: string }> {
     if (!this.stripe) return { url: null, message: 'Payments coming soon' };
 
-    const priceId = this.configService.get<string>(`stripe.prices.${planId}`);
+    const priceId =
+      billing === 'yearly'
+        ? this.configService.get<string>(`stripe.prices.${planId}_yearly`)
+        : this.configService.get<string>(`stripe.prices.${planId}`);
     if (!priceId) return { url: null, message: `Price for plan '${planId}' not configured` };
 
     const session = await this.stripe.checkout.sessions.create({

@@ -2,14 +2,16 @@
 
 import Cookies from 'js-cookie';
 import { LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-
 
 export function LogoutButton() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     Cookies.remove('token');
+    queryClient.clear();
     router.push('/login');
   };
 

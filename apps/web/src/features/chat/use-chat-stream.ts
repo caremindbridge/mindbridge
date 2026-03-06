@@ -98,7 +98,7 @@ export function useChatStream({
     const token = getAuthToken();
     if (!token) return;
 
-    const url = `${env.apiUrl}/chat/sessions/${sessionId}/stream?token=${encodeURIComponent(token)}`;
+    const url = `${env.apiUrl}/api/chat/sessions/${sessionId}/stream?token=${encodeURIComponent(token)}`;
     const es = new EventSource(url);
 
     es.onopen = () => setIsConnected(true);

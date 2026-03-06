@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowUp } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/shared/ui';
@@ -11,6 +12,7 @@ interface SendMessageFormProps {
 }
 
 export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
+  const t = useTranslations('chat');
   const [content, setContent] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -45,7 +47,7 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
+            placeholder={t('placeholder')}
             disabled={disabled}
             rows={1}
             className="max-h-[200px] min-h-[44px] flex-1 resize-none overflow-y-auto bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -60,7 +62,7 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
           </Button>
         </div>
         <p className="mt-2 text-center text-xs text-muted-foreground">
-          Mira is an AI companion, not a replacement for professional help.
+          {t('disclaimer')}
         </p>
       </div>
     </div>

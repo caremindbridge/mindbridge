@@ -17,8 +17,9 @@ export function TherapistSection() {
     {
       name: t('t1Name'),
       price: t('t1Price'),
+      period: t('t1Period'),
       desc: t('t1Desc'),
-      features: [t('t1F1'), t('t1F2'), t('t1F3')],
+      features: [t('t1F1'), t('t1F2'), t('t1F3'), t('t1F4')],
       cta: t('t1Cta'),
       href: '/register?role=therapist',
       highlight: false,
@@ -36,6 +37,7 @@ export function TherapistSection() {
     {
       name: t('t3Name'),
       price: t('t3Price'),
+      period: t('t3Period'),
       desc: t('t3Desc'),
       features: [t('t3F1'), t('t3F2'), t('t3F3'), t('t3F4')],
       cta: t('t3Cta'),

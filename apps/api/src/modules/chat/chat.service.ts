@@ -82,6 +82,7 @@ export class ChatService {
     sessionId: string,
     userId: string,
     content: string,
+    locale = 'en',
   ): Promise<Message> {
     const session = await this.sessionRepo.findOne({
       where: { id: sessionId, userId },
@@ -123,7 +124,7 @@ export class ChatService {
 
     await this.redisService.appendSessionMessage(sessionId, { role: 'user', content });
 
-    this.streamAssistantResponse(sessionId, messageCount + 1).catch((err) => {
+    this.streamAssistantResponse(sessionId, messageCount + 1, locale).catch((err) => {
       this.logger.error(`Streaming error for session ${sessionId}:`, err);
       this.eventEmitter.emit(`chat.${sessionId}`, {
         type: 'error',
@@ -150,6 +151,7 @@ export class ChatService {
   private async streamAssistantResponse(
     sessionId: string,
     orderIndex: number,
+    locale = 'en',
   ): Promise<void> {
     try {
       const [cachedMessages, session] = await Promise.all([
@@ -173,6 +175,15 @@ export class ChatService {
             `Use this context to personalize your responses. Reference past themes or progress naturally when relevant, ` +
             `but do not overwhelm the patient by reciting their full history.`;
         }
+      }
+
+      if (locale === 'ru') {
+        systemPrompt +=
+          '\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST respond ONLY in Russian (Русский язык). ' +
+          'All your messages, questions, suggestions, and exercises must be in Russian. ' +
+          'Do NOT use English under any circumstances, even though this system prompt is in English. ' +
+          'Address the patient naturally in Russian using "ты" unless they prefer "вы". ' +
+          'Use Russian names for therapy techniques where possible (КПТ instead of CBT).';
       }
 
       let fullResponse = '';

@@ -4,6 +4,7 @@ import type { ProfileAnalysis } from '@mindbridge/types/src/therapist';
 import { format, formatDistanceToNow } from 'date-fns';
 import { Activity, ArrowLeft, BarChart3, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -34,6 +35,7 @@ interface PatientProfilePageProps {
 }
 
 export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
+  const t = useTranslations('therapist');
   const { data: profile, isLoading } = usePatientProfile(patientId);
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -54,9 +56,9 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
   if (!profile) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-muted-foreground">Patient not found</p>
+        <p className="text-muted-foreground">{t('patientNotFound')}</p>
         <Button variant="link" asChild className="mt-2">
-          <Link href="/dashboard/therapist">Back to patients</Link>
+          <Link href="/dashboard/therapist">{t('backToPatients')}</Link>
         </Button>
       </div>
     );
@@ -96,37 +98,37 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             <h1 className="text-xl font-bold">{profile.patient.email}</h1>
             {profile.connectedAt && (
               <p className="text-xs text-muted-foreground">
-                Connected {formatDistanceToNow(new Date(profile.connectedAt), { addSuffix: true })}
+                {t('connectedAgo')} {formatDistanceToNow(new Date(profile.connectedAt), { addSuffix: true })}
               </p>
             )}
           </div>
         </div>
-        <Button onClick={() => setReportOpen(true)}>Generate Report</Button>
+        <Button onClick={() => setReportOpen(true)}>{t('generateReport')}</Button>
       </div>
 
       {/* Stat Cards */}
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard
           icon={<Activity className="h-4 w-4" />}
-          label="Avg Anxiety"
+          label={t('avgAnxiety')}
           value={avgAnxiety ?? '—'}
-          description="out of 10"
+          description={t('outOf10')}
         />
         <StatCard
           icon={<TrendingDown className="h-4 w-4" />}
-          label="Avg Depression"
+          label={t('avgDepression')}
           value={avgDepression ?? '—'}
-          description="out of 10"
+          description={t('outOf10')}
         />
         <StatCard
           icon={<BarChart3 className="h-4 w-4" />}
-          label="Avg Mood"
+          label={t('avgMood')}
           value={profile.moodStats.avgMood != null ? profile.moodStats.avgMood.toFixed(1) : '—'}
-          description="out of 10"
+          description={t('outOf10')}
         />
         <StatCard
           icon={<TrendingUp className="h-4 w-4" />}
-          label="Mood Entries"
+          label={t('moodEntries')}
           value={profile.moodStats.totalEntries}
         />
       </div>
@@ -134,17 +136,17 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
       {/* Risk flag */}
       {latestAnalysis?.riskFlags && (
         <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
-          ⚠️ <strong>Risk Flag:</strong> {latestAnalysis.riskFlags}
+          ⚠️ <strong>{t('riskFlagLabel')}:</strong> {latestAnalysis.riskFlags}
         </div>
       )}
 
       {/* Tabs */}
       <Tabs defaultValue="mood">
         <TabsList>
-          <TabsTrigger value="mood">Mood</TabsTrigger>
-          <TabsTrigger value="analysis">Analysis</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="dossier">Dossier</TabsTrigger>
+          <TabsTrigger value="mood">{t('moodTab')}</TabsTrigger>
+          <TabsTrigger value="analysis">{t('analysisTab')}</TabsTrigger>
+          <TabsTrigger value="reports">{t('reportsTab')}</TabsTrigger>
+          <TabsTrigger value="dossier">{t('dossierTab')}</TabsTrigger>
         </TabsList>
 
         {/* --- Mood Tab --- */}
@@ -152,12 +154,12 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           {/* Mood Line Chart */}
           <Card>
             <CardHeader>
-              <CardTitle>Mood Over Time</CardTitle>
+              <CardTitle>{t('moodOverTime')}</CardTitle>
             </CardHeader>
             <CardContent>
               {moodChartData.length === 0 ? (
                 <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
-                  No mood data available
+                  {t('noMoodData')}
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={250}>
@@ -169,7 +171,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                     <Line
                       type="monotone"
                       dataKey="mood"
-                      name="Mood"
+                      name={t('moodTab')}
                       stroke="hsl(var(--primary))"
                       strokeWidth={2}
                       dot={{ r: 3 }}
@@ -184,7 +186,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           {profile.emotionDistribution.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Emotion Distribution</CardTitle>
+                <CardTitle>{t('emotionDistribution')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -219,7 +221,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
               <div className="space-y-3 pr-4">
                 {profile.analyses.length === 0 ? (
                   <p className="py-8 text-center text-sm text-muted-foreground">
-                    No session analyses yet
+                    {t('noAnalyses')}
                   </p>
                 ) : (
                   profile.analyses.map((a) => <AnalysisCard key={a.id} analysis={a} />)
@@ -250,6 +252,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
 }
 
 function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
+  const t = useTranslations('therapist');
   const [expanded, setExpanded] = useState(false);
   return (
     <Card>
@@ -263,10 +266,10 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
               {format(new Date(analysis.createdAt), 'MMM d, yyyy')}
             </span>
             <Badge variant={analysis.anxietyLevel != null && analysis.anxietyLevel >= 7 ? 'destructive' : 'secondary'}>
-              Anxiety {analysis.anxietyLevel ?? '—'}
+              {t('anxietyBadge')} {analysis.anxietyLevel ?? '—'}
             </Badge>
             <Badge variant="outline">
-              Depression {analysis.depressionLevel ?? '—'}
+              {t('depressionBadge')} {analysis.depressionLevel ?? '—'}
             </Badge>
           </div>
           <span className="text-xs text-muted-foreground">{expanded ? '▲' : '▼'}</span>
@@ -299,6 +302,7 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
 }
 
 function ReportsTab({ patientId, onGenerate }: { patientId: string; onGenerate: () => void }) {
+  const t = useTranslations('therapist');
   const { data: reports, isLoading } = usePatientReports(patientId);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -306,7 +310,7 @@ function ReportsTab({ patientId, onGenerate }: { patientId: string; onGenerate: 
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button size="sm" onClick={onGenerate}>
-          Generate Report
+          {t('generateReport')}
         </Button>
       </div>
 
@@ -320,7 +324,7 @@ function ReportsTab({ patientId, onGenerate }: { patientId: string; onGenerate: 
 
       {!isLoading && (!reports || reports.length === 0) && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No reports yet. Generate the first one.
+          {t('noReports')}
         </p>
       )}
 
@@ -361,6 +365,7 @@ function ReportRow({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const t = useTranslations('therapist');
   const { data: report } = useReport(expanded ? reportId : null);
 
   const [knownStatus, setKnownStatus] = useState(initialStatus);
@@ -380,7 +385,7 @@ function ReportRow({
               {format(new Date(periodStart), 'MMM d')} – {format(new Date(periodEnd), 'MMM d, yyyy')}
             </p>
             <p className="text-xs text-muted-foreground">
-              Generated {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+              {t('generated')} {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -399,7 +404,7 @@ function ReportRow({
 
         {expanded && report?.status === 'error' && (
           <div className="mt-3 border-t pt-3">
-            <p className="text-xs font-medium text-destructive">Report generation failed</p>
+            <p className="text-xs font-medium text-destructive">{t('reportFailed')}</p>
             {report.errorMessage && (
               <p className="mt-1 text-xs text-muted-foreground">{report.errorMessage}</p>
             )}
@@ -421,7 +426,7 @@ function ReportRow({
             )}
             {report.content.suggestedFocus && (
               <div className="rounded-md border border-blush-200 bg-blush-50 p-3 text-sm">
-                <p className="mb-1 font-semibold">Focus</p>
+                <p className="mb-1 font-semibold">{t('focusTitle')}</p>
                 <MarkdownMessage content={report.content.suggestedFocus} />
               </div>
             )}

@@ -34,10 +34,10 @@ export class ApiError extends Error {
 
 function getAuthHeaders(): Record<string, string> {
   const token = Cookies.get('token');
-  if (token) {
-    return { Authorization: `Bearer ${token}` };
-  }
-  return {};
+  const locale = Cookies.get('locale') ?? 'en';
+  const headers: Record<string, string> = { 'x-locale': locale };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -72,7 +72,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 export const apiClient = {
   async get<T>(path: string): Promise<T> {
-    const response = await fetch(`${env.apiUrl}${path}`, {
+    const response = await fetch(`${env.apiUrl}/api${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const apiClient = {
   },
 
   async post<T>(path: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${env.apiUrl}${path}`, {
+    const response = await fetch(`${env.apiUrl}/api${path}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export const apiClient = {
   },
 
   async put<T>(path: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${env.apiUrl}${path}`, {
+    const response = await fetch(`${env.apiUrl}/api${path}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export const apiClient = {
   },
 
   async patch<T>(path: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${env.apiUrl}${path}`, {
+    const response = await fetch(`${env.apiUrl}/api${path}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export const apiClient = {
   },
 
   async delete<T>(path: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${env.apiUrl}${path}`, {
+    const response = await fetch(`${env.apiUrl}/api${path}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -145,6 +145,10 @@ export async function getMe(): Promise<UserDto> {
 
 export async function updateProfile(data: { name?: string }): Promise<UserDto> {
   return apiClient.patch<UserDto>('/auth/me', data);
+}
+
+export async function switchMode(mode: 'therapist' | 'patient'): Promise<{ activeMode: string }> {
+  return apiClient.patch<{ activeMode: string }>('/auth/me/mode', { mode });
 }
 
 export async function changePassword(data: {
@@ -325,17 +329,23 @@ export function getPatientReports(patientId: string): Promise<TherapistReport[]>
 
 // === SUBSCRIPTION ===
 
-export function getUsageStatus(sessionId?: string): Promise<unknown> {
-  const params = sessionId ? `?sessionId=${encodeURIComponent(sessionId)}` : '';
-  return apiClient.get<unknown>(`/subscription/usage${params}`);
+export function getUsageStatus(sessionId?: string, planType?: 'patient' | 'therapist'): Promise<unknown> {
+  const params = new URLSearchParams();
+  if (sessionId) params.set('sessionId', sessionId);
+  if (planType) params.set('planType', planType);
+  const qs = params.toString();
+  return apiClient.get<unknown>(`/subscription/usage${qs ? `?${qs}` : ''}`);
 }
 
 export function getPlans(): Promise<unknown> {
   return apiClient.get<unknown>('/subscription/plans');
 }
 
-export function createCheckout(planId: string): Promise<{ url: string | null }> {
-  return apiClient.post<{ url: string | null }>('/subscription/checkout', { planId });
+export function createCheckout(
+  planId: string,
+  billing: 'monthly' | 'yearly' = 'monthly',
+): Promise<{ url: string | null }> {
+  return apiClient.post<{ url: string | null }>('/subscription/checkout', { planId, billing });
 }
 
 export function createPackCheckout(packId: string): Promise<{ url: string | null }> {
@@ -344,4 +354,22 @@ export function createPackCheckout(packId: string): Promise<{ url: string | null
 
 export function createPortal(): Promise<{ url: string | null }> {
   return apiClient.post<{ url: string | null }>('/subscription/portal', {});
+}
+
+// === AUTH ===
+
+export function forgotPassword(email: string): Promise<{ message: string }> {
+  return apiClient.post<{ message: string }>('/auth/forgot-password', { email });
+}
+
+export function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  return apiClient.post<{ message: string }>('/auth/reset-password', { token, newPassword });
+}
+
+export function resendVerification(): Promise<{ message: string }> {
+  return apiClient.post<{ message: string }>('/auth/resend-verification');
+}
+
+export function verifyEmailToken(token: string): Promise<{ message: string }> {
+  return apiClient.post<{ message: string }>('/auth/verify-email', { token });
 }

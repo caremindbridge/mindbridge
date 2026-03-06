@@ -31,6 +31,7 @@ export interface UsageStatus {
   paymentWarning?: boolean;
   grace?: boolean;
   graceRemaining?: number;
+  patientLimit?: number | null;
 }
 
 export interface PlanInfo {

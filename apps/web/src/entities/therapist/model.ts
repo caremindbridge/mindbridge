@@ -13,7 +13,11 @@ import {
 } from '@/shared/api/client';
 
 export function usePatients() {
-  return useQuery<PatientSummary[]>({ queryKey: ['patients'], queryFn: getPatients });
+  return useQuery<PatientSummary[]>({
+    queryKey: ['patients'],
+    queryFn: getPatients,
+    staleTime: 2 * 60 * 1000,
+  });
 }
 
 export function usePatientProfile(id: string) {
@@ -21,6 +25,7 @@ export function usePatientProfile(id: string) {
     queryKey: ['patient-profile', id],
     queryFn: () => getPatientProfile(id),
     enabled: !!id,
+    staleTime: 2 * 60 * 1000,
   });
 }
 

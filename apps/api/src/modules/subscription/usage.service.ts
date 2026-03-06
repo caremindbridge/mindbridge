@@ -159,8 +159,14 @@ export class UsageService {
     await this.usageRepo.save(usage);
   }
 
-  async getStatus(userId: string, sessionId?: string): Promise<UsageStatus> {
-    const sub = await this.subService.getActive(userId);
+  async getStatus(
+    userId: string,
+    sessionId?: string,
+    planType?: 'patient' | 'therapist',
+  ): Promise<UsageStatus> {
+    const sub = planType
+      ? await this.subService.getActiveByType(userId, planType)
+      : await this.subService.getActive(userId);
     if (!sub) return { hasSubscription: false };
 
     const paymentWarning =
@@ -261,6 +267,7 @@ export class UsageService {
       paymentWarning: paymentWarning ?? false,
       grace: grace ?? false,
       graceRemaining,
+      patientLimit: sub.patientLimit ?? null,
     };
   }
 }

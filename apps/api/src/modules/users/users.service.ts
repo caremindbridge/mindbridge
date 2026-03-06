@@ -48,6 +48,10 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async updateActiveMode(userId: string, mode: 'therapist' | 'patient' | null): Promise<void> {
+    await this.usersRepository.update(userId, { activeMode: mode });
+  }
+
   async delete(userId: string): Promise<void> {
     await this.usersRepository.delete(userId);
   }

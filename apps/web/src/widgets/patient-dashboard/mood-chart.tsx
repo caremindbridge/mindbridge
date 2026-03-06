@@ -1,6 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
+import { useTranslations } from 'next-intl';
 import {
   CartesianGrid,
   Line,
@@ -20,6 +21,7 @@ interface MoodChartProps {
 }
 
 export function MoodChart({ from, to }: MoodChartProps) {
+  const t = useTranslations('dashboard');
   const { data: moods, isLoading } = useMoods(from, to);
 
   if (isLoading) {
@@ -30,10 +32,10 @@ export function MoodChart({ from, to }: MoodChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Mood Over Time</CardTitle>
+          <CardTitle>{t('moodOverTime')}</CardTitle>
         </CardHeader>
         <CardContent className="flex h-[300px] items-center justify-center">
-          <p className="text-sm text-muted-foreground">No mood entries in this period</p>
+          <p className="text-sm text-muted-foreground">{t('noMoodData')}</p>
         </CardContent>
       </Card>
     );
@@ -47,7 +49,7 @@ export function MoodChart({ from, to }: MoodChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Mood Over Time</CardTitle>
+        <CardTitle>{t('moodOverTime')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -59,7 +61,7 @@ export function MoodChart({ from, to }: MoodChartProps) {
             <Line
               type="monotone"
               dataKey="mood"
-              name="Mood"
+              name={t('avgMood')}
               stroke="hsl(var(--primary))"
               strokeWidth={2}
               dot={{ r: 4 }}
