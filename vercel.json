@@ -1,6 +1,5 @@
 {
   "installCommand": "npm install",
   "buildCommand": "npx turbo build --filter=@mindbridge/web",
-  "outputDirectory": "apps/web/.next",
-  "framework": "nextjs"
+  "outputDirectory": "apps/web/.next"
 }
