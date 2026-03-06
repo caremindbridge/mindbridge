@@ -10,18 +10,19 @@ interface StatCardProps {
   value: string | number;
   description?: string;
   trend?: 'up' | 'down' | 'stable';
+  compact?: boolean;
 }
 
-export function StatCard({ icon, label, value, description, trend }: StatCardProps) {
+export function StatCard({ icon, label, value, description, trend, compact }: StatCardProps) {
   return (
     <Card>
-      <CardContent className="p-6">
-        <div className="flex items-start gap-3">
-          <div className="mt-0.5 text-muted-foreground">{icon}</div>
-          <div className="flex-1 space-y-1">
-            <p className="text-sm text-muted-foreground">{label}</p>
+      <CardContent className={compact ? 'p-3 md:p-6' : 'p-6'}>
+        <div className={compact ? 'flex items-start gap-2 md:gap-3' : 'flex items-start gap-3'}>
+          <div className={compact ? 'mt-0.5 hidden shrink-0 text-muted-foreground md:block' : 'mt-0.5 shrink-0 text-muted-foreground'}>{icon}</div>
+          <div className="min-w-0 flex-1 space-y-1">
+            <p className={compact ? 'text-xs leading-tight text-muted-foreground md:text-sm' : 'text-sm text-muted-foreground'}>{label}</p>
             <div className="flex items-center gap-1.5">
-              <p className="text-2xl font-bold">{value}</p>
+              <p className={compact ? 'text-xl font-bold md:text-2xl' : 'text-2xl font-bold'}>{value}</p>
               {trend && (
                 <span
                   className={

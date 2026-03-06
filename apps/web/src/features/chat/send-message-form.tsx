@@ -50,7 +50,7 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
             placeholder={t('placeholder')}
             disabled={disabled}
             rows={1}
-            className="max-h-[200px] min-h-[44px] flex-1 resize-none overflow-y-auto bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            className="max-h-[200px] min-h-[44px] flex-1 resize-none overflow-y-auto bg-transparent px-4 py-3 text-base outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
           />
           <Button
             size="icon"

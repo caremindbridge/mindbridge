@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { useUser } from '@/entities/user';
+import { ModeSwitcher } from '@/features/auth';
 import {
   DangerSection,
   PreferencesSection,
@@ -11,6 +12,7 @@ import {
   SubscriptionSection,
   TherapistConnectionSection,
 } from '@/features/settings';
+import { Card, CardContent } from '@/shared/ui';
 
 export function SettingsPage() {
   const t = useTranslations('settings');
@@ -29,6 +31,14 @@ export function SettingsPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         {/* Left column */}
         <div className="space-y-5">
+          {/* Mode switcher — mobile only, therapists only */}
+          {isTherapist && (
+            <Card className="lg:hidden">
+              <CardContent className="p-4">
+                <ModeSwitcher />
+              </CardContent>
+            </Card>
+          )}
           <ProfileSection user={user} onUpdated={mutate} />
           <SubscriptionSection />
           <SecuritySection user={user} />

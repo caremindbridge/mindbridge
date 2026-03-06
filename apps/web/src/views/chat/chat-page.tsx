@@ -132,6 +132,25 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
+      {/* Mobile header */}
+      <div className="lg:hidden flex shrink-0 items-center h-12 px-2 border-b bg-background/95 backdrop-blur-sm">
+        <button
+          onClick={() => router.back()}
+          className="flex h-9 w-9 items-center justify-center rounded-full text-primary"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <span className="flex-1 text-center text-[15px] font-semibold">Mira</span>
+        <div className="flex h-9 w-9 items-center justify-center">
+          {isActive && <EndSessionButton onEnd={handleEnd} disabled={isStreaming} compact />}
+          {!isActive && (session.status === 'completed' || analysisReady) && (
+            <Link href={`/dashboard/chat/${sessionId}/analysis`} className="text-primary">
+              <BarChart3 className="h-5 w-5" />
+            </Link>
+          )}
+        </div>
+      </div>
+
       {/* Desktop header */}
       <div className="hidden lg:flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm">
         <div className="flex items-center gap-2">

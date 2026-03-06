@@ -5,16 +5,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useGenerateReport, useReport } from '@/entities/report';
-import {
-  Badge,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Label,
-  Skeleton,
-} from '@/shared/ui';
+import { Badge, Button, Label, Skeleton } from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
 
 interface GenerateReportDialogProps {
   patientId: string;
@@ -62,15 +54,14 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
   const isError = report?.status === 'error';
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Generate Therapist Report</DialogTitle>
-        </DialogHeader>
-
+    <BottomSheet
+      open={open}
+      onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}
+      title="Generate Therapist Report"
+    >
         {/* Form — show until we have a report id */}
         {!reportId && (
-          <div className="space-y-4">
+          <div className="space-y-4 pb-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="period-start">Period start</Label>
@@ -94,20 +85,18 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
               </div>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <div className="flex gap-2">
-              <Button className="flex-1" onClick={handleGenerate} disabled={generate.isPending}>
+            <div className="flex flex-col gap-2 pt-1">
+              <Button onClick={handleGenerate} disabled={generate.isPending}>
                 {generate.isPending ? 'Starting...' : 'Generate'}
               </Button>
-              <Button variant="outline" onClick={handleClose}>
-                Cancel
-              </Button>
+              <Button variant="outline" onClick={handleClose}>Cancel</Button>
             </div>
           </div>
         )}
 
         {/* Generating state */}
         {isGenerating && (
-          <div className="space-y-3">
+          <div className="space-y-3 pb-2">
             <p className="text-sm text-muted-foreground">Generating report, please wait...</p>
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-4 w-full" />
@@ -118,19 +107,17 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
 
         {/* Error state */}
         {isError && (
-          <div className="space-y-4">
+          <div className="space-y-4 pb-2">
             <p className="text-sm text-destructive">
               {report?.errorMessage ?? 'Report generation failed.'}
             </p>
-            <Button variant="outline" className="w-full" onClick={handleClose}>
-              Close
-            </Button>
+            <Button variant="outline" className="w-full" onClick={handleClose}>Close</Button>
           </div>
         )}
 
         {/* Ready state */}
         {isReady && report?.content && (
-          <div className="max-h-[60vh] space-y-4 overflow-y-auto pr-1">
+          <div className="space-y-4 pb-2">
             <p className="text-sm leading-relaxed">{report.content.summary}</p>
 
             {report.content.moodTrend && (
@@ -214,12 +201,9 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
               </div>
             )}
 
-            <Button className="w-full" onClick={handleClose}>
-              Close
-            </Button>
+            <Button className="w-full" onClick={handleClose}>Close</Button>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+    </BottomSheet>
   );
 }

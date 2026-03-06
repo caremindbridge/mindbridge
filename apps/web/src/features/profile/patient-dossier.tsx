@@ -190,12 +190,13 @@ export function PatientDossier({ patientId }: PatientDossierProps) {
               }
             }}
             placeholder={t('notesPlaceholder')}
-            className="min-h-[100px] resize-y font-mono text-sm"
+            className="min-h-[120px] resize-y font-mono text-base"
           />
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <span className="text-xs text-muted-foreground">{notes.length}/2000</span>
             <Button
               size="sm"
+              className="w-full md:w-auto"
               disabled={!isDirty || updateNotes.isPending}
               onClick={async () => {
                 try {
