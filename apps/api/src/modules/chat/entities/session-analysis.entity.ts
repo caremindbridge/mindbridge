@@ -80,6 +80,9 @@ export class SessionAnalysis {
   @Column({ type: 'text', nullable: true })
   moodInsight!: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  patientSummary!: string | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

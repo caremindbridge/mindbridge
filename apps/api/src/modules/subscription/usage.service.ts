@@ -248,7 +248,13 @@ export class UsageService {
       status: sub.status,
       trialDaysLeft:
         sub.status === 'trial' && sub.trialEndsAt
-          ? Math.max(0, Math.ceil((sub.trialEndsAt.getTime() - Date.now()) / 86400000))
+          ? (() => {
+              const end = sub.trialEndsAt!;
+              const endDay = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate());
+              const now = new Date();
+              const todayDay = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+              return Math.max(0, Math.round((endDay - todayDay) / 86400000));
+            })()
           : null,
       monthly: {
         used: usage.messagesUsed,

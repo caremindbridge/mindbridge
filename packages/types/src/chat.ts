@@ -60,6 +60,8 @@ export interface SessionAnalysisDto {
   recommendations: string[];
   homework: string[] | null;
   therapistBrief: string;
+  moodInsight?: string | null;
+  patientSummary?: string | null;
   createdAt: string;
 }
 

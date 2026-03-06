@@ -26,8 +26,16 @@ interface UseChatStreamReturn {
   addUserMessage: (message: MessageDto) => void;
 }
 
-const FLUSH_MS = 30;
 const TEMP_ID = '__streaming__';
+// Typewriter drain: runs every DRAIN_MS, emits CHARS_PER_TICK characters.
+// Adaptive: drains faster when queue is large so we never lag far behind.
+const DRAIN_MS = 16; // ~60fps
+
+function charsPerTick(pendingLength: number): number {
+  // Always drain the queue in ~300ms regardless of size.
+  // Floor at 2, no hard cap — large bursts drain quickly, small trickles drain smoothly.
+  return Math.max(2, Math.ceil(pendingLength / 18));
+}
 
 export function useChatStream({
   sessionId,
@@ -39,58 +47,84 @@ export function useChatStream({
   const [isConnected, setIsConnected] = useState(false);
   const [analysisReady, setAnalysisReady] = useState(false);
 
-  const bufferRef = useRef('');
-  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Received-but-not-yet-displayed text queue
+  const pendingRef = useRef('');
+  // Stable key for the current streaming bubble (set once, reused across ticks)
+  const streamingKeyRef = useRef<string | null>(null);
+  // Final message id to apply once the queue is fully drained
+  const finalIdRef = useRef<string | null>(null);
+  // The drain interval handle
+  const drainRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     setMessages(initialMessages);
   }, [initialMessages]);
 
-  // Flushes buffered tokens into the last streaming message.
-  // If finalId is provided, also marks the message as complete.
-  const flushBuffer = useCallback(
-    (finalId?: string) => {
-      if (flushTimerRef.current) {
-        clearTimeout(flushTimerRef.current);
-        flushTimerRef.current = null;
+  const stopDrain = useCallback(() => {
+    if (drainRef.current) {
+      clearInterval(drainRef.current);
+      drainRef.current = null;
+    }
+    pendingRef.current = '';
+    streamingKeyRef.current = null;
+    finalIdRef.current = null;
+  }, []);
+
+  const startDrain = useCallback(() => {
+    if (drainRef.current) return;
+
+    drainRef.current = setInterval(() => {
+      const pending = pendingRef.current;
+      const finalId = finalIdRef.current;
+
+      if (!pending.length) {
+        // Queue empty — if message_complete arrived, finalize now
+        if (finalId !== null) {
+          setMessages((prev) => {
+            const last = prev[prev.length - 1];
+            if (last?.isStreaming) {
+              const updated = [...prev];
+              updated[updated.length - 1] = { ...last, id: finalId, isStreaming: false };
+              return updated;
+            }
+            return prev;
+          });
+          setIsStreaming(false);
+          stopDrain();
+        }
+        return;
       }
-      const buffered = bufferRef.current;
-      bufferRef.current = '';
-      const isFinal = finalId !== undefined;
+
+      // Drain a chunk
+      const n = charsPerTick(pending.length);
+      const chunk = pending.slice(0, n);
+      pendingRef.current = pending.slice(n);
 
       setMessages((prev) => {
         const last = prev[prev.length - 1];
         if (last?.isStreaming) {
           const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...last,
-            content: last.content + buffered,
-            ...(isFinal ? { id: finalId || last.id, isStreaming: false } : {}),
-          };
+          updated[updated.length - 1] = { ...last, content: last.content + chunk };
           return updated;
         }
-        if (buffered) {
-          // First flush — add the streaming message with a stable key
-          const stableKey = crypto.randomUUID();
-          return [
-            ...prev,
-            {
-              id: isFinal ? (finalId || stableKey) : TEMP_ID,
-              _key: stableKey,
-              role: 'assistant' as MessageRole,
-              content: buffered,
-              sessionId,
-              orderIndex: prev.length,
-              createdAt: new Date().toISOString(),
-              isStreaming: !isFinal,
-            },
-          ];
-        }
-        return prev;
+        // First chunk — create the streaming bubble with a stable key
+        const key = streamingKeyRef.current ?? (streamingKeyRef.current = crypto.randomUUID());
+        return [
+          ...prev,
+          {
+            id: TEMP_ID,
+            _key: key,
+            role: 'assistant' as MessageRole,
+            content: chunk,
+            sessionId,
+            orderIndex: prev.length,
+            createdAt: new Date().toISOString(),
+            isStreaming: true,
+          },
+        ];
       });
-    },
-    [sessionId],
-  );
+    }, DRAIN_MS);
+  }, [sessionId, stopDrain]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -110,15 +144,31 @@ export function useChatStream({
 
         switch (parsed.type) {
           case 'token':
-            bufferRef.current += parsed.data ?? '';
-            if (!flushTimerRef.current) {
-              flushTimerRef.current = setTimeout(() => flushBuffer(), FLUSH_MS);
-            }
+            pendingRef.current += parsed.data ?? '';
+            startDrain();
             break;
 
           case 'message_complete':
-            flushBuffer(parsed.messageId ?? crypto.randomUUID());
-            setIsStreaming(false);
+            // Store final id — the drain interval will apply it once queue is empty
+            finalIdRef.current = parsed.messageId ?? crypto.randomUUID();
+            // Edge case: queue already empty when complete fires (very short response)
+            if (!pendingRef.current.length && !drainRef.current) {
+              setMessages((prev) => {
+                const last = prev[prev.length - 1];
+                if (last?.isStreaming) {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = {
+                    ...last,
+                    id: finalIdRef.current!,
+                    isStreaming: false,
+                  };
+                  return updated;
+                }
+                return prev;
+              });
+              setIsStreaming(false);
+              finalIdRef.current = null;
+            }
             break;
 
           case 'analysis_ready':
@@ -126,11 +176,8 @@ export function useChatStream({
             break;
 
           case 'error':
-            if (flushTimerRef.current) {
-              clearTimeout(flushTimerRef.current);
-              flushTimerRef.current = null;
-            }
-            bufferRef.current = '';
+            pendingRef.current = '';
+            stopDrain();
             setMessages((prev) => {
               const last = prev[prev.length - 1];
               return last?.isStreaming ? prev.slice(0, -1) : prev;
@@ -149,16 +196,13 @@ export function useChatStream({
     return () => {
       es.close();
       setIsConnected(false);
-      if (flushTimerRef.current) {
-        clearTimeout(flushTimerRef.current);
-        flushTimerRef.current = null;
-      }
+      stopDrain();
     };
-  }, [sessionId, enabled, flushBuffer]);
+  }, [sessionId, enabled, startDrain, stopDrain]);
 
   const addUserMessage = useCallback((message: MessageDto) => {
     setMessages((prev) => [...prev, message]);
-    setIsStreaming(true); // start waiting for response
+    setIsStreaming(true);
   }, []);
 
   return { messages, isStreaming, isConnected, analysisReady, addUserMessage };

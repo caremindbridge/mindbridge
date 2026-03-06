@@ -187,7 +187,7 @@ Return ONLY valid JSON with this exact structure:
   "cognitiveDistortions": [
     {
       "type": "string - distortion type (e.g., 'All-or-Nothing Thinking', 'Catastrophizing', 'Mind Reading', 'Emotional Reasoning', 'Overgeneralization', 'Should Statements', 'Personalization', 'Mental Filter', 'Disqualifying the Positive', 'Jumping to Conclusions')",
-      "description": "string - brief explanation of this distortion",
+      "description": "string - brief explanation of this distortion IN PLAIN LANGUAGE, addressed to the patient using 'ты' (Russian) or 'you' (English). No clinical jargon.",
       "example": "string - exact quote or paraphrase from the session",
       "frequency": "string - 'low', 'medium', or 'high'"
     }
@@ -202,23 +202,45 @@ Return ONLY valid JSON with this exact structure:
   ],
   "themes": ["string - main themes discussed"],
   "triggers": ["string - identified emotional/behavioral triggers"],
-  "progressSummary": "string - summary of progress made during the session",
-  "recommendations": ["string - specific actionable recommendations"],
-  "homework": ["string - suggested exercises between sessions"] or null,
-  "therapistBrief": "string - professional summary for a human therapist reviewing this session, including clinical observations and suggested follow-up areas",
+  "progressSummary": "string - what the patient noticed or shifted during the session, written directly TO the patient using 'ты'/'you'. NOT third person. NOT clinical. E.g. 'Ты смог разделить побочку от своей интерпретации' not 'пациент продемонстрировал прогресс'.",
+  "recommendations": ["string - each item written TO the patient using 'ты'/'you'. Specific and practical. E.g. 'Попробуй на этой неделе записать одну тревожную мысль'. NOT 'рекомендуется' or 'пациенту следует'."],
+  "homework": ["string - suggested exercises between sessions, addressed to 'ты'/'you'"] or null,
+  "therapistBrief": "string - CLINICAL summary for a human therapist. Third person ('patient'/'пациент' is fine here). Include: severity assessment, key patterns observed, risk flags, suggested therapeutic focus. Clinical language is appropriate here.",
   "anxietyLevel": "number 0-10 - estimated anxiety level based on mentions of worry, physical symptoms, catastrophizing, avoidance",
   "depressionLevel": "number 0-10 - estimated depression level based on hopelessness, loss of interest, low energy, poor self-esteem, sadness",
   "keyEmotions": ["string - top 3 emotions observed. MUST use ONLY these exact English identifiers regardless of session language: anxiety, sadness, joy, calm, irritation, fear, anger, hope, loneliness, gratitude"],
   "keyTopics": ["string - 2 to 4 main discussion topics. Write in the SAME language as the patient's messages."],
   "copingStrategies": ["string - coping strategies mentioned or practiced, e.g. breathing exercises, cognitive reframing, journaling, exercise"],
   "riskFlags": "null if no concerns, or a string describing warning signals such as suicidal ideation, self-harm mentions, or acute crisis",
-  "moodInsight": "string - 1 to 2 sentence personal observation about the patient's emotional state suitable for their own dashboard"
+  "moodInsight": "string - 1 to 2 sentence observation about the patient's emotional state for their dashboard. Write TO the patient using 'ты'/'you'. Specific to this session, not generic.",
+  "patientSummary": "string - A warm personal message FROM Mira TO the patient, written in Mira's voice. 3-5 sentences. This is NOT a clinical summary."
 }
+
+FIELD-SPECIFIC TONE RULES:
+
+For patientSummary:
+- Write in FIRST PERSON as Mira (я/I), addressing the patient as ты/you
+- Match Mira's tone from the actual chat — direct, warm, real
+- Reference SPECIFIC moments, quotes, or breakthroughs from this session
+- Do NOT use clinical language ('пациент', 'когнитивное искажение', 'терапевтический процесс')
+- Use plain human words: 'ты заметил', 'та мысль которая тебя мучила', 'мы разобрали'
+- End with one small specific thing to try — framed as an invitation, not homework
+- NEVER start with 'Ваша тревога...' or any clinical framing
+- Good openings: 'Сегодня было непросто, но...', 'Знаешь что меня зацепило сегодня...', 'Today I noticed something important...'
+
+For progressSummary and recommendations:
+- Address the patient as 'ты' (Russian) or 'you' (English)
+- No third person ('пациент', 'the patient')
+- Practical, grounded language
+
+For therapistBrief:
+- Clinical language is appropriate — this is for the therapist, not the patient
+- Third person is fine here
 
 LANGUAGE RULES (strictly enforced):
 - keyEmotions values MUST always be from the fixed English list above — never translate them
 - ALL other text fields MUST be in the same language as the patient's messages. Never mix languages.
-- If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
+- If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, patientSummary, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
 - cognitiveDistortions.type MUST also use the patient's language. Russian translations to use:
   Catastrophizing → Катастрофизация | All-or-Nothing Thinking → Чёрно-белое мышление
   Mind Reading → Чтение мыслей | Fortune Telling → Предсказание будущего

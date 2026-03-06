@@ -297,6 +297,7 @@ export class ChatService {
         copingStrategies: Array.isArray(parsed.copingStrategies) ? parsed.copingStrategies : [],
         riskFlags: typeof parsed.riskFlags === 'string' ? parsed.riskFlags : null,
         moodInsight: typeof parsed.moodInsight === 'string' ? parsed.moodInsight : null,
+        patientSummary: typeof parsed.patientSummary === 'string' ? parsed.patientSummary : null,
       });
       await this.analysisRepo.save(analysis);
 

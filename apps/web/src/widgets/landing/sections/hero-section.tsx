@@ -2,13 +2,72 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
+
+type Message = { role: 'user' | 'mira'; text: string };
+type Dialogue = { title: string; tag: string; messages: Message[] };
 
 export function HeroSection() {
   const t = useTranslations('landing.hero');
-  const chatRef = useRef<HTMLDivElement>(null);
+  const d = useTranslations('landing.demos');
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const dialogues: Dialogue[] = [
+    {
+      title: d('d1Title'),
+      tag: d('d1Tag'),
+      messages: [
+        { role: 'user', text: d('d1u1') },
+        { role: 'mira', text: d('d1m1') },
+        { role: 'user', text: d('d1u2') },
+        { role: 'mira', text: d('d1m2') },
+        { role: 'user', text: d('d1u3') },
+        { role: 'mira', text: d('d1m3') },
+        { role: 'user', text: d('d1u4') },
+        { role: 'mira', text: d('d1m4') },
+      ],
+    },
+    {
+      title: d('d2Title'),
+      tag: d('d2Tag'),
+      messages: [
+        { role: 'user', text: d('d2u1') },
+        { role: 'mira', text: d('d2m1') },
+        { role: 'user', text: d('d2u2') },
+        { role: 'mira', text: d('d2m2') },
+        { role: 'user', text: d('d2u3') },
+        { role: 'mira', text: d('d2m3') },
+        { role: 'user', text: d('d2u4') },
+        { role: 'mira', text: d('d2m4') },
+        { role: 'user', text: d('d2u5') },
+        { role: 'mira', text: d('d2m5') },
+      ],
+    },
+    {
+      title: d('d3Title'),
+      tag: d('d3Tag'),
+      messages: [
+        { role: 'user', text: d('d3u1') },
+        { role: 'mira', text: d('d3m1') },
+        { role: 'user', text: d('d3u2') },
+        { role: 'mira', text: d('d3m2') },
+        { role: 'user', text: d('d3u3') },
+        { role: 'mira', text: d('d3m3') },
+        { role: 'user', text: d('d3u4') },
+        { role: 'mira', text: d('d3m4') },
+      ],
+    },
+  ];
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [activeIdx]);
+
+  const active = dialogues[activeIdx];
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-16">
@@ -37,56 +96,83 @@ export function HeroSection() {
               <Link href="#therapists">{t('ctaTherapist')}</Link>
             </Button>
           </div>
+
+          <p className="text-xs text-muted-foreground/70">{d('poweredBy')}</p>
         </div>
 
-        {/* Right: chat preview */}
-        <div ref={chatRef} className="flex justify-center lg:justify-end">
-          <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-card shadow-soft-lg">
-            <div className="border-b border-border/50 px-4 py-3">
-              <p className="text-sm font-medium text-muted-foreground">{t('chatLabel')}</p>
+        {/* Right: dialogue carousel */}
+        <div className="flex justify-center lg:justify-end">
+          <div className="w-full space-y-3">
+            {/* Tabs */}
+            <div className="flex flex-wrap gap-1.5">
+              {dialogues.map((dial, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIdx(i)}
+                  className={cn(
+                    'rounded-lg px-3 py-2 text-xs font-medium transition-all',
+                    i === activeIdx
+                      ? 'bg-blush-100 text-blush-700'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {dial.tag}
+                </button>
+              ))}
             </div>
-            <div className="space-y-3 p-4">
-              {/* User message */}
-              <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                  {t('chatMessage1')}
-                </div>
-              </div>
-              {/* Mira reply */}
-              <div className="flex gap-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blush-100 text-xs font-semibold text-blush-600">
+
+            {/* Card */}
+            <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft-lg">
+              {/* Card header */}
+              <div className="flex items-center gap-2.5 border-b border-border/50 px-4 py-3">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush-100 text-xs font-semibold text-blush-600">
                   M
                 </div>
-                <div className="max-w-[80%] rounded-2xl rounded-bl-md bg-muted/60 px-4 py-2.5 text-sm text-foreground">
-                  {t('chatReply1')}
-                </div>
+                <span className="text-sm font-medium text-foreground">Mira</span>
+                <span className="ml-auto rounded-full bg-blush-50 px-2.5 py-0.5 text-xs text-blush-600">
+                  {active.title}
+                </span>
               </div>
-              {/* User message 2 */}
-              <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                  {t('chatMessage2')}
+
+              {/* Messages */}
+              <div className="relative">
+                <div ref={scrollRef} className="h-[500px] space-y-2.5 overflow-y-auto p-4">
+                  {active.messages.map((msg, i) =>
+                    msg.role === 'user' ? (
+                      <div key={i} className="flex justify-end">
+                        <div className="max-w-[82%] rounded-2xl rounded-br-md bg-primary px-3.5 py-2 text-xs leading-relaxed text-primary-foreground">
+                          {msg.text}
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={i} className="flex gap-2">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush-100 text-xs font-semibold text-blush-600">
+                          M
+                        </div>
+                        <div className="max-w-[82%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-muted/60 px-3.5 py-2 text-xs leading-relaxed text-foreground">
+                          {msg.text}
+                        </div>
+                      </div>
+                    ),
+                  )}
                 </div>
+                {/* Fade */}
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-card to-transparent" />
               </div>
-              {/* Mira reply 2 */}
-              <div className="flex gap-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blush-100 text-xs font-semibold text-blush-600">
-                  M
-                </div>
-                <div className="max-w-[80%] rounded-2xl rounded-bl-md bg-muted/60 px-4 py-2.5 text-sm text-foreground">
-                  {t('chatReply2')}
-                </div>
-              </div>
-              {/* Typing indicator */}
-              <div className="flex gap-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blush-100 text-xs font-semibold text-blush-600">
-                  M
-                </div>
-                <div className="flex items-center gap-1 rounded-2xl rounded-bl-md bg-muted/60 px-4 py-3">
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:0ms]" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:300ms]" />
-                </div>
-              </div>
+            </div>
+
+            {/* Dots */}
+            <div className="flex justify-center gap-1.5">
+              {dialogues.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIdx(i)}
+                  className={cn(
+                    'h-1.5 rounded-full transition-all',
+                    i === activeIdx ? 'w-5 bg-primary' : 'w-1.5 bg-border hover:bg-muted-foreground/40',
+                  )}
+                />
+              ))}
             </div>
           </div>
         </div>

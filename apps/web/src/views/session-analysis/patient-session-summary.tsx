@@ -11,6 +11,7 @@ import { cn } from '@/shared/lib/utils';
 
 interface ExtendedAnalysis extends SessionAnalysisDto {
   moodInsight?: string | null;
+  patientSummary?: string | null;
   keyEmotions?: string[];
   keyTopics?: string[];
   riskFlags?: string | null;
@@ -32,6 +33,42 @@ function isClinicianOnly(rec: string): boolean {
   return CLINICAL_KEYWORDS.some((kw) => lower.includes(kw));
 }
 
+// Backward-compat: replace clinical third-person "пациент" in old analyses
+function humanizeText(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/пациент[уаоеёюяи]?\s/gi, 'ты ')
+    .replace(/^пациент[уаоеёюяи]?$/gi, 'ты');
+}
+
+const FRIENDLY_DISTORTION_NAMES: Record<string, string> = {
+  'Catastrophizing': 'Мысль-катастрофа',
+  'Катастрофизация': 'Мысль-катастрофа',
+  'All-or-Nothing Thinking': '"Всё или ничего"',
+  'Чёрно-белое мышление': '"Всё или ничего"',
+  'Should Statements': '"Должен"',
+  'Долженствование': '"Должен"',
+  'Overgeneralization': 'Обобщение',
+  'Сверхобобщение': 'Обобщение',
+  'Fortune Telling': 'Предсказание',
+  'Предсказание будущего': 'Предсказание',
+  'Personalization': 'Всё из-за меня',
+  'Персонализация': 'Всё из-за меня',
+  'Mental Filter': 'Фильтр негатива',
+  'Ментальный фильтр': 'Фильтр негатива',
+  'Discounting the Positive': 'Обесценивание',
+  'Disqualifying the Positive': 'Обесценивание',
+  'Обесценивание позитивного': 'Обесценивание',
+  'Labeling': 'Ярлыки',
+  'Навешивание ярлыков': 'Ярлыки',
+  'Mind Reading': 'Чтение мыслей',
+  'Чтение мыслей': 'Чтение мыслей',
+  'Jumping to Conclusions': 'Поспешный вывод',
+  'Поспешные выводы': 'Поспешный вывод',
+  'Emotional Reasoning': 'Чувство = факт',
+  'Эмоциональное рассуждение': 'Чувство = факт',
+};
+
 const EMOTION_KEYS: Record<string, string> = {
   anxiety: 'emotionAnxiety', sadness: 'emotionSadness', joy: 'emotionJoy',
   calm: 'emotionCalm', irritation: 'emotionIrritation', fear: 'emotionFear',
@@ -46,7 +83,11 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
   const ext = analysis as ExtendedAnalysis;
 
   const miraMessage =
-    ext.moodInsight && ext.moodInsight.length >= 20 ? ext.moodInsight : t('defaultMessage');
+    (ext.patientSummary && ext.patientSummary.length >= 20)
+      ? ext.patientSummary
+      : (ext.moodInsight && ext.moodInsight.length >= 20)
+        ? ext.moodInsight
+        : t('defaultMessage');
 
   const patientRecs = (analysis.recommendations ?? []).filter((r) => !isClinicianOnly(r));
 
@@ -117,7 +158,7 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
         {/* Progress */}
         <Tile title={t('progressNote')} icon="✨" scrollable>
           <p className="text-xs leading-relaxed text-foreground/80">
-            {analysis.progressSummary || '—'}
+            {humanizeText(analysis.progressSummary) || '—'}
           </p>
         </Tile>
 
@@ -131,19 +172,23 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
         >
           {analysis.cognitiveDistortions.length > 0 ? (
             <div className="space-y-3">
-              {analysis.cognitiveDistortions.map((d, i) => (
-                <div key={i} className="flex gap-2 text-xs">
-                  <span className="mt-0.5 shrink-0">{i === 0 ? '💡' : '🔄'}</span>
-                  <div>
-                    <p className="leading-relaxed">{d.description}</p>
-                    {d.example && (
-                      <p className="mt-0.5 italic text-muted-foreground">
-                        &ldquo;{d.example}&rdquo;
-                      </p>
-                    )}
+              {analysis.cognitiveDistortions.map((d, i) => {
+                const friendlyName = FRIENDLY_DISTORTION_NAMES[d.type] ?? d.type;
+                return (
+                  <div key={i} className="flex gap-2 text-xs">
+                    <span className="mt-0.5 shrink-0">{i === 0 ? '💡' : '🔄'}</span>
+                    <div>
+                      <p className="mb-0.5 font-medium">{friendlyName}</p>
+                      <p className="leading-relaxed text-foreground/80">{d.description}</p>
+                      {d.example && (
+                        <p className="mt-0.5 italic text-muted-foreground">
+                          &ldquo;{d.example}&rdquo;
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <Empty />
@@ -157,13 +202,13 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
               {patientRecs.map((r, i) => (
                 <div key={i} className="flex gap-1.5 text-xs">
                   <span className="mt-0.5 shrink-0 text-primary">•</span>
-                  <span>{r}</span>
+                  <span>{humanizeText(r)}</span>
                 </div>
               ))}
               {(analysis.homework ?? []).map((item, i) => (
                 <div key={`hw-${i}`} className="flex gap-1.5 text-xs">
                   <span className="mt-0.5 shrink-0 text-muted-foreground">{i + 1}.</span>
-                  <span>{item}</span>
+                  <span>{humanizeText(item)}</span>
                 </div>
               ))}
             </div>

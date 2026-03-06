@@ -79,13 +79,17 @@ function TypingIndicator() {
 export function ChatWindow({ messages, isStreaming }: ChatWindowProps) {
   const t = useTranslations('chat');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const msgCountRef = useRef(messages.length);
 
-  const scrollToBottom = useCallback(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  const scrollToBottom = useCallback((smooth: boolean) => {
+    bottomRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'end' });
   }, []);
 
+  // Smooth scroll only when a new message is added (not on every content update)
   useEffect(() => {
-    scrollToBottom();
+    const isNewMessage = messages.length !== msgCountRef.current;
+    msgCountRef.current = messages.length;
+    scrollToBottom(isNewMessage);
   }, [messages.length, messages[messages.length - 1]?.content, scrollToBottom]);
 
   const lastIsStreaming = messages.at(-1)?.isStreaming;
