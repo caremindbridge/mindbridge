@@ -14,8 +14,10 @@ async function bootstrap() {
   // Global prefix — all routes under /api (except health check at /)
   app.setGlobalPrefix('api', { exclude: ['/'] });
 
+  const corsOrigin = process.env.CORS_ORIGIN || configService.get<string>('frontendUrl') || 'http://localhost:3000';
+  const origins = corsOrigin.split(',').map((o) => o.trim());
   app.enableCors({
-    origin: configService.get<string>('frontendUrl') ?? 'http://localhost:3000',
+    origin: origins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Locale'],
