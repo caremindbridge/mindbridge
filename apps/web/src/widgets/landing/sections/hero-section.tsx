@@ -70,7 +70,7 @@ export function HeroSection() {
   const active = dialogues[activeIdx];
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-16">
+    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-12 pt-16 md:px-6 md:pb-16 md:pt-24">
       {/* Soft background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
@@ -80,37 +80,36 @@ export function HeroSection() {
         {/* Left: headline + CTAs */}
         <div className="space-y-8">
           <div className="space-y-5">
-            <h1 className="font-serif text-5xl font-medium leading-tight tracking-tight text-foreground md:text-6xl">
+            <h1 className="font-serif text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
               {t('title')}
             </h1>
-            <p className="max-w-md text-lg leading-relaxed text-muted-foreground">
+            <p className="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
               {t('subtitle')}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="px-8 text-base">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button asChild size="lg" className="w-full px-8 text-base sm:w-auto">
               <Link href="/register">{t('cta')}</Link>
             </Button>
-            <Button asChild variant="ghost" size="lg" className="px-8 text-base">
+            <Button asChild variant="ghost" size="lg" className="w-full px-8 text-base sm:w-auto">
               <Link href="#therapists">{t('ctaTherapist')}</Link>
             </Button>
           </div>
 
-          <p className="text-xs text-muted-foreground/70">{d('poweredBy')}</p>
         </div>
 
         {/* Right: dialogue carousel */}
         <div className="flex justify-center lg:justify-end">
           <div className="w-full space-y-3">
-            {/* Tabs */}
-            <div className="flex flex-wrap gap-1.5">
+            {/* Tabs — horizontal scroll on mobile, no wrap */}
+            <div className="flex gap-1.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
               {dialogues.map((dial, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveIdx(i)}
                   className={cn(
-                    'rounded-lg px-3 py-2 text-xs font-medium transition-all',
+                    'shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-all',
                     i === activeIdx
                       ? 'bg-blush-100 text-blush-700'
                       : 'text-muted-foreground hover:text-foreground',
@@ -136,7 +135,7 @@ export function HeroSection() {
 
               {/* Messages */}
               <div className="relative">
-                <div ref={scrollRef} className="h-[500px] space-y-2.5 overflow-y-auto p-4">
+                <div ref={scrollRef} className="h-[300px] space-y-2.5 overflow-y-auto p-4 md:h-[500px]">
                   {active.messages.map((msg, i) =>
                     msg.role === 'user' ? (
                       <div key={i} className="flex justify-end">
@@ -161,18 +160,21 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Dots */}
-            <div className="flex justify-center gap-1.5">
-              {dialogues.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIdx(i)}
-                  className={cn(
-                    'h-1.5 rounded-full transition-all',
-                    i === activeIdx ? 'w-5 bg-primary' : 'w-1.5 bg-border hover:bg-muted-foreground/40',
-                  )}
-                />
-              ))}
+            {/* Dots + powered by */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex gap-1.5">
+                {dialogues.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIdx(i)}
+                    className={cn(
+                      'h-1.5 rounded-full transition-all',
+                      i === activeIdx ? 'w-5 bg-primary' : 'w-1.5 bg-border hover:bg-muted-foreground/40',
+                    )}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground/50">{d('poweredBy')}</p>
             </div>
           </div>
         </div>

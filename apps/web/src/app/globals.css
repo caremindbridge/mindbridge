@@ -29,14 +29,26 @@
 }
 
 /* === LANDING FADE-IN === */
-.fade-section {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+/* Desktop only — animations can be janky on mobile */
+@media (min-width: 768px) {
+  .fade-section {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.fade-section.visible {
-  opacity: 1;
-  transform: translateY(0);
+
+/* Mobile: all sections immediately visible */
+@media (max-width: 767px) {
+  .fade-section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* === SKELETON SHIMMER === */
@@ -198,6 +210,31 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Prevent iOS input zoom (inputs must be ≥16px to avoid auto-zoom) */
+@media (max-width: 767px) {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  textarea,
+  select {
+    font-size: 16px;
   }
 }
 

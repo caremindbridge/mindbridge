@@ -15,13 +15,13 @@ export function StatsSection() {
   ];
 
   return (
-    <section ref={ref} className="fade-section border-y border-border/50 bg-muted/30 px-6 py-16">
+    <section ref={ref} className="fade-section border-y border-border/50 bg-muted/30 px-4 py-12 md:px-6 md:py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-3 gap-4 md:gap-8">
           {stats.map((s) => (
             <div key={s.value} className="space-y-2 text-center">
-              <p className="font-serif text-5xl font-medium text-primary">{s.value}</p>
-              <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="font-serif text-3xl font-medium text-primary md:text-5xl">{s.value}</p>
+              <p className="text-xs text-muted-foreground md:text-sm">{s.label}</p>
             </div>
           ))}
         </div>

@@ -10,12 +10,12 @@ export function FounderSection() {
   const ref = useFadeIn<HTMLElement>();
 
   return (
-    <section ref={ref} className="fade-section bg-blush-50 px-6 py-24">
+    <section ref={ref} className="fade-section bg-blush-50 px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-col gap-12 md:flex-row md:items-center md:gap-16">
+        <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           {/* Text */}
           <div className="flex-1">
-            <blockquote className="mb-8 border-l-2 border-blush-300 pl-5 font-serif text-3xl font-medium leading-snug text-foreground md:text-4xl">
+            <blockquote className="mb-8 border-l-2 border-blush-300 pl-5 font-serif text-2xl font-medium leading-snug text-foreground md:text-3xl lg:text-4xl">
               &ldquo;{t('quote')}&rdquo;
             </blockquote>
 
@@ -33,7 +33,7 @@ export function FounderSection() {
 
           {/* Photo */}
           <div className="flex shrink-0 flex-col items-center gap-3 md:order-2">
-            <div className="relative h-56 w-56 overflow-hidden rounded-full shadow-lg ring-4 ring-blush-200 ring-offset-4 ring-offset-blush-50">
+            <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-lg ring-4 ring-blush-200 ring-offset-4 ring-offset-blush-50 md:h-56 md:w-56">
               <Image
                 src="/founder.png"
                 alt="Alex"

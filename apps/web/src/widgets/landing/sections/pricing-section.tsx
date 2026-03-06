@@ -46,9 +46,9 @@ export function PricingSection() {
   ];
 
   return (
-    <section id="pricing" ref={ref} className="fade-section px-6 py-24">
+    <section id="pricing" ref={ref} className="fade-section px-4 py-16 md:px-6 md:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="mb-14 font-serif text-3xl font-medium tracking-tight text-foreground md:text-4xl">
+        <h2 className="mb-8 font-serif text-2xl font-medium tracking-tight text-foreground md:mb-14 md:text-3xl lg:text-4xl">
           {t('title')}
         </h2>
 

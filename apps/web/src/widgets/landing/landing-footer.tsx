@@ -8,7 +8,7 @@ export function LandingFooter() {
 
   return (
     <footer className="border-t border-border/50 bg-muted/30">
-      <div className="mx-auto max-w-6xl px-6 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
             <Logo size="default" />

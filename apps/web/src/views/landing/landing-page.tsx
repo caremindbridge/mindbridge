@@ -11,7 +11,7 @@ import { CtaSection } from '@/widgets/landing/sections/cta-section';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <LandingHeader />
       <main>
         <HeroSection />

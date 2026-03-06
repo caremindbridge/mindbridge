@@ -50,7 +50,7 @@ export function TherapistSection() {
     <section
       id={t('id')}
       ref={ref}
-      className="fade-section border-t border-border/50 bg-muted/20 px-6 py-24"
+      className="fade-section border-t border-border/50 bg-muted/20 px-4 py-16 md:px-6 md:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-16 grid gap-10 lg:grid-cols-2 lg:items-start">
@@ -58,7 +58,7 @@ export function TherapistSection() {
             <p className="text-sm font-semibold uppercase tracking-wider text-primary">
               {t('title')}
             </p>
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground md:text-4xl">
+            <h2 className="font-serif text-2xl font-medium tracking-tight text-foreground md:text-3xl lg:text-4xl">
               {t('subtitle')}
             </h2>
             <p className="text-base leading-relaxed text-muted-foreground">{t('body')}</p>
