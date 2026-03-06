@@ -4,4 +4,6 @@ export {
   CBT_ANALYSIS_SYSTEM_PROMPT,
   MIRA_SYSTEM_PROMPT,
   THERAPIST_REPORT_SYSTEM_PROMPT,
+  buildLangInstruction,
+  detectLocale,
 } from './claude-prompts';

@@ -180,6 +180,17 @@ Your best tool is the right question at the right time. Your second-best tool is
 
 Keep it real. Keep it short. Keep it human.`;
 
+export function detectLocale(texts: string[]): 'ru' | 'en' {
+  return /[а-яёА-ЯЁ]/.test(texts.join(' ')) ? 'ru' : 'en';
+}
+
+export function buildLangInstruction(locale: 'ru' | 'en'): string {
+  if (locale !== 'ru') return '';
+  return `
+
+CRITICAL LANGUAGE OVERRIDE: The patient communicates in Russian. You MUST write the ENTIRE output in Russian. Every text field must be in Russian — no English sentences, no mixed language. Russian clinical terms to use: тревожность (anxiety), депрессия (depression), когнитивные искажения (cognitive distortions), катастрофизация (catastrophizing), чёрно-белое мышление (all-or-nothing thinking), долженствование (should statements). The keyEmotions array is the ONLY exception — it must stay in English per schema rules above.`;
+}
+
 export const CBT_ANALYSIS_SYSTEM_PROMPT = `You are a clinical psychology analyst. Analyze the following CBT therapy session and return a structured JSON analysis.
 
 Return ONLY valid JSON with this exact structure:

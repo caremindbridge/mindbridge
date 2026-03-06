@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { PatientProfileData, PatientSummary } from '@mindbridge/types/src/therapist';
 
 import {
+  ApiError,
   acceptInvite,
   disconnectFromTherapist,
   getMyTherapist,
@@ -38,17 +39,31 @@ export function useInvitePatient() {
 }
 
 export function useAcceptInvite() {
-  return useMutation({ mutationFn: acceptInvite });
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: acceptInvite,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['my-therapist'] }),
+  });
 }
 
 export function useMyTherapist() {
-  return useQuery({ queryKey: ['my-therapist'], queryFn: getMyTherapist });
+  return useQuery({
+    queryKey: ['my-therapist'],
+    queryFn: async () => {
+      try {
+        return await getMyTherapist();
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 404) return null;
+        throw err;
+      }
+    },
+  });
 }
 
 export function useDisconnectFromTherapist() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: disconnectFromTherapist,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['my-therapist'] }),
+    onSuccess: () => qc.setQueryData(['my-therapist'], null),
   });
 }

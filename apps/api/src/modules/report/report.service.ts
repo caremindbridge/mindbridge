@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 
 import { SessionAnalysis } from '../chat/entities/session-analysis.entity';
-import { THERAPIST_REPORT_SYSTEM_PROMPT } from '../claude';
+import { THERAPIST_REPORT_SYSTEM_PROMPT, buildLangInstruction, detectLocale } from '../claude';
 import { ClaudeService } from '../claude/claude.service';
 import { Mood } from '../mood/mood.entity';
 import { RedisService } from '../redis/redis.service';
@@ -120,7 +120,19 @@ export class ReportService {
 
       const patientData = this.buildPatientDataText(moods, analyses, periodStart, periodEnd);
 
-      const rawJson = await this.claudeService.generateAnalysis(THERAPIST_REPORT_SYSTEM_PROMPT, [
+      const localeTexts = [
+        ...moods.map((m) => m.note ?? ''),
+        ...analyses.flatMap((a) => [
+          ...(a.keyTopics ?? []),
+          a.progressSummary ?? '',
+          a.moodInsight ?? '',
+          a.therapistBrief ?? '',
+        ]),
+      ];
+      const locale = detectLocale(localeTexts);
+      const reportPrompt = THERAPIST_REPORT_SYSTEM_PROMPT + buildLangInstruction(locale);
+
+      const rawJson = await this.claudeService.generateAnalysis(reportPrompt, [
         { role: 'user', content: patientData },
       ]);
 

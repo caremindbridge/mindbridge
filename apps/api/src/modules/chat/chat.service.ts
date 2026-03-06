@@ -13,6 +13,8 @@ import {
   CBT_ANALYSIS_SYSTEM_PROMPT,
   MIRA_SYSTEM_PROMPT,
   ClaudeService,
+  buildLangInstruction,
+  detectLocale,
 } from '../claude';
 import { ProfileService } from '../profile/profile.service';
 import { RedisService } from '../redis';
@@ -263,10 +265,10 @@ export class ChatService {
       }));
 
     try {
-      let rawJson = await this.claudeService.generateAnalysis(
-        CBT_ANALYSIS_SYSTEM_PROMPT,
-        claudeMessages,
-      );
+      const locale = detectLocale(claudeMessages.map((m) => m.content));
+      const analysisPrompt = CBT_ANALYSIS_SYSTEM_PROMPT + buildLangInstruction(locale);
+
+      let rawJson = await this.claudeService.generateAnalysis(analysisPrompt, claudeMessages);
 
       // Strip markdown code fences if Claude wraps the JSON
       rawJson = rawJson.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');

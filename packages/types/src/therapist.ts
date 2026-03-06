@@ -65,7 +65,7 @@ export interface TherapistReport {
 export interface PatientSummary {
   linkId: string;
   linkStatus: 'pending' | 'active' | 'inactive';
-  patient: { id: string; email: string };
+  patient: { id: string; email: string; name: string | null };
   avgMood: number | null;
   anxietyLevel: number | null;
   depressionLevel: number | null;
@@ -88,7 +88,7 @@ export interface ProfileAnalysis {
 }
 
 export interface PatientProfileData {
-  patient: { id: string; email: string };
+  patient: { id: string; email: string; name: string | null };
   linkStatus: string;
   connectedAt: string | null;
   moodStats: { avgMood: number | null; totalEntries: number };

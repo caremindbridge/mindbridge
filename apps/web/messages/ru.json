@@ -413,6 +413,7 @@
     "since": "С {date}",
     "disconnect": "Отключиться",
     "disconnectConfirm": "Вы уверены, что хотите отключиться от терапевта?",
+    "disconnectedSuccess": "Вы отключились от терапевта",
     "notConnected": "Терапевт не подключён",
     "enterInviteCode": "Ввести код приглашения",
     "practice": "Практика",
@@ -594,7 +595,7 @@
     "riskFlags": "Тревожные сигналы",
     "suggestedFocus": "Рекомендуемый фокус",
     "noPatients": "Пока нет пациентов. Пригласите первого пациента.",
-    "searchPatients": "Поиск по email...",
+    "searchPatients": "Поиск по имени или email...",
     "inviteCode": "Код приглашения",
     "patientEmail": "Email пациента",
     "sendInvite": "Отправить приглашение",
@@ -636,7 +637,11 @@
     "connectedAgo": "Подключён",
     "focusTitle": "Фокус",
     "depressionBadge": "Депрессия",
-    "generated": "Создано"
+    "generated": "Создано",
+    "reportStatusReady": "Готово",
+    "reportStatusGenerating": "Генерация...",
+    "reportStatusError": "Ошибка",
+    "noEmotionDistribution": "Данных об эмоциях пока нет"
   },
   "analysis": {
     "distortions": "Искажения",

@@ -413,6 +413,7 @@
     "since": "Since {date}",
     "disconnect": "Disconnect",
     "disconnectConfirm": "Are you sure you want to disconnect from your therapist?",
+    "disconnectedSuccess": "Disconnected from therapist",
     "notConnected": "Not connected to a therapist",
     "enterInviteCode": "Enter invite code",
     "practice": "Practice",
@@ -594,7 +595,7 @@
     "riskFlags": "Risk Flags",
     "suggestedFocus": "Suggested Focus",
     "noPatients": "No patients yet. Invite your first patient.",
-    "searchPatients": "Search by email...",
+    "searchPatients": "Search by name or email...",
     "inviteCode": "Invite code",
     "patientEmail": "Patient email",
     "sendInvite": "Send Invite",
@@ -636,7 +637,11 @@
     "connectedAgo": "Connected",
     "focusTitle": "Focus",
     "depressionBadge": "Depression",
-    "generated": "Generated"
+    "generated": "Generated",
+    "reportStatusReady": "Ready",
+    "reportStatusGenerating": "Generating...",
+    "reportStatusError": "Error",
+    "noEmotionDistribution": "No emotion data yet"
   },
   "analysis": {
     "distortions": "Distortions",

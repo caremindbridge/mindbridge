@@ -4,7 +4,7 @@ import type { ProfileAnalysis } from '@mindbridge/types/src/therapist';
 import { format, formatDistanceToNow } from 'date-fns';
 import { Activity, ArrowLeft, BarChart3, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -95,7 +95,10 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             </Link>
           </Button>
           <div>
-            <h1 className="text-xl font-bold">{profile.patient.email}</h1>
+            <h1 className="text-xl font-bold">{profile.patient.name || profile.patient.email}</h1>
+            {profile.patient.name && (
+              <p className="text-xs text-muted-foreground">{profile.patient.email}</p>
+            )}
             {profile.connectedAt && (
               <p className="text-xs text-muted-foreground">
                 {t('connectedAgo')} {formatDistanceToNow(new Date(profile.connectedAt), { addSuffix: true })}
@@ -112,19 +115,16 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           icon={<Activity className="h-4 w-4" />}
           label={t('avgAnxiety')}
           value={avgAnxiety ?? '—'}
-          description={t('outOf10')}
         />
         <StatCard
           icon={<TrendingDown className="h-4 w-4" />}
           label={t('avgDepression')}
           value={avgDepression ?? '—'}
-          description={t('outOf10')}
         />
         <StatCard
           icon={<BarChart3 className="h-4 w-4" />}
           label={t('avgMood')}
           value={profile.moodStats.avgMood != null ? profile.moodStats.avgMood.toFixed(1) : '—'}
-          description={t('outOf10')}
         />
         <StatCard
           icon={<TrendingUp className="h-4 w-4" />}
@@ -183,12 +183,16 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           </Card>
 
           {/* Emotion Distribution */}
-          {profile.emotionDistribution.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('emotionDistribution')}</CardTitle>
-              </CardHeader>
-              <CardContent>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('emotionDistribution')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {profile.emotionDistribution.length === 0 ? (
+                <div className="flex h-[80px] items-center justify-center text-sm text-muted-foreground">
+                  {t('noEmotionDistribution')}
+                </div>
+              ) : (
                 <div className="space-y-2">
                   {profile.emotionDistribution.map(({ emotion, count }) => {
                     const max = profile.emotionDistribution[0]?.count ?? 1;
@@ -208,9 +212,9 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                     );
                   })}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* --- Analysis Tab --- */}
@@ -251,9 +255,21 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
   );
 }
 
+const EMOTION_RU: Record<string, string> = {
+  anxiety: 'Тревога', sadness: 'Грусть', joy: 'Радость', calm: 'Спокойствие',
+  irritation: 'Раздражение', fear: 'Страх', anger: 'Злость', hope: 'Надежда',
+  loneliness: 'Одиночество', gratitude: 'Благодарность', guilt: 'Вина',
+  shame: 'Стыд', frustration: 'Разочарование', stress: 'Стресс',
+  overwhelm: 'Перегруженность', panic: 'Паника', worry: 'Беспокойство',
+  relief: 'Облегчение', contentment: 'Удовлетворение', grief: 'Горе',
+};
+
 function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
   const t = useTranslations('therapist');
+  const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
+  const localizeEmotion = (e: string) => (locale === 'ru' ? (EMOTION_RU[e.toLowerCase()] ?? e) : e);
+
   return (
     <Card>
       <CardContent className="p-4">
@@ -285,7 +301,7 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
             {analysis.keyEmotions && analysis.keyEmotions.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {analysis.keyEmotions.map((e) => (
-                  <Badge key={e} variant="secondary" className="text-xs">{e}</Badge>
+                  <Badge key={e} variant="secondary" className="text-xs">{localizeEmotion(e)}</Badge>
                 ))}
               </div>
             )}
@@ -375,6 +391,12 @@ function ReportRow({
 
   const statusVariant =
     knownStatus === 'ready' ? 'default' : knownStatus === 'error' ? 'destructive' : 'secondary';
+  const statusLabel =
+    knownStatus === 'ready'
+      ? t('reportStatusReady')
+      : knownStatus === 'error'
+        ? t('reportStatusError')
+        : t('reportStatusGenerating');
 
   return (
     <Card>
@@ -389,7 +411,7 @@ function ReportRow({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant={statusVariant}>{knownStatus}</Badge>
+            <Badge variant={statusVariant}>{statusLabel}</Badge>
             <span className="text-xs text-muted-foreground">{expanded ? '▲' : '▼'}</span>
           </div>
         </button>

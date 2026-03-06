@@ -10,7 +10,6 @@ import { useMemo, useState } from 'react';
 import { usePatients } from '@/entities/therapist';
 import { InvitePatientDialog } from '@/features/therapist';
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -25,13 +24,6 @@ const STATUS_COLOR_CLASS: Record<PatientSummary['statusColor'], string> = {
   red: 'bg-rose-500',
 };
 
-function anxietyVariant(level: number | null): 'default' | 'secondary' | 'destructive' {
-  if (level === null) return 'secondary';
-  if (level >= 7) return 'destructive';
-  if (level >= 5) return 'default';
-  return 'secondary';
-}
-
 function PatientCard({
   patient,
   onClick,
@@ -40,6 +32,7 @@ function PatientCard({
   onClick: () => void;
 }) {
   const t = useTranslations('therapist');
+  const displayName = patient.patient.name || patient.patient.email;
   const lastSeen = patient.lastActivity
     ? formatDistanceToNow(new Date(patient.lastActivity), { addSuffix: true })
     : t('never');
@@ -55,19 +48,34 @@ function PatientCard({
             className={`h-3 w-3 shrink-0 rounded-full ${STATUS_COLOR_CLASS[patient.statusColor]}`}
           />
           <div className="min-w-0 flex-1">
-            <p className="truncate font-medium">{patient.patient.email}</p>
+            <p className="truncate font-medium">{displayName}</p>
+            {patient.patient.name && (
+              <p className="truncate text-xs text-muted-foreground">{patient.patient.email}</p>
+            )}
             {patient.riskFlags && (
-              <p className="mt-0.5 text-xs text-destructive">⚠️ {patient.riskFlags}</p>
+              <p className="mt-0.5 line-clamp-1 text-xs text-destructive">⚠️ {patient.riskFlags}</p>
             )}
             <p className="mt-0.5 text-xs text-muted-foreground">{t('lastActivity')} {lastSeen}</p>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <Badge variant="secondary">
-              {t('moodBadge')} {patient.avgMood != null ? patient.avgMood.toFixed(1) : '—'}
-            </Badge>
-            <Badge variant={anxietyVariant(patient.anxietyLevel)}>
-              {t('anxietyBadge')} {patient.anxietyLevel ?? '—'}
-            </Badge>
+          <div className="shrink-0 text-right text-xs text-muted-foreground">
+            <p>
+              {t('moodBadge')}:{' '}
+              <span className="font-medium text-foreground">
+                {patient.avgMood != null ? patient.avgMood.toFixed(1) : '—'}
+              </span>
+            </p>
+            <p>
+              {t('anxietyBadge')}:{' '}
+              <span
+                className={`font-medium ${
+                  patient.anxietyLevel != null && patient.anxietyLevel >= 7
+                    ? 'text-destructive'
+                    : 'text-foreground'
+                }`}
+              >
+                {patient.anxietyLevel ?? '—'}
+              </span>
+            </p>
           </div>
         </div>
       </CardContent>
@@ -85,9 +93,13 @@ export function TherapistDashboardPage() {
 
   const filtered = useMemo(
     () =>
-      (patients ?? []).filter((p) =>
-        p.patient.email.toLowerCase().includes(search.toLowerCase()),
-      ),
+      (patients ?? []).filter((p) => {
+        const q = search.toLowerCase();
+        return (
+          p.patient.email.toLowerCase().includes(q) ||
+          (p.patient.name?.toLowerCase().includes(q) ?? false)
+        );
+      }),
     [patients, search],
   );
 

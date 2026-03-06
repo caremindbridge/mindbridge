@@ -113,14 +113,30 @@ export class TherapistService {
     }
 
     const code = generateCode();
-    const link = await this.linkRepo.save(
-      this.linkRepo.create({
-        therapistId,
-        patientId: patient.id,
+
+    // If a previous inactive link exists, reuse it (unique constraint on therapistId+patientId)
+    const inactive = await this.linkRepo.findOne({
+      where: { therapistId, patientId: patient.id, status: 'inactive' },
+    });
+
+    let link: PatientTherapist;
+    if (inactive) {
+      await this.linkRepo.update(inactive.id, {
         status: 'pending',
         inviteCode: code,
-      }),
-    );
+        connectedAt: null as unknown as Date,
+      });
+      link = { ...inactive, status: 'pending', inviteCode: code };
+    } else {
+      link = await this.linkRepo.save(
+        this.linkRepo.create({
+          therapistId,
+          patientId: patient.id,
+          status: 'pending',
+          inviteCode: code,
+        }),
+      );
+    }
 
     await this.redisService.setInviteCode(code, {
       linkId: link.id,
@@ -209,7 +225,7 @@ export class TherapistService {
         return {
           linkId: link.id,
           linkStatus: link.status,
-          patient: { id: link.patient.id, email: link.patient.email },
+          patient: { id: link.patient.id, email: link.patient.email, name: link.patient.name },
           avgMood,
           anxietyLevel,
           depressionLevel,
@@ -261,7 +277,7 @@ export class TherapistService {
       .sort((a, b) => b.count - a.count);
 
     return {
-      patient: { id: link.patient.id, email: link.patient.email },
+      patient: { id: link.patient.id, email: link.patient.email, name: link.patient.name },
       linkStatus: link.status,
       connectedAt: link.connectedAt,
       moodStats: { avgMood, totalEntries: moods.length },

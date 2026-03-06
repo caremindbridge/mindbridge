@@ -1,25 +1,38 @@
 'use client';
 
 import { format } from 'date-fns';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
 
 import { useDisconnectFromTherapist, useMyTherapist } from '@/entities/therapist';
 import { AcceptInviteDialog } from '@/features/therapist';
-import { Button, Card, CardContent, Skeleton } from '@/shared/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Skeleton,
+} from '@/shared/ui';
 
 export function TherapistConnectionSection() {
   const t = useTranslations('settings');
+  const tc = useTranslations('common');
   const { data: therapist, isLoading } = useMyTherapist();
   const disconnect = useDisconnectFromTherapist();
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleDisconnect = async () => {
-    if (!confirm(t('disconnectConfirm'))) return;
     try {
       await disconnect.mutateAsync();
-      toast.success('Disconnected from therapist');
+      setConfirmOpen(false);
+      toast.success(t('disconnectedSuccess'));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to disconnect');
     }
@@ -58,8 +71,7 @@ export function TherapistConnectionSection() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={handleDisconnect}
-                    disabled={disconnect.isPending}
+                    onClick={() => setConfirmOpen(true)}
                     className="shrink-0 border-destructive/30 text-destructive hover:bg-destructive/5 hover:text-destructive"
                   >
                     {t('disconnect')}
@@ -79,6 +91,28 @@ export function TherapistConnectionSection() {
       </Card>
 
       <AcceptInviteDialog open={inviteOpen} onClose={() => setInviteOpen(false)} />
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t('disconnect')}</DialogTitle>
+            <DialogDescription>{t('disconnectConfirm')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setConfirmOpen(false)}>
+              {tc('cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDisconnect}
+              disabled={disconnect.isPending}
+            >
+              {t('disconnect')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
