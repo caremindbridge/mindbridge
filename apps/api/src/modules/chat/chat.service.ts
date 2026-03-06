@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 
 import {
   CBT_ANALYSIS_SYSTEM_PROMPT,
-  CBT_THERAPIST_SYSTEM_PROMPT,
+  MIRA_SYSTEM_PROMPT,
   ClaudeService,
 } from '../claude';
 import { ProfileService } from '../profile/profile.service';
@@ -164,7 +164,7 @@ export class ChatService {
         content: m.content,
       }));
 
-      let systemPrompt = CBT_THERAPIST_SYSTEM_PROMPT;
+      let systemPrompt = MIRA_SYSTEM_PROMPT;
 
       if (session) {
         const profile = await this.profileService.getByUserId(session.userId);
