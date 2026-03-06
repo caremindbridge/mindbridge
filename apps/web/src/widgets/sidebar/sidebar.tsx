@@ -87,7 +87,7 @@ export function Sidebar() {
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
         {navItems.map((item) => {
-          const isActive = item.exact
+          const isActive = 'exact' in item && item.exact
             ? pathname === item.href
             : pathname.startsWith(item.href);
           return (
