@@ -589,7 +589,11 @@
     "trialDescription": "50 сообщений, чтобы попробовать Миру. Без карты.",
     "upgradeForAnalytics": "Обновите до Standard для доступа к аналитике",
     "upgradeForTherapist": "Обновите до Standard для связи с терапевтом",
-    "upgradeTo": "Обновить до Standard"
+    "upgradeTo": "Обновить до Standard",
+    "paymentComingSoon": "Скоро",
+    "perMonth": "/мес",
+    "yearShort": "год",
+    "perSeatPerMonth": "/место/мес"
   },
   "subscription": {
     "messages": "Сообщения",

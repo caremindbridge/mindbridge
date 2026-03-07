@@ -18,16 +18,26 @@ export function middleware(request: NextRequest) {
     response = NextResponse.next();
   }
 
-  // Auto-detect locale on first visit (if cookie not set)
-  const localeCookie = request.cookies.get('locale')?.value;
-  if (!localeCookie || !['en', 'ru'].includes(localeCookie)) {
-    const acceptLang = request.headers.get('accept-language') || '';
-    const detected = acceptLang.toLowerCase().includes('ru') ? 'ru' : 'en';
-    response.cookies.set('locale', detected, {
+  // Force locale for single-locale deploys (e.g. EN or RU only)
+  const forcedLocale = process.env.NEXT_PUBLIC_FORCED_LOCALE;
+  if (forcedLocale && ['en', 'ru'].includes(forcedLocale)) {
+    response.cookies.set('locale', forcedLocale, {
       path: '/',
       maxAge: 365 * 24 * 60 * 60,
       sameSite: 'lax',
     });
+  } else {
+    // Auto-detect locale on first visit (if cookie not set)
+    const localeCookie = request.cookies.get('locale')?.value;
+    if (!localeCookie || !['en', 'ru'].includes(localeCookie)) {
+      const acceptLang = request.headers.get('accept-language') || '';
+      const detected = acceptLang.toLowerCase().includes('ru') ? 'ru' : 'en';
+      response.cookies.set('locale', detected, {
+        path: '/',
+        maxAge: 365 * 24 * 60 * 60,
+        sameSite: 'lax',
+      });
+    }
   }
 
   return response;

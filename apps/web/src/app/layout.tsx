@@ -7,6 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from 'sonner';
 import './globals.css';
 
+import { RuRedirectBanner } from '@/features/locale/ru-redirect-banner';
 import { PostHogProvider } from '@/shared/lib/posthog-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
@@ -102,6 +103,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${jakarta.variable} ${fraunces.variable} font-sans`}>
+        <RuRedirectBanner />
         <PostHogProvider>
           <NextIntlClientProvider messages={messages}>
             <QueryProvider>{children}</QueryProvider>

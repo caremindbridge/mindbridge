@@ -1,9 +1,12 @@
 'use client';
 
+import { siteConfig } from '@/shared/lib/site-config';
 import { useUiStore } from '@/shared/stores/ui-store';
 
 export function AuthLocaleToggle() {
   const { locale, setLocale } = useUiStore();
+
+  if (siteConfig.isLocaleForced) return null;
 
   return (
     <button

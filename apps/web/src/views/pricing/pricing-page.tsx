@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-
 import type { UserDto } from '@mindbridge/types/src/user';
 import { Check, ChevronDown } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { usePlans, useUsageStatus } from '@/entities/subscription';
 import { useUser } from '@/entities/user';
 import { createCheckout, createPackCheckout } from '@/shared/api/client';
+import { siteConfig } from '@/shared/lib/site-config';
 import { cn } from '@/shared/lib/utils';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@/shared/ui';
 
@@ -104,7 +104,28 @@ const STATIC_PLANS: PlansData = {
   yearlyDiscountPercent: 33,
 };
 
+const RUB_PRICE_MAP: Record<number, number> = {
+  999: 899,
+  7990: 7190,
+  1999: 1799,
+  15990: 14390,
+  3999: 3599,
+  31990: 28790,
+  2900: 2600,
+  23200: 20800,
+  5900: 5300,
+  47200: 42400,
+  3900: 3500,
+  299: 269,
+  699: 629,
+  1499: 1349,
+};
+
 function formatPrice(cents: number): string {
+  if (siteConfig.isRussia) {
+    const rub = RUB_PRICE_MAP[cents] ?? Math.round(cents * 0.9);
+    return `${rub} ₽`;
+  }
   const dollars = cents / 100;
   return dollars % 1 === 0 ? `$${dollars}` : `$${dollars.toFixed(2)}`;
 }
@@ -127,6 +148,10 @@ export function PricingPage() {
     : showTherapist;
 
   const handleSelectPlan = async (planId: string) => {
+    if (!siteConfig.canPay) {
+      toast.info(t('comingSoon'));
+      return;
+    }
     if (planId === 'therapist_clinic') {
       window.open('mailto:hello@mindbridge.app?subject=Clinic%20Plan', '_blank');
       return;
@@ -145,6 +170,10 @@ export function PricingPage() {
   };
 
   const handleBuyPack = async (packId: string) => {
+    if (!siteConfig.canPay) {
+      toast.info(t('comingSoon'));
+      return;
+    }
     if (!user) {
       window.location.href = '/register';
       return;
@@ -401,7 +430,7 @@ function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCar
               <span className="text-3xl font-bold">
                 {formatPrice(plan.monthlyPricePerSeat)}
               </span>
-              <span className="text-sm text-muted-foreground">/seat/mo</span>
+              <span className="text-sm text-muted-foreground">{t('perSeatPerMonth')}</span>
             </>
           ) : showYearly ? (
             <>
@@ -413,13 +442,13 @@ function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCar
               </div>
               <div className="text-xs text-muted-foreground">{t('billedYearly')}</div>
               <div className="mt-1 text-xs font-medium text-emerald-600">
-                {formatPrice(yearlyPrice)}/year — save {formatPrice(savedPerYear)}
+                {formatPrice(yearlyPrice)}/{t('yearShort')} — save {formatPrice(savedPerYear)}
               </div>
             </>
           ) : (
             <>
               <span className="text-3xl font-bold">{formatPrice(monthlyPrice)}</span>
-              <span className="text-sm text-muted-foreground">/mo</span>
+              <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
             </>
           )}
         </div>
@@ -436,10 +465,16 @@ function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCar
         <Button
           className="w-full"
           variant={plan.popular ? 'default' : 'outline'}
-          disabled={isCurrent}
+          disabled={isCurrent || (!siteConfig.canPay && !isClinic)}
           onClick={() => onSelect(plan.id)}
         >
-          {isCurrent ? t('currentPlan') : isClinic ? t('contactUs') : t('choosePlan')}
+          {isCurrent
+            ? t('currentPlan')
+            : isClinic
+              ? t('contactUs')
+              : !siteConfig.canPay
+                ? t('paymentComingSoon')
+                : t('choosePlan')}
         </Button>
       </CardContent>
     </Card>

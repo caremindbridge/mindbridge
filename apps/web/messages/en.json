@@ -589,7 +589,11 @@
     "trialDescription": "50 messages to try Mira. No credit card required.",
     "upgradeForAnalytics": "Upgrade to Standard to access detailed analytics",
     "upgradeForTherapist": "Upgrade to Standard to connect with a therapist",
-    "upgradeTo": "Upgrade to Standard"
+    "upgradeTo": "Upgrade to Standard",
+    "paymentComingSoon": "Coming soon",
+    "perMonth": "/mo",
+    "yearShort": "year",
+    "perSeatPerMonth": "/seat/mo"
   },
   "subscription": {
     "messages": "Messages",

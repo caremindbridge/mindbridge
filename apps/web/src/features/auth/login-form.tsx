@@ -1,15 +1,16 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { GoogleSignInButton } from './google-sign-in-button';
 
 import { getMe, login } from '@/shared/api/client';
 import { analytics } from '@/shared/lib/analytics';
@@ -24,8 +25,6 @@ import {
   Input,
   Label,
 } from '@/shared/ui';
-
-import { GoogleSignInButton } from './google-sign-in-button';
 
 type LoginFormValues = {
   email: string;
