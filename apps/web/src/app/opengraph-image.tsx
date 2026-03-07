@@ -63,7 +63,7 @@ export default function OGImage() {
             maxWidth: 800,
           }}
         >
-          Anxiety doesn't wait for your next session.
+          Anxiety doesn&apos;t wait for your next session.
         </div>
 
         <div
@@ -91,7 +91,7 @@ export default function OGImage() {
             lineHeight: 1.5,
           }}
         >
-          Talk to Mira when it's hard. Free 7-day trial, no card needed.
+          Talk to Mira when it&apos;s hard. Free 7-day trial, no card needed.
         </div>
 
         {/* Bridge tags */}
