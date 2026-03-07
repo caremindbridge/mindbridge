@@ -54,13 +54,14 @@ export class PlanFeatureService {
       plan,
       isTrial,
       trialEndsAt: sub?.trialEndsAt ?? null,
-      patientLimit: patientLimit as number,
-      reportLimit: reportLimit as number,
+      // Trial is fully unlocked for testing
+      patientLimit: isTrial ? -1 : (patientLimit as number),
+      reportLimit: isTrial ? -1 : (reportLimit as number),
       activePatientCount,
       reportsThisMonth,
-      canWriteMiraInstructions: !isTrial,
-      canViewMoodAnalytics: !isTrial && !isSolo,
-      canViewFullAnalysis: !isTrial && !isSolo,
+      canWriteMiraInstructions: true,
+      canViewMoodAnalytics: !isSolo,
+      canViewFullAnalysis: !isSolo,
     };
   }
 }

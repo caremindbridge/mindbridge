@@ -72,10 +72,6 @@ export function TherapistDashboardPage() {
   const [search, setSearch] = useState('');
   const [inviteOpen, setInviteOpen] = useState(false);
 
-  const trialDaysLeft =
-    features?.isTrial && features.trialEndsAt
-      ? Math.max(0, Math.ceil((new Date(features.trialEndsAt).getTime() - Date.now()) / 86400000))
-      : null;
 
   const filtered = useMemo(
     () =>
@@ -96,21 +92,6 @@ export function TherapistDashboardPage() {
   return (
     <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
       <div className="space-y-4 p-4 md:p-6">
-        {/* Trial banner */}
-        {trialDaysLeft !== null && (
-          <div className="flex flex-col gap-2 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                {t('trialBannerTitle', { days: trialDaysLeft })}
-              </p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{t('trialBannerDesc')}</p>
-            </div>
-            <Button asChild size="sm" className="shrink-0">
-              <a href="/pricing?role=therapist">{t('upgrade')}</a>
-            </Button>
-          </div>
-        )}
-
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>

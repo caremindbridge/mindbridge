@@ -2,8 +2,8 @@ export const PLANS = {
   // === Patient Plans ===
   trial: {
     type: 'patient' as const,
-    monthlyMessageLimit: 50,
-    sessionMessageLimit: 20,
+    monthlyMessageLimit: 9999,
+    sessionMessageLimit: 9999,
     trialDays: 7,
     price: 0,
     stripePriceId: null,
@@ -43,8 +43,8 @@ export const PLANS = {
   // === Therapist Plans ===
   therapist_trial: {
     type: 'therapist' as const,
-    patientLimit: 2,
-    reportLimit: 3,
+    patientLimit: -1,
+    reportLimit: -1,
     trialDays: 14,
     price: 0,
     stripePriceId: null,
