@@ -23,7 +23,7 @@ export function CtaSection() {
         <p className="mb-8 text-base text-muted-foreground md:text-lg">{t('subtitle')}</p>
 
         <Button asChild size="lg" className="w-full px-10 text-base sm:w-auto">
-          <Link href="/register">{t('button')}</Link>
+          <Link href="/login">{t('button')}</Link>
         </Button>
 
         <p className="mt-8 text-xs leading-relaxed text-muted-foreground/70">{t('disclaimer')}</p>

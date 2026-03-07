@@ -9,7 +9,7 @@ export function LandingFooter() {
   return (
     <footer className="border-t border-border/50 bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           <div className="space-y-3">
             <Logo size="default" />
             <p className="text-sm text-muted-foreground">{t('tagline')}</p>
@@ -40,20 +40,6 @@ export function LandingFooter() {
 
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {t('resourcesTitle')}
-            </p>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <span className="cursor-not-allowed opacity-50">{t('blog')}</span>
-              </li>
-              <li>
-                <span className="cursor-not-allowed opacity-50">{t('help')}</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t('legalTitle')}
             </p>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -78,6 +64,7 @@ export function LandingFooter() {
 
         <div className="mt-10 space-y-2 border-t border-border/50 pt-8">
           <p className="text-xs text-muted-foreground">{t('crisis')}</p>
+          <p className="text-xs text-muted-foreground/50">{t('poweredBy')}</p>
           <p className="text-xs text-muted-foreground">{t('copyright')}</p>
         </div>
       </div>

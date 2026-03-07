@@ -12,17 +12,19 @@ export function FounderSection() {
   return (
     <section ref={ref} className="fade-section bg-blush-50 px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
+        <h2 className="mb-10 text-center font-serif text-xl font-medium tracking-tight text-foreground md:text-2xl">
+          {t('sectionTitle')}
+        </h2>
+
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-16">
           {/* Text */}
           <div className="flex-1">
-            <blockquote className="mb-8 border-l-2 border-blush-300 pl-5 font-serif text-2xl font-medium leading-snug text-foreground md:text-3xl lg:text-4xl">
-              &ldquo;{t('quote')}&rdquo;
-            </blockquote>
-
-            <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('body1')}</p>
-              <p>{t('body2')}</p>
-              <p className="font-medium text-foreground">{t('body3')}</p>
+            <div className="space-y-4 text-sm leading-relaxed text-foreground/80 md:text-base">
+              <p>{t('p1')}</p>
+              <p>{t('p2')}</p>
+              <p>{t('p3')}</p>
+              <p>{t('p4')}</p>
+              <p className="font-medium text-foreground">{t('p5')}</p>
             </div>
 
             <div className="mt-8 flex items-center gap-4">

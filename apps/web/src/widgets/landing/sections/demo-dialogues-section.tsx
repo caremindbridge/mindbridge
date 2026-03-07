@@ -79,7 +79,6 @@ export function DemoDialoguesSection() {
             <span className="rounded-full border border-blush-200 bg-blush-50 px-3 py-1 text-xs font-medium text-blush-600">
               {t('tagline')}
             </span>
-            <span className="text-xs text-muted-foreground">{t('poweredBy')}</span>
           </div>
           <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground md:text-4xl">
             {t('sectionTitle')}
@@ -87,7 +86,7 @@ export function DemoDialoguesSection() {
         </div>
 
         {/* Dialogue selector tabs */}
-        <div className="-mx-6 mb-4 flex gap-2 overflow-x-auto px-6 pb-1">
+        <div className="mb-4 flex flex-wrap justify-center gap-2">
           {dialogues.map((d, i) => (
             <button
               key={i}

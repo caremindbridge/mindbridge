@@ -26,11 +26,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://mindbridge.app';
 
 export const metadata: Metadata = {
   title: {
-    default: 'MindBridge — AI Companion for Mental Health',
+    default: 'MindBridge — Anxiety doesn\'t wait. Neither does Mira.',
     template: '%s | MindBridge',
   },
   description:
-    'Talk to Mira, your AI CBT therapist. Track mood, understand patterns, share insights with your therapist. Free trial available.',
+    'Talk to Mira when it\'s hard. She listens, helps untangle your thoughts, and won\'t say "just don\'t think about it." Free 7-day trial, no card needed.',
   keywords: [
     'AI therapy',
     'mental health',
@@ -50,16 +50,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'MindBridge',
-    title: 'MindBridge — AI Companion for Mental Health',
+    title: 'MindBridge — Anxiety doesn\'t wait. Neither does Mira.',
     description:
-      'Your AI companion between therapy sessions. Talk to Mira, track your mood, share insights with your therapist.',
+      'Talk to Mira when it\'s hard. She listens, helps untangle your thoughts, and won\'t say "just don\'t think about it." Free 7-day trial, no card needed.',
     locale: 'en_US',
     url: SITE_URL,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MindBridge — AI Companion for Mental Health',
-    description: 'Your AI companion between therapy sessions.',
+    title: 'MindBridge — Anxiety doesn\'t wait. Neither does Mira.',
+    description:
+      'Talk to Mira when it\'s hard. She listens, helps untangle your thoughts, and won\'t say "just don\'t think about it."',
   },
   robots: {
     index: true,

@@ -67,7 +67,7 @@ export function LandingHeader() {
                     <Link href="/login">{t('login')}</Link>
                   </Button>
                   <Button asChild size="sm">
-                    <Link href="/register">{t('register')}</Link>
+                    <Link href="/login">{t('register')}</Link>
                   </Button>
                 </>
               )}
@@ -117,7 +117,7 @@ export function LandingHeader() {
                       {t('login')}
                     </Link>
                     <Link
-                      href="/register"
+                      href="/login"
                       onClick={() => setOpen(false)}
                       className="block rounded-md px-2 py-2.5 text-sm font-medium text-primary"
                     >

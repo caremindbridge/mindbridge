@@ -21,16 +21,16 @@ export function HowItWorksSection() {
           {t('title')}
         </h2>
 
-        <div className="grid gap-10 md:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-3 md:items-start">
           {steps.map((step, i) => (
-            <div key={step.title} className="relative space-y-4">
+            <div key={step.title} className="relative">
               {i < steps.length - 1 && (
                 <div className="absolute left-6 top-10 hidden h-px w-full border-t border-dashed border-border/60 md:block" />
               )}
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-2xl">
                 {step.icon}
               </div>
-              <div className="space-y-2">
+              <div className="mt-4 space-y-2">
                 <p className="text-lg font-semibold text-foreground">{step.title}</p>
                 <p className="text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
               </div>

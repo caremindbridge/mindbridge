@@ -210,48 +210,64 @@
     "nav": {
       "forTherapists": "For Therapists",
       "pricing": "Pricing",
-      "login": "Sign In",
-      "register": "Get Started",
+      "login": "Log in",
+      "register": "Start free",
       "dashboard": "Go to Dashboard"
     },
     "hero": {
-      "title": "Your AI companion between therapy sessions",
-      "subtitle": "Talk to Mira — an AI trained in CBT. Track your mood. Understand your patterns. Share progress with your therapist.",
-      "cta": "Start Free — 3 Sessions",
-      "ctaTherapist": "I'm a Therapist",
-      "chatLabel": "A conversation with Mira",
-      "chatMessage1": "I've been feeling really overwhelmed this week.",
-      "chatReply1": "I hear you. Can you tell me more about what's been happening? Sometimes naming the feeling helps us understand it better.",
-      "chatMessage2": "It's like everything is too much at once.",
-      "chatReply2": "That sounds exhausting. Let's try to slow down together and look at one thing at a time.",
-      "chatTyping": "Mira is typing…"
+      "line1": "Anxiety doesn't wait for your next session.",
+      "line2": "Neither does Mira.",
+      "subtitle": "Talk to Mira when it's hard. She'll listen, help you untangle your thoughts, and won't say \"just don't think about it.\"",
+      "cta": "Try free",
+      "note": "No credit card. 7 days. 50 messages.",
+      "founderQuote": "A year ago I was lying on the floor of an empty apartment in Ireland, unable to breathe. Divorce, panic attacks, antidepressants. Therapy helped — once a week. The other 6 days I'd open an AI chat just to get the thoughts out of my head. It didn't replace my therapist — but it filled the void between sessions. I built MindBridge so that void wouldn't be so unbearable for anyone.",
+      "founderName": "Alex, Founder"
     },
     "stats": {
-      "label1": "of people with anxiety never receive treatment",
       "value1": "60%",
-      "label2": "average wait for first therapy appointment",
+      "label1": "of people with anxiety never get help",
       "value2": "6 weeks",
-      "label3": "days between therapy sessions",
-      "value3": "6–7",
-      "note": "Between sessions, you're on your own. MindBridge changes that."
+      "label2": "average wait for a first therapy appointment",
+      "value3": "10,030",
+      "label3": "minutes between sessions you're on your own",
+      "note": "Mira fills those 10,030 minutes."
+    },
+    "bridge": {
+      "title": "Not just a chatbot. A bridge to your therapist.",
+      "subtitle": "Mira connects your daily experiences with your therapist's work — so you're both on the same page.",
+      "you": "You",
+      "youDesc": "Share what you feel, anytime",
+      "mira": "Mira",
+      "miraDesc": "Listens, helps, spots patterns",
+      "therapist": "Therapist",
+      "therapistDesc": "Sees what happens between sessions",
+      "result": "Result: you don't waste 20 minutes recapping your week. Instead — straight to the real work."
+    },
+    "twoPaths": {
+      "title": "Works both ways",
+      "patientTitle": "You're a patient",
+      "patientDesc": "Start with Mira on your own. If you see a therapist — invite them. They'll see your progress, patterns and triggers. Sessions become more focused.",
+      "therapistTitle": "You're a therapist",
+      "therapistDesc": "Connect your patients to Mira. Get AI insights before each session: mood, topics, risks. Save 2+ hours per week on prep.",
+      "therapistCta": "For therapists →"
     },
     "founder": {
-      "quote": "I built MindBridge because I needed it myself",
-      "body1": "Two years ago I started having panic attacks. I didn't understand what was happening — I just knew something was wrong. I found a therapist, and it helped. But between those weekly sessions, I was alone with my anxiety, with no tools and no support.",
-      "body2": "I kept thinking: what if AI could be there in those 6 days and 23 hours between sessions? Not to replace my therapist — but to help me track patterns, practice CBT techniques, and actually arrive at my next appointment with real data instead of \"well, it was kind of a rough week.\"",
-      "body3": "That's why I built MindBridge.",
-      "signature": "Alex, founder",
-      "founderTitle": "Founder, MindBridge",
-      "placeholder": "Replace with your real story — this is a placeholder."
+      "sectionTitle": "Why I built this",
+      "p1": "I've been anxious my whole life — I just didn't know there was a word for it. Sweaty palms behind the wheel, fear of phone calls, inability to tell people close to me what I feel. I thought everyone lived like that.",
+      "p2": "Then everything collapsed at once. Divorce after 10 years. Alone in Ireland — no friends, no family. Panic attacks, ambulances, cardiophobia. I was convinced I was dying — every morning, every night.",
+      "p3": "A doctor prescribed antidepressants. I found a therapist. It got better — but therapy is 50 minutes a week. The other 10,030 minutes I was alone with my fear.",
+      "p4": "One night I opened an AI chat. Not because I believed in it — but because there was literally nobody else to write to. And it asked the right question. Not 'rate your mood from 1 to 10' but 'what specifically scares you right now?' I let it all out. And it got a little easier.",
+      "p5": "That's when I understood: between sessions, people don't need a CBT textbook. They need someone who'll listen at 3 AM and won't say 'just don't think about it.' I built that someone.",
+      "signature": "Alex, Founder"
     },
     "howItWorks": {
       "title": "How it works",
-      "step1Title": "Talk to Mira",
-      "step1Desc": "Share what's on your mind. Mira listens without judgment, asks the right questions, and guides you through CBT exercises.",
-      "step2Title": "Track your patterns",
-      "step2Desc": "Log your mood daily. Watch trends emerge. Understand what triggers your anxiety and what helps.",
-      "step3Title": "Arrive prepared",
-      "step3Desc": "Your therapist sees AI-generated insights before each session — so you spend time healing, not catching up.",
+      "step1Title": "Say what's on your mind",
+      "step1Desc": "Mira doesn't give textbook advice. She listens, asks questions, and helps you figure it out yourself.",
+      "step2Title": "Notice your patterns",
+      "step2Desc": "\"Always\" and \"never\" are anxiety's favorite words. Mira helps you tell thoughts from facts.",
+      "step3Title": "Grow between sessions",
+      "step3Desc": "Show up to therapy not with \"it was an okay week\" — but with real observations and data.",
       "step1Icon": "💬",
       "step2Icon": "📊",
       "step3Icon": "🎯"
@@ -310,34 +326,21 @@
       "t3Cta": "Contact Us"
     },
     "pricing": {
-      "title": "Simple, transparent pricing",
+      "title": "7 days free. Decide after.",
       "liteTitle": "Lite",
       "litePrice": "$9.99",
       "litePeriod": "/month",
-      "liteF1": "200 messages/month",
-      "liteF2": "30 per session",
-      "liteF3": "Full analytics dashboard",
-      "liteF4": "Therapist connection",
-      "liteCta": "Get Started",
       "standardTitle": "Standard",
       "standardPrice": "$19.99",
       "standardPeriod": "/month",
-      "standardF1": "500 messages/month",
-      "standardF2": "50 per session",
-      "standardF3": "Full analytics dashboard",
-      "standardF4": "AI session analysis",
-      "standardCta": "Try Standard",
       "premiumTitle": "Premium",
       "premiumPrice": "$39.99",
       "premiumPeriod": "/month",
-      "premiumF1": "1,500 messages/month",
-      "premiumF2": "80 per session",
-      "premiumF3": "All analytics features",
-      "premiumF4": "Priority AI responses",
-      "premiumCta": "Go Premium",
       "popular": "Popular",
       "viewAllPlans": "Full pricing & therapist plans →",
-      "note": "Save 33% with yearly billing. Message packs for extra flexibility."
+      "note": "Save 33% with yearly billing. Message packs for extra flexibility.",
+      "therapistLink": "Therapist plans available separately.",
+      "therapistLinkCta": "View plans →"
     },
     "demos": {
       "sectionTitle": "Real conversations. Not chatbot answers.",
@@ -377,10 +380,10 @@
       "d3m4": "You're NOT broken. And the techniques aren't useless. It's just that a fire truck doesn't replace a smoke detector — you need the second one and you've only been using the first.\n\nBreathing, meditation — they train your nervous system. They work with consistency: every day, same time, REGARDLESS of how you feel. Two weeks minimum before anything shifts.\n\nOne thing. Not five — one. 4-7-8 breathing, ten minutes, every morning after your alarm. Two weeks, no skipping. Don't judge until end of week two. Deal?"
     },
     "cta": {
-      "disclaimer": "Mira is an AI companion trained in CBT techniques. She's here to support you between sessions — not to diagnose or treat. If you're in crisis, please call a crisis line or go to your nearest emergency room.",
-      "title": "Ready to start your journey?",
-      "subtitle": "Free to begin. No credit card required.",
-      "button": "Start Free — 3 Sessions"
+      "title": "You don't have to handle this alone.",
+      "subtitle": "Free. No credit card. 50 messages on us.",
+      "button": "Talk to Mira",
+      "disclaimer": "Mira is an AI companion trained in CBT techniques. She's here to support you between sessions — not to diagnose or treat. If you're in crisis, please call a crisis line or go to your nearest emergency room."
     },
     "footer": {
       "tagline": "AI companion for mental health",
@@ -388,15 +391,13 @@
       "features": "Features",
       "pricing": "Pricing",
       "forTherapists": "For Therapists",
-      "resourcesTitle": "Resources",
-      "blog": "Blog (soon)",
-      "help": "Help (soon)",
       "legalTitle": "Legal",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "contact": "Contact",
-      "crisis": "If you're in crisis, please call your local emergency services.",
-      "copyright": "© 2025 MindBridge. Not a replacement for professional help."
+      "poweredBy": "Powered by Anthropic AI",
+      "crisis": "Crisis line: 988 (US) or 112 (EU) — free, 24/7",
+      "copyright": "© 2026 MindBridge. Not a replacement for professional help."
     }
   },
   "settings": {
