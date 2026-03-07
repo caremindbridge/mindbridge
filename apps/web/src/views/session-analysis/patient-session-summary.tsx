@@ -107,7 +107,7 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
       {/* ── Header ── */}
       <div className="flex shrink-0 items-center justify-between">
         <Button variant="ghost" size="sm" asChild className="-ml-2">
-          <Link href={`/dashboard/chat/${sessionId}`}>
+          <Link href="/dashboard/chat">
             <ArrowLeft className="mr-1 h-4 w-4" />
             {t('backToSessions')}
           </Link>
@@ -290,7 +290,7 @@ function Tile({
           {title}
         </p>
       </div>
-      <div className={cn('relative flex-1', scrollable && 'sm:overflow-y-auto')}>
+      <div className={cn('relative flex-1', scrollable && 'sm:overflow-y-auto', lockedOverlay && 'min-h-[90px]')}>
         {children}
         {lockedOverlay && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg backdrop-blur-[6px] bg-background/60">
