@@ -9,6 +9,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { getMe, login } from '@/shared/api/client';
 import { analytics } from '@/shared/lib/analytics';
 import {
@@ -33,6 +35,7 @@ type LoginFormValues = {
 export function LoginForm() {
   const t = useTranslations('auth');
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,6 +59,7 @@ export function LoginForm() {
       const response = await login(data);
       Cookies.set('token', response.access_token, { expires: 7 });
       const me = await getMe();
+      queryClient.setQueryData(['user'], me);
       analytics.identify({ id: me.id, email: me.email, role: me.role, createdAt: me.createdAt });
       analytics.signIn('email');
       router.push(me.activeMode === 'therapist' ? '/dashboard/therapist' : '/dashboard');

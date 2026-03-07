@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,6 +11,7 @@ import { getMe } from '@/shared/api/client';
 export default function AuthCallbackPage() {
   const t = useTranslations('auth');
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export default function AuthCallbackPage() {
 
     getMe()
       .then((user) => {
+        queryClient.setQueryData(['user'], user);
         router.replace(user.activeMode === 'therapist' ? '/dashboard/therapist' : '/dashboard');
       })
       .catch(() => {
