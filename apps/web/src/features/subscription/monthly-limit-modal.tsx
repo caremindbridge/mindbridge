@@ -41,6 +41,7 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
   const resetDate = usage?.periodEnd
     ? new Date(usage.periodEnd).toLocaleDateString()
     : '';
+  const isTrialUser = !usage?.plan || usage.plan === 'trial';
 
   return (
     <BottomSheet open={open} onOpenChange={onClose} title={t('monthlyLimitTitle')}>
@@ -54,30 +55,34 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
 
         <Separator />
 
-        <div className="space-y-2">
-          <p className="text-sm font-medium">{t('getMoreMessages')}</p>
-          {PACKS.map((pack) => (
-            <button
-              key={pack.id}
-              onClick={() => handleBuyPack(pack.id)}
-              className={cn(
-                'flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 active:bg-muted/50',
-                pack.popular && 'border-primary/50 bg-primary/5',
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-medium">{pack.messages} messages</span>
-                {pack.popular && <Badge className="text-[10px]">Popular</Badge>}
-                {pack.bestValue && (
-                  <Badge variant="secondary" className="text-[10px]">
-                    Best Value
-                  </Badge>
+        {isTrialUser ? (
+          <p className="text-sm text-muted-foreground">{t('packsRequirePlan')}</p>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">{t('getMoreMessages')}</p>
+            {PACKS.map((pack) => (
+              <button
+                key={pack.id}
+                onClick={() => handleBuyPack(pack.id)}
+                className={cn(
+                  'flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 active:bg-muted/50',
+                  pack.popular && 'border-primary/50 bg-primary/5',
                 )}
-              </div>
-              <span className="font-semibold">{pack.price}</span>
-            </button>
-          ))}
-        </div>
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{pack.messages} messages</span>
+                  {pack.popular && <Badge className="text-[10px]">Popular</Badge>}
+                  {pack.bestValue && (
+                    <Badge variant="secondary" className="text-[10px]">
+                      Best Value
+                    </Badge>
+                  )}
+                </div>
+                <span className="font-semibold">{pack.price}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         <Separator />
 

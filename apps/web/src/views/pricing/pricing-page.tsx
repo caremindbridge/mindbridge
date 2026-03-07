@@ -55,14 +55,14 @@ const STATIC_PLANS: PlansData = {
       name: 'Lite',
       monthlyPrice: 999,
       yearlyPrice: 7990,
-      features: ['200 messages/month', '30 per session', 'Full dashboard', 'AI analysis', 'Therapist connection'],
+      features: ['200 messages/month', '30 per session', 'Mood tracking', 'Session analysis'],
     },
     {
       id: 'standard',
       name: 'Standard',
       monthlyPrice: 1999,
       yearlyPrice: 15990,
-      features: ['500 messages/month', '50 per session', 'Full dashboard', 'AI analysis', 'Therapist connection'],
+      features: ['500 messages/month', '50 per session', 'Mood tracking', 'Session analysis', 'Detailed analytics', 'Therapist connection'],
       popular: true,
     },
     {
@@ -70,7 +70,7 @@ const STATIC_PLANS: PlansData = {
       name: 'Premium',
       monthlyPrice: 3999,
       yearlyPrice: 31990,
-      features: ['1,500 messages/month', '80 per session', 'Full dashboard', 'AI analysis', 'Priority responses'],
+      features: ['1,500 messages/month', '80 per session', 'Mood tracking', 'Session analysis', 'Detailed analytics', 'Therapist connection', 'Cross-session memory', 'Export chat history'],
     },
   ],
   therapist: [
@@ -120,6 +120,7 @@ export function PricingPage() {
 
   const plans = (rawPlans as PlansData | undefined) ?? STATIC_PLANS;
   const currentPlan = (usage as { plan?: string } | undefined)?.plan;
+  const isTrialUser = !currentPlan || currentPlan === 'trial';
 
   const isTherapist = user
     ? (user.activeMode ?? user.role) === 'therapist'
@@ -146,6 +147,10 @@ export function PricingPage() {
   const handleBuyPack = async (packId: string) => {
     if (!user) {
       window.location.href = '/register';
+      return;
+    }
+    if (isTrialUser) {
+      toast.info(t('packsRequirePlan'));
       return;
     }
     try {
@@ -217,6 +222,14 @@ export function PricingPage() {
           </div>
         </div>
 
+        {/* Trial banner — patients only, unauthenticated or on trial */}
+        {!isTherapist && (!user || (usage as { status?: string } | undefined)?.status === 'trial') && (
+          <div className="mb-6 flex items-center justify-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-5 py-3 text-sm">
+            <span className="font-semibold text-primary">{t('trialBadge')}</span>
+            <span className="text-muted-foreground">{t('trialDescription')}</span>
+          </div>
+        )}
+
         {/* Plan cards */}
         {isTherapist ? (
           <div className="grid gap-4 md:grid-cols-3">
@@ -248,15 +261,26 @@ export function PricingPage() {
 
             {/* Message packs — patients only */}
             <div className="mt-10">
-              <h3 className="mb-4 text-center text-sm font-medium text-muted-foreground">
+              <h3 className="mb-1 text-center text-sm font-medium text-muted-foreground">
                 {t('messagePacks')}
               </h3>
+              {isTrialUser && (
+                <p className="mb-4 text-center text-xs text-muted-foreground/70">
+                  {t('packsRequirePlan')}
+                </p>
+              )}
+              {!isTrialUser && <div className="mb-4" />}
               <div className="mx-auto grid max-w-lg grid-cols-3 gap-3">
                 {plans.messagePacks.map((pack) => (
                   <button
                     key={pack.id}
                     onClick={() => handleBuyPack(pack.id)}
-                    className="relative rounded-xl border p-3 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
+                    className={cn(
+                      'relative rounded-xl border p-3 text-center transition-all',
+                      isTrialUser
+                        ? 'cursor-not-allowed opacity-40'
+                        : 'hover:border-primary/50 hover:bg-primary/5',
+                    )}
                   >
                     {pack.popular && (
                       <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">
@@ -347,8 +371,14 @@ interface PlanCardProps {
   onSelect: (planId: string) => void;
 }
 
+const PATIENT_PLAN_IDS = ['lite', 'standard', 'premium'];
+
 function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCardProps) {
   const t = useTranslations('pricing');
+
+  const features = PATIENT_PLAN_IDS.includes(plan.id)
+    ? (t.raw(`planFeatures.${plan.id}`) as string[])
+    : plan.features;
 
   const monthlyPrice = plan.monthlyPrice ?? 0;
   const yearlyPrice = plan.yearlyPrice ?? 0;
@@ -396,7 +426,7 @@ function PlanCard({ plan, billingCycle, isCurrent, isClinic, onSelect }: PlanCar
       </CardHeader>
       <CardContent className="space-y-4">
         <ul className="space-y-2">
-          {plan.features.map((feature, i) => (
+          {features.map((feature, i) => (
             <li key={i} className="flex items-start gap-2 text-sm">
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               <span>{feature}</span>

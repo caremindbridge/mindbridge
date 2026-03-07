@@ -42,6 +42,7 @@ export function MobileTabBar({ hide = false }: MobileTabBarProps) {
         {tabs.map((tab) => {
           const active = tab.match.test(pathname);
           const Icon = tab.icon;
+
           return (
             <Link
               key={tab.href}

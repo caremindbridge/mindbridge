@@ -66,7 +66,15 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           switch (data.code) {
             case 'session_limit':
               analytics.limitReached('session');
-              setShowSessionLimitModal(true);
+              endSession(sessionId)
+                .then(() => {
+                  queryClient.invalidateQueries({ queryKey: ['session', sessionId] });
+                  queryClient.invalidateQueries({ queryKey: ['sessions'] });
+                  queryClient.invalidateQueries({ queryKey: ['mood-metrics'] });
+                  queryClient.invalidateQueries({ queryKey: ['mood-stats'] });
+                  setShowMoodCheckIn(true);
+                })
+                .catch(() => setShowSessionLimitModal(true));
               break;
             case 'monthly_limit':
               analytics.limitReached('monthly');

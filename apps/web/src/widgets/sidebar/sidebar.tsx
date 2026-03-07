@@ -90,6 +90,7 @@ export function Sidebar() {
           const isActive = 'exact' in item && item.exact
             ? pathname === item.href
             : pathname.startsWith(item.href);
+
           return (
             <Button
               key={item.href}

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
+import { useUsageStatus } from '@/entities/subscription';
 import { Badge, Button } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 
@@ -79,6 +80,10 @@ const EMOTION_KEYS: Record<string, string> = {
 export function PatientSessionSummary({ analysis, sessionId }: Props) {
   const t = useTranslations('sessionSummary');
   const tm = useTranslations('mood');
+  const tp = useTranslations('pricing');
+
+  const { data: usage } = useUsageStatus();
+  const isLitePlan = !usage?.plan || usage.plan === 'lite' || usage.plan === 'trial';
 
   const ext = analysis as ExtendedAnalysis;
 
@@ -179,9 +184,11 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
                     <span className="mt-0.5 shrink-0">{i === 0 ? '💡' : '🔄'}</span>
                     <div>
                       <p className="mb-0.5 font-medium">{friendlyName}</p>
-                      <p className="leading-relaxed text-foreground/80">{d.description}</p>
+                      <p className={cn('leading-relaxed text-foreground/80', isLitePlan && 'select-none blur-[3px]')}>
+                        {d.description}
+                      </p>
                       {d.example && (
-                        <p className="mt-0.5 italic text-muted-foreground">
+                        <p className={cn('mt-0.5 italic text-muted-foreground', isLitePlan && 'select-none blur-[3px]')}>
                           &ldquo;{d.example}&rdquo;
                         </p>
                       )}
@@ -196,7 +203,20 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
         </Tile>
 
         {/* What to try + homework */}
-        <Tile title={t('whatToTry')} icon="🎯" scrollable>
+        <Tile
+          title={t('whatToTry')}
+          icon="🎯"
+          scrollable
+          lockedOverlay={isLitePlan ? (
+            <div className="flex flex-col items-center gap-2 px-3 text-center">
+              <span className="text-lg">🔒</span>
+              <p className="text-[11px] font-medium text-foreground/80">{t('lockedRecommendations')}</p>
+              <Button size="sm" variant="soft" asChild className="mt-1 h-7 text-xs">
+                <Link href="/pricing">{tp('upgradeTo')}</Link>
+              </Button>
+            </div>
+          ) : undefined}
+        >
           {patientRecs.length > 0 || (analysis.homework?.length ?? 0) > 0 ? (
             <div className="space-y-2">
               {patientRecs.map((r, i) => (
@@ -246,6 +266,7 @@ function Tile({
   className,
   accent,
   scrollable,
+  lockedOverlay,
 }: {
   title: string;
   icon: string;
@@ -253,6 +274,7 @@ function Tile({
   className?: string;
   accent?: boolean;
   scrollable?: boolean;
+  lockedOverlay?: ReactNode;
 }) {
   return (
     <div
@@ -268,8 +290,13 @@ function Tile({
           {title}
         </p>
       </div>
-      <div className={cn('flex-1', scrollable && 'sm:overflow-y-auto')}>
+      <div className={cn('relative flex-1', scrollable && 'sm:overflow-y-auto')}>
         {children}
+        {lockedOverlay && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg backdrop-blur-[6px] bg-background/60">
+            {lockedOverlay}
+          </div>
+        )}
       </div>
     </div>
   );

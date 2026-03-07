@@ -198,6 +198,8 @@
     "stableTrend": "Steady →",
     "analyticsTitle": "Detailed Analytics",
     "analyticsSubtitle": "Your mental health patterns over time",
+    "analyticsLockedTitle": "Detailed analytics — Standard+",
+    "analyticsLockedDesc": "Track anxiety trends, emotion patterns, and session topics over time. Available from the Standard plan.",
     "levelLow": "Low",
     "levelModerate": "Moderate",
     "levelHigh": "High",
@@ -538,6 +540,7 @@
     "messages": "messages",
     "messagePacks": "Need more? Message packs (never expire):",
     "packsNeverExpire": "Purchased packs never expire and work with any plan.",
+    "packsRequirePlan": "Message packs require an active paid plan. Choose a plan above first.",
     "patientsGetStandard": "Your patients get Standard plan (500 msg/mo) included free.",
     "comingSoon": "Payments coming soon! Join the waitlist.",
     "checkoutError": "Could not start checkout. Please try again.",
@@ -551,7 +554,39 @@
     "faqPacksExpireQ": "Do message packs expire?",
     "faqPacksExpireA": "No. Purchased message packs stay in your account until used, regardless of your subscription status.",
     "faqSecurityQ": "Is my data secure?",
-    "faqSecurityA": "Yes. All conversations are encrypted. We never sell your data. Your therapist only sees what you choose to share."
+    "faqSecurityA": "Yes. All conversations are encrypted. We never sell your data. Your therapist only sees what you choose to share.",
+    "planFeatures": {
+      "lite": [
+        "200 messages/month",
+        "30 per session",
+        "Mood tracking",
+        "Basic session analysis",
+        "Basic analytics"
+      ],
+      "standard": [
+        "500 messages/month",
+        "50 per session",
+        "Mood tracking",
+        "Full session analysis",
+        "Detailed analytics",
+        "Therapist connection"
+      ],
+      "premium": [
+        "1,500 messages/month",
+        "80 per session",
+        "Mood tracking",
+        "Session analysis",
+        "Detailed analytics",
+        "Therapist connection",
+        "Cross-session memory",
+        "Export chat history"
+      ]
+    },
+    "trialBadge": "🎁 7-day free trial",
+    "trialDescription": "50 messages to try Mira. No credit card required.",
+    "upgradeForAnalytics": "Upgrade to Standard to access detailed analytics",
+    "upgradeForTherapist": "Upgrade to Standard to connect with a therapist",
+    "upgradeTo": "Upgrade to Standard"
   },
   "subscription": {
     "messages": "Messages",
@@ -569,6 +604,7 @@
     "monthlyLimitDescription": "You've used all your messages for this month.",
     "resetsOn": "Resets on {date}",
     "getMoreMessages": "Get more messages",
+    "packsRequirePlan": "Message packs are available with a paid plan.",
     "upgradePlan": "Upgrade plan",
     "trialEndedTitle": "Your trial has ended",
     "trialEndedDescription": "Choose a plan to continue your mental health journey with Mira.",
@@ -617,6 +653,7 @@
     "inviteSent": "Invite sent! Code: {code}",
     "connectedSuccess": "Connected to therapist!",
     "invalidCode": "Invalid or expired invite code. Please check and try again.",
+    "upgradeRequiredToConnect": "Therapist connection requires Standard plan or higher. Upgrade to continue.",
     "noMatch": "No patients match your search",
     "inviteFirst": "Invite your first patient using their email address.",
     "lastActivity": "Last activity:",
@@ -688,7 +725,9 @@
     "needHelp": "Need support right now?",
     "crisisLine": "Crisis line: 988 (call or text) — free, 24/7",
     "newSession": "Start new session",
-    "toDashboard": "Back to dashboard"
+    "toDashboard": "Back to dashboard",
+    "lockedRecommendations": "Recommendations available in Standard",
+    "lockedRecommendationsDesc": "Upgrade to get personalised tips after every session"
   },
   "mobile": {
     "title": "Mobile app is coming soon",

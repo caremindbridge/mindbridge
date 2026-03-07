@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import { useUser } from '@/entities/user';
 import { SubscriptionBanner } from '@/features/subscription';
+import { completeCheckout } from '@/shared/api/client';
 import { useMediaQuery } from '@/shared/lib/use-media-query';
 import { MobileTabBar } from '@/widgets/mobile-nav/mobile-tab-bar';
 import { Sidebar } from '@/widgets/sidebar';
@@ -20,14 +21,19 @@ function StripeReturnHandler() {
   useEffect(() => {
     const upgraded = searchParams.get('upgraded');
     const packPurchased = searchParams.get('pack_purchased');
-    if (upgraded === 'true') {
-      toast.success(t('planUpgraded'));
-      queryClient.invalidateQueries({ queryKey: ['usage-status'] });
-      window.history.replaceState({}, '', window.location.pathname);
-    } else if (packPurchased === 'true') {
-      toast.success(t('packPurchased'));
-      queryClient.invalidateQueries({ queryKey: ['usage-status'] });
-      window.history.replaceState({}, '', window.location.pathname);
+    const sessionId = searchParams.get('session_id');
+
+    if (upgraded === 'true' || packPurchased === 'true') {
+      const activate = async () => {
+        if (sessionId) {
+          // Synchronous activation — works even if webhook hasn't arrived yet
+          await completeCheckout(sessionId).catch(() => {});
+        }
+        await queryClient.invalidateQueries({ queryKey: ['usage-status'] });
+        toast.success(upgraded === 'true' ? t('planUpgraded') : t('packPurchased'));
+        window.history.replaceState({}, '', window.location.pathname);
+      };
+      void activate();
     }
   }, [searchParams, t, queryClient]);
 

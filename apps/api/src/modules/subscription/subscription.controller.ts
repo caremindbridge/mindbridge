@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -9,12 +10,23 @@ import { StripeService } from './stripe.service';
 import { UsageService } from './usage.service';
 
 class CheckoutDto {
+  @IsString()
   planId!: PatientPlanId | TherapistPlanId;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['monthly', 'yearly'])
   billing?: 'monthly' | 'yearly';
 }
 
 class PackCheckoutDto {
+  @IsString()
   packId!: MessagePackId;
+}
+
+class CompleteCheckoutDto {
+  @IsString()
+  sessionId!: string;
 }
 
 @Controller('subscription')
@@ -65,9 +77,8 @@ export class SubscriptionController {
           features: [
             '200 messages/month',
             '30 per session',
-            'Full dashboard',
-            'AI analysis',
-            'Therapist connection',
+            'Mood tracking',
+            'Session analysis',
           ],
         },
         {
@@ -81,8 +92,9 @@ export class SubscriptionController {
           features: [
             '500 messages/month',
             '50 per session',
-            'Full dashboard',
-            'AI analysis',
+            'Mood tracking',
+            'Session analysis',
+            'Detailed analytics',
             'Therapist connection',
           ],
         },
@@ -96,10 +108,12 @@ export class SubscriptionController {
           features: [
             '1,500 messages/month',
             '80 per session',
-            'Full dashboard',
-            'AI analysis',
+            'Mood tracking',
+            'Session analysis',
+            'Detailed analytics',
             'Therapist connection',
-            'Priority responses',
+            'Cross-session memory',
+            'Export chat history',
           ],
         },
       ],
@@ -183,6 +197,15 @@ export class SubscriptionController {
       `${frontendUrl}/dashboard?pack_purchased=true`,
       `${frontendUrl}/dashboard?canceled=1`,
     );
+  }
+
+  @Post('checkout/complete')
+  @UseGuards(JwtAuthGuard)
+  async completeCheckout(
+    @CurrentUser() user: { id: string },
+    @Body() dto: CompleteCheckoutDto,
+  ) {
+    return this.stripeService.completeCheckout(dto.sessionId, user.id);
   }
 
   @Post('portal')

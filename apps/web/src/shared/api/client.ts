@@ -356,6 +356,10 @@ export function createPackCheckout(packId: string): Promise<{ url: string | null
   return apiClient.post<{ url: string | null }>('/subscription/checkout/pack', { packId });
 }
 
+export function completeCheckout(sessionId: string): Promise<{ ok: boolean }> {
+  return apiClient.post<{ ok: boolean }>('/subscription/checkout/complete', { sessionId });
+}
+
 export function createPortal(): Promise<{ url: string | null }> {
   return apiClient.post<{ url: string | null }>('/subscription/portal', {});
 }

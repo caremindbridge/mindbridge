@@ -53,7 +53,7 @@ export class StripeService {
       payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: successUrl,
+      success_url: `${successUrl}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
       metadata: { userId, planId },
     });
@@ -78,7 +78,7 @@ export class StripeService {
       payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: successUrl,
+      success_url: `${successUrl}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
       metadata: { userId, packId },
     });
@@ -99,6 +99,31 @@ export class StripeService {
     });
 
     return { url: session.url };
+  }
+
+  async completeCheckout(sessionId: string, userId: string): Promise<{ ok: boolean }> {
+    if (!this.stripe) return { ok: false };
+
+    let session: Stripe.Checkout.Session;
+    try {
+      session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    } catch (err) {
+      this.logger.error(`completeCheckout: failed to retrieve session ${sessionId}:`, err);
+      return { ok: false };
+    }
+
+    // Security: verify this session belongs to the requesting user
+    if (session.metadata?.userId !== userId) {
+      this.logger.warn(`completeCheckout: userId mismatch for session ${sessionId}`);
+      return { ok: false };
+    }
+
+    if (session.payment_status === 'paid') {
+      await this.handleCheckoutCompleted(session);
+      return { ok: true };
+    }
+
+    return { ok: false };
   }
 
   async handleWebhook(rawBody: Buffer, signature: string): Promise<void> {

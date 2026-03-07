@@ -168,14 +168,17 @@ export class TherapistService {
 
     await this.redisService.deleteInviteCode(inviteCode);
 
-    // Upgrade patient to standard plan if on a lesser plan (therapist-sponsored)
+    // Therapist connection requires Standard+ plan
     const currentSub = await this.subscriptionService.getActive(patientId);
     const isUnderStandard =
       !currentSub ||
       currentSub.plan === 'trial' ||
       currentSub.plan === 'lite';
     if (isUnderStandard) {
-      await this.subscriptionService.upgradePlan(patientId, 'standard');
+      throw new ForbiddenException({
+        code: 'upgrade_required',
+        message: 'Upgrade to Standard to connect with a therapist',
+      });
     }
 
     return link;
