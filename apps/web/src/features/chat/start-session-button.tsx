@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { createSession } from '@/shared/api/client';
+import { analytics } from '@/shared/lib/analytics';
 import { Button } from '@/shared/ui';
 
 export function StartSessionButton() {
@@ -17,6 +18,7 @@ export function StartSessionButton() {
     setLoading(true);
     try {
       const session = await createSession();
+      analytics.sessionStarted(session.id);
       router.push(`/dashboard/chat/${session.id}`);
     } catch {
       setLoading(false);

@@ -13,6 +13,7 @@ import { useMoodMetrics } from '@/entities/dashboard';
 import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
 import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
+import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
 import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/shared/ui';
 
@@ -113,7 +114,7 @@ export function DashboardPage() {
                   key={value}
                   type="button"
                   disabled={logging || hasLoggedToday}
-                  onClick={() => logMood({ value }, { onSuccess: () => setMoodLoggedLocal(true) })}
+                  onClick={() => logMood({ value }, { onSuccess: () => { setMoodLoggedLocal(true); analytics.moodCheckedIn(value, 'dashboard'); } })}
                   className="text-2xl transition-transform hover:scale-125 active:scale-95 disabled:opacity-50"
                   title={`${value}/10`}
                 >

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { useCreateMood } from '@/entities/mood';
+import { analytics } from '@/shared/lib/analytics';
 import { BottomSheet } from '@/shared/ui/bottom-sheet';
 import { Button, Textarea } from '@/shared/ui';
 
@@ -57,6 +58,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
         note: note || undefined,
         sessionId,
       });
+      analytics.moodCheckedIn(value, 'post_session');
       onComplete();
     } catch {
       toast.error('Failed to save mood');

@@ -5,8 +5,11 @@ import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
+import { useEffect } from 'react';
+
 import { useAnalysis } from '@/entities/analysis';
 import { useUser } from '@/entities/user';
+import { analytics } from '@/shared/lib/analytics';
 import { Button, Skeleton } from '@/shared/ui';
 import { AnalysisReport } from '@/widgets/analysis-report';
 
@@ -23,6 +26,10 @@ export function SessionAnalysisPage({ sessionId }: SessionAnalysisPageProps) {
 
   const isTherapistView =
     user?.role === UserRole.THERAPIST && (user.activeMode ?? 'therapist') === 'therapist';
+
+  useEffect(() => {
+    if (analysis) analytics.analysisViewed(sessionId);
+  }, [analysis, sessionId]);
 
   if (isLoading) {
     return (

@@ -16,6 +16,7 @@ import { EndSessionButton, SendMessageForm, useChatStream } from '@/features/cha
 import { MoodCheckIn } from '@/features/mood';
 import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription';
 import { ApiError, createSession, endSession, sendMessage } from '@/shared/api/client';
+import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
 import { Button, Skeleton } from '@/shared/ui';
 import { ChatWindow } from '@/widgets/chat-window';
@@ -57,18 +58,22 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           orderIndex: messages.length,
           createdAt: new Date().toISOString(),
         });
+        analytics.messageSent(sessionId, messages.length + 1);
         await queryClient.invalidateQueries({ queryKey: ['usage-status'] });
       } catch (error) {
         if (error instanceof ApiError && error.status === 403) {
           const data = error.data as { code: string; message: string };
           switch (data.code) {
             case 'session_limit':
+              analytics.limitReached('session');
               setShowSessionLimitModal(true);
               break;
             case 'monthly_limit':
+              analytics.limitReached('monthly');
               setShowMonthlyLimitModal(true);
               break;
             case 'trial_expired':
+              analytics.limitReached('trial_expired');
               setShowTrialEndedModal(true);
               break;
             case 'no_subscription':
@@ -92,18 +97,23 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
   const handleEnd = useCallback(async () => {
     await endSession(sessionId);
+    const userMessages = messages.filter((m) => m.role === 'user').length;
+    const startTime = session ? new Date(session.createdAt).getTime() : Date.now();
+    const durationMinutes = Math.round((Date.now() - startTime) / 60000);
+    analytics.sessionCompleted(sessionId, userMessages, durationMinutes);
     queryClient.invalidateQueries({ queryKey: ['session', sessionId] });
     queryClient.invalidateQueries({ queryKey: ['sessions'] });
     queryClient.invalidateQueries({ queryKey: ['mood-metrics'] });
     queryClient.invalidateQueries({ queryKey: ['mood-stats'] });
     setShowMoodCheckIn(true);
-  }, [sessionId, queryClient]);
+  }, [sessionId, messages, session, queryClient]);
 
   const [startingSession, setStartingSession] = useState(false);
   const handleNewSession = useCallback(async () => {
     setStartingSession(true);
     try {
       const s = await createSession();
+      analytics.sessionStarted(s.id);
       router.push(`/dashboard/chat/${s.id}`);
     } catch {
       setStartingSession(false);

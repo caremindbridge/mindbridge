@@ -45,7 +45,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   if (message.role === 'user') {
     return (
       <div className="message-bubble flex justify-end gap-3">
-        <div className="max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+        <div data-ph-mask className="max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground">
           <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
         </div>
         <UserAvatar />
@@ -56,7 +56,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   return (
     <div className="message-bubble flex gap-3">
       <MiraAvatar />
-      <div className={cn('max-w-[85%] rounded-2xl rounded-bl-md bg-muted/60 px-4 py-2.5', PROSE)}>
+      <div data-ph-mask className={cn('max-w-[85%] rounded-2xl rounded-bl-md bg-muted/60 px-4 py-2.5', PROSE)}>
         <MarkdownMessage content={message.content} isStreaming={message.isStreaming} />
       </div>
     </div>

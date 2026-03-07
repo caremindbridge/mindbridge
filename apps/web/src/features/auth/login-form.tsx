@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getMe, login } from '@/shared/api/client';
+import { analytics } from '@/shared/lib/analytics';
 import {
   Button,
   Card,
@@ -55,6 +56,8 @@ export function LoginForm() {
       const response = await login(data);
       Cookies.set('token', response.access_token, { expires: 7 });
       const me = await getMe();
+      analytics.identify({ id: me.id, email: me.email, role: me.role, createdAt: me.createdAt });
+      analytics.signIn('email');
       router.push(me.activeMode === 'therapist' ? '/dashboard/therapist' : '/dashboard');
     } catch {
       setServerError(t('loginFailed'));

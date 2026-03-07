@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { UserRole } from '@mindbridge/types/src/user';
 
 import { getMe, register as registerApi } from '@/shared/api/client';
+import { analytics } from '@/shared/lib/analytics';
 import {
   Button,
   Card,
@@ -62,6 +63,8 @@ export function RegisterForm() {
       const response = await registerApi(data);
       Cookies.set('token', response.access_token, { expires: 7 });
       const me = await getMe();
+      analytics.identify({ id: me.id, email: me.email, role: me.role, createdAt: me.createdAt });
+      analytics.signUp('email', data.role);
       router.push(me.role === UserRole.THERAPIST ? '/dashboard/therapist' : '/dashboard');
     } catch {
       setServerError(t('registrationFailed'));

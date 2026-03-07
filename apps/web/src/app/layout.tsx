@@ -2,9 +2,12 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from 'sonner';
 import './globals.css';
 
+import { PostHogProvider } from '@/shared/lib/posthog-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -98,10 +101,14 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${jakarta.variable} ${fraunces.variable} font-sans`}>
-        <NextIntlClientProvider messages={messages}>
-          <QueryProvider>{children}</QueryProvider>
-          <Toaster richColors closeButton />
-        </NextIntlClientProvider>
+        <PostHogProvider>
+          <NextIntlClientProvider messages={messages}>
+            <QueryProvider>{children}</QueryProvider>
+            <Toaster richColors closeButton />
+          </NextIntlClientProvider>
+        </PostHogProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

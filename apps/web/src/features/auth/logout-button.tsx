@@ -5,11 +5,14 @@ import { LogOut } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
+import { analytics } from '@/shared/lib/analytics';
+
 export function LogoutButton() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const handleLogout = () => {
+    analytics.reset();
     Cookies.remove('token');
     queryClient.clear();
     router.push('/login');
