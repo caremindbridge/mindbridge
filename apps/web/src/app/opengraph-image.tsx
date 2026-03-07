@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'MindBridge — Anxiety doesn\'t wait. Neither does Mira.';
+export const alt = "Anxiety doesn't wait for your next session. Neither does Mira.";
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -14,111 +14,118 @@ export default function OGImage() {
           background: '#FAF9F7',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'system-ui, sans-serif',
-          padding: '0 80px',
+          padding: '56px 88px',
+          position: 'relative',
         }}
       >
-        {/* Logo mark */}
+        {/* Decorative orb top-right */}
         <div
           style={{
-            width: 72,
-            height: 72,
-            borderRadius: 18,
-            background: '#C4856F',
+            position: 'absolute',
+            top: -120,
+            right: -120,
+            width: 480,
+            height: 480,
+            borderRadius: '50%',
+            background: 'rgba(196, 133, 111, 0.08)',
+            display: 'flex',
+          }}
+        />
+        {/* Decorative orb bottom-left */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: -60,
+            left: -60,
+            width: 280,
+            height: 280,
+            borderRadius: '50%',
+            background: 'rgba(196, 133, 111, 0.08)',
+            display: 'flex',
+          }}
+        />
+
+        {/* Logo row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 36 }}>🌿</span>
+          <span
+            style={{
+              color: '#2B2320',
+              fontSize: 22,
+              fontWeight: 600,
+              letterSpacing: '0.01em',
+            }}
+          >
+            MindBridge
+          </span>
+        </div>
+
+        {/* Headline block */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: 0,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 72,
+              fontWeight: 800,
+              color: '#2B2320',
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+            }}
+          >
+            Anxiety doesn&apos;t wait
+          </div>
+          <div
+            style={{
+              fontSize: 72,
+              fontWeight: 800,
+              color: '#2B2320',
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              marginBottom: 16,
+            }}
+          >
+            for your next session.
+          </div>
+          <div
+            style={{
+              fontSize: 72,
+              fontWeight: 800,
+              color: '#C4856F',
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+            }}
+          >
+            Neither does Mira.
+          </div>
+        </div>
+
+        {/* Bottom row */}
+        <div
+          style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 40,
-            marginBottom: 28,
+            justifyContent: 'space-between',
           }}
         >
-          🌿
-        </div>
-
-        {/* Brand */}
-        <div
-          style={{
-            fontSize: 22,
-            fontWeight: 600,
-            color: '#7A6F65',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: 20,
-          }}
-        >
-          MindBridge
-        </div>
-
-        {/* Headline */}
-        <div
-          style={{
-            fontSize: 52,
-            fontWeight: 700,
-            color: '#2B2320',
-            letterSpacing: '-0.02em',
-            textAlign: 'center',
-            lineHeight: 1.2,
-            maxWidth: 800,
-          }}
-        >
-          Anxiety doesn&apos;t wait for your next session.
-        </div>
-
-        <div
-          style={{
-            fontSize: 52,
-            fontWeight: 700,
-            color: '#C4856F',
-            letterSpacing: '-0.02em',
-            textAlign: 'center',
-            lineHeight: 1.2,
-            marginTop: 8,
-          }}
-        >
-          Neither does Mira.
-        </div>
-
-        {/* Subline */}
-        <div
-          style={{
-            fontSize: 22,
-            color: '#7A6F65',
-            marginTop: 28,
-            textAlign: 'center',
-            maxWidth: 680,
-            lineHeight: 1.5,
-          }}
-        >
-          Talk to Mira when it&apos;s hard. Free 7-day trial, no card needed.
-        </div>
-
-        {/* Bridge tags */}
-        <div
-          style={{
-            display: 'flex',
-            gap: 12,
-            marginTop: 40,
-          }}
-        >
-          {['💬 You', '→', '🌿 Mira', '→', '🧑‍⚕️ Therapist'].map((item, i) => (
-            <div
-              key={i}
-              style={{
-                fontSize: item === '→' ? 20 : 16,
-                color: item === '→' ? '#C4856F' : '#2B2320',
-                background: item === '→' ? 'transparent' : i === 2 ? '#F5E8E4' : '#F0EDEB',
-                padding: item === '→' ? '0 4px' : '8px 18px',
-                borderRadius: 24,
-                fontWeight: item === '→' ? 400 : 500,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {item}
-            </div>
-          ))}
+          <span style={{ color: 'rgba(43,35,32,0.45)', fontSize: 20 }}>
+            Talk to Mira when it&apos;s hard. Free 7-day trial, no card.
+          </span>
+          <span
+            style={{
+              color: 'rgba(43,35,32,0.25)',
+              fontSize: 18,
+              letterSpacing: '0.02em',
+            }}
+          >
+            mindbridge.me
+          </span>
         </div>
       </div>
     ),
