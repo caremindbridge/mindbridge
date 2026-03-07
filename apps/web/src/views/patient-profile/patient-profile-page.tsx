@@ -2,13 +2,14 @@
 
 import type { ProfileAnalysis } from '@mindbridge/types/src/therapist';
 import { format, formatDistanceToNow } from 'date-fns';
-import { Activity, ArrowLeft, BarChart3, ChevronDown, ChevronUp, TrendingDown, TrendingUp } from 'lucide-react';
+import { Activity, ArrowLeft, BarChart3, ChevronDown, ChevronUp, Lock, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { usePatientReports, useReport } from '@/entities/report';
+import { useTherapistFeatures } from '@/entities/subscription';
 import { usePatientProfile } from '@/entities/therapist';
 import { PatientDossier } from '@/features/profile';
 import { GenerateReportDialog } from '@/features/report';
@@ -36,6 +37,7 @@ interface PatientProfilePageProps {
 export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
   const t = useTranslations('therapist');
   const { data: profile, isLoading } = usePatientProfile(patientId);
+  const { data: features } = useTherapistFeatures();
   const [reportOpen, setReportOpen] = useState(false);
 
   if (isLoading) {
@@ -130,75 +132,89 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         )}
 
         {/* Tabs */}
-        <Tabs defaultValue="mood">
+        <Tabs defaultValue="dossier">
           <TabsList className="mb-2 grid w-full grid-cols-4 rounded-lg p-1">
+            <TabsTrigger value="dossier" className="text-xs md:text-sm">{t('dossierTab')}</TabsTrigger>
+            <TabsTrigger value="reports" className="text-xs md:text-sm">{t('reportsTab')}</TabsTrigger>
             <TabsTrigger value="mood" className="text-xs md:text-sm">{t('moodTab')}</TabsTrigger>
             <TabsTrigger value="analysis" className="text-xs md:text-sm">{t('analysisTab')}</TabsTrigger>
-            <TabsTrigger value="reports" className="text-xs md:text-sm">{t('reportsTab')}</TabsTrigger>
-            <TabsTrigger value="dossier" className="text-xs md:text-sm">{t('dossierTab')}</TabsTrigger>
           </TabsList>
 
           {/* Mood Tab */}
-          <TabsContent value="mood" className="space-y-4 pt-2">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm md:text-base">{t('moodOverTime')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {moodChartData.length === 0 ? (
-                  <div className="flex h-[160px] items-center justify-center text-sm text-muted-foreground">
-                    {t('noMoodData')}
-                  </div>
-                ) : (
-                  <div className="h-[180px] w-full overflow-hidden md:h-[250px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={moodChartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="date" tick={{ fontSize: 11 }} minTickGap={40} />
-                        <YAxis domain={[1, 10]} tick={{ fontSize: 11 }} width={24} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="mood" name={t('moodTab')} stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <TabsContent value="mood" className="pt-2">
+            <div className="relative space-y-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm md:text-base">{t('moodOverTime')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {moodChartData.length === 0 ? (
+                    <div className="flex h-[160px] items-center justify-center text-sm text-muted-foreground">
+                      {t('noMoodData')}
+                    </div>
+                  ) : (
+                    <div className="h-[180px] w-full overflow-hidden md:h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={moodChartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="date" tick={{ fontSize: 11 }} minTickGap={40} />
+                          <YAxis domain={[1, 10]} tick={{ fontSize: 11 }} width={24} />
+                          <Tooltip />
+                          <Line type="monotone" dataKey="mood" name={t('moodTab')} stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm md:text-base">{t('emotionDistribution')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {profile.emotionDistribution.length === 0 ? (
-                  <div className="flex h-[80px] items-center justify-center text-sm text-muted-foreground">
-                    {t('noEmotionDistribution')}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {profile.emotionDistribution.map(({ emotion, count }) => {
-                      const max = profile.emotionDistribution[0]?.count ?? 1;
-                      return (
-                        <div key={emotion} className="space-y-1">
-                          <div className="flex justify-between text-sm">
-                            <span className="capitalize">{emotion}</span>
-                            <span className="text-muted-foreground">{count}</span>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm md:text-base">{t('emotionDistribution')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {profile.emotionDistribution.length === 0 ? (
+                    <div className="flex h-[80px] items-center justify-center text-sm text-muted-foreground">
+                      {t('noEmotionDistribution')}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {profile.emotionDistribution.map(({ emotion, count }) => {
+                        const max = profile.emotionDistribution[0]?.count ?? 1;
+                        return (
+                          <div key={emotion} className="space-y-1">
+                            <div className="flex justify-between text-sm">
+                              <span className="capitalize">{emotion}</span>
+                              <span className="text-muted-foreground">{count}</span>
+                            </div>
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                              <div className="h-2 rounded-full bg-primary" style={{ width: `${(count / max) * 100}%` }} />
+                            </div>
                           </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                            <div className="h-2 rounded-full bg-primary" style={{ width: `${(count / max) * 100}%` }} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {features?.canViewMoodAnalytics === false && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl backdrop-blur-[6px] bg-background/60">
+                  <Lock className="h-4 w-4 text-muted-foreground" />
+                  <p className="text-xs font-medium text-foreground/80 text-center px-4">
+                    {t('upgradeForAnalytics')}
+                  </p>
+                  <Button size="sm" variant="soft" asChild className="h-7 text-xs mt-1">
+                    <Link href="/pricing?role=therapist">{t('upgrade')}</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* Analysis Tab */}
           <TabsContent value="analysis" className="pt-2">
-            <div className="space-y-4">
+            <div className="relative space-y-4">
               <AnxietyChart analyses={profile.analyses} />
               <div className="space-y-3">
                 {profile.analyses.length === 0 ? (
@@ -207,12 +223,29 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                   profile.analyses.map((a) => <AnalysisCard key={a.id} analysis={a} />)
                 )}
               </div>
+
+              {features?.canViewFullAnalysis === false && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl backdrop-blur-[6px] bg-background/60">
+                  <Lock className="h-4 w-4 text-muted-foreground" />
+                  <p className="text-xs font-medium text-foreground/80 text-center px-4">
+                    {t('upgradeForFullAnalysis')}
+                  </p>
+                  <Button size="sm" variant="soft" asChild className="h-7 text-xs mt-1">
+                    <Link href="/pricing?role=therapist">{t('upgrade')}</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </TabsContent>
 
           {/* Reports Tab */}
           <TabsContent value="reports" className="pt-2">
-            <ReportsTab patientId={patientId} onGenerate={() => setReportOpen(true)} />
+            <ReportsTab
+              patientId={patientId}
+              onGenerate={() => setReportOpen(true)}
+              reportLimit={features?.reportLimit}
+              reportsThisMonth={features?.reportsThisMonth}
+            />
           </TabsContent>
 
           {/* Dossier Tab */}
@@ -293,14 +326,34 @@ function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
   );
 }
 
-function ReportsTab({ patientId, onGenerate }: { patientId: string; onGenerate: () => void }) {
+function ReportsTab({
+  patientId,
+  onGenerate,
+  reportLimit,
+  reportsThisMonth,
+}: {
+  patientId: string;
+  onGenerate: () => void;
+  reportLimit?: number;
+  reportsThisMonth?: number;
+}) {
   const t = useTranslations('therapist');
   const { data: reports, isLoading } = usePatientReports(patientId);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  const showReportCounter =
+    reportLimit != null && reportLimit > 0 && reportsThisMonth != null;
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        {showReportCounter ? (
+          <p className="text-xs text-muted-foreground">
+            {t('reportCounter', { used: reportsThisMonth, limit: reportLimit })}
+          </p>
+        ) : (
+          <span />
+        )}
         <Button size="sm" onClick={onGenerate}>
           {t('generateReport')}
         </Button>

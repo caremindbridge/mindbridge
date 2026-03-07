@@ -1,1 +1,1 @@
-export { usePlans, useUsageStatus } from './model';
+export { usePlans, useTherapistFeatures, useUsageStatus } from './model';

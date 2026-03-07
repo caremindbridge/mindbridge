@@ -345,6 +345,23 @@ export function getPlans(): Promise<unknown> {
   return apiClient.get<unknown>('/subscription/plans');
 }
 
+export interface TherapistFeatures {
+  plan: string;
+  isTrial: boolean;
+  trialEndsAt: string | null;
+  patientLimit: number;
+  reportLimit: number;
+  activePatientCount: number;
+  reportsThisMonth: number;
+  canWriteMiraInstructions: boolean;
+  canViewMoodAnalytics: boolean;
+  canViewFullAnalysis: boolean;
+}
+
+export function getTherapistFeatures(): Promise<TherapistFeatures> {
+  return apiClient.get<TherapistFeatures>('/subscription/therapist-features');
+}
+
 export function createCheckout(
   planId: string,
   billing: 'monthly' | 'yearly' = 'monthly',

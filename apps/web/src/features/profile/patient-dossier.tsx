@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 
 import { formatDistanceToNow } from 'date-fns';
+import { Lock } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { toast } from 'sonner';
@@ -10,6 +12,7 @@ import { toast } from 'sonner';
 import type { PatientContextData } from '@mindbridge/types/src/profile';
 
 import { usePatientDossier, useUpdateTherapistNotes } from '@/entities/profile';
+import { useTherapistFeatures } from '@/entities/subscription';
 import { cn } from '@/shared/lib/utils';
 import {
   Button,
@@ -29,6 +32,7 @@ interface PatientDossierProps {
 export function PatientDossier({ patientId }: PatientDossierProps) {
   const t = useTranslations('dossier');
   const { data: dossier, isLoading } = usePatientDossier(patientId);
+  const { data: features } = useTherapistFeatures();
   const updateNotes = useUpdateTherapistNotes(patientId);
 
   const [notes, setNotes] = useState('');
@@ -180,36 +184,51 @@ export function PatientDossier({ patientId }: PatientDossierProps) {
 
         {/* ─── YOUR NOTES ─── */}
         <DossierSection title={t('yourNotes')}>
-          <p className="mb-2 text-xs text-muted-foreground">{t('yourNotesDescription')}</p>
-          <Textarea
-            value={notes}
-            onChange={(e) => {
-              if (e.target.value.length <= 2000) {
-                setNotes(e.target.value);
-                setIsDirty(true);
-              }
-            }}
-            placeholder={t('notesPlaceholder')}
-            className="min-h-[120px] resize-y font-mono text-base"
-          />
-          <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <span className="text-xs text-muted-foreground">{notes.length}/2000</span>
-            <Button
-              size="sm"
-              className="w-full md:w-auto"
-              disabled={!isDirty || updateNotes.isPending}
-              onClick={async () => {
-                try {
-                  await updateNotes.mutateAsync(notes);
-                  setIsDirty(false);
-                  toast.success(t('notesSaved'));
-                } catch {
-                  toast.error(t('notesSaveError'));
+          <div className="relative">
+            <p className="mb-2 text-xs text-muted-foreground">{t('yourNotesDescription')}</p>
+            <Textarea
+              value={notes}
+              onChange={(e) => {
+                if (e.target.value.length <= 2000) {
+                  setNotes(e.target.value);
+                  setIsDirty(true);
                 }
               }}
-            >
-              {updateNotes.isPending ? t('saving') : t('saveNotes')}
-            </Button>
+              placeholder={t('notesPlaceholder')}
+              className="min-h-[120px] resize-y font-mono text-base"
+              readOnly={features?.canWriteMiraInstructions === false}
+            />
+            <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <span className="text-xs text-muted-foreground">{notes.length}/2000</span>
+              <Button
+                size="sm"
+                className="w-full md:w-auto"
+                disabled={!isDirty || updateNotes.isPending}
+                onClick={async () => {
+                  try {
+                    await updateNotes.mutateAsync(notes);
+                    setIsDirty(false);
+                    toast.success(t('notesSaved'));
+                  } catch {
+                    toast.error(t('notesSaveError'));
+                  }
+                }}
+              >
+                {updateNotes.isPending ? t('saving') : t('saveNotes')}
+              </Button>
+            </div>
+
+            {features?.canWriteMiraInstructions === false && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg backdrop-blur-[10px] bg-background/60">
+                <Lock className="h-4 w-4 text-muted-foreground" />
+                <p className="text-xs font-medium text-foreground/80 text-center px-4">
+                  {t('upgradeForMiraInstructions')}
+                </p>
+                <Button size="sm" variant="soft" asChild className="h-7 text-xs mt-1">
+                  <Link href="/pricing?role=therapist">{t('upgrade')}</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </DossierSection>
       </CardContent>

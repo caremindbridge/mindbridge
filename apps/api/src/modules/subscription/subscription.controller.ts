@@ -4,6 +4,7 @@ import { IsIn, IsOptional, IsString } from 'class-validator';
 
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PlanFeatureService } from './plan-feature.service';
 import { YEARLY_DISCOUNT_PERCENT } from './subscription.plans';
 import type { MessagePackId, PatientPlanId, TherapistPlanId } from './subscription.plans';
 import { StripeService } from './stripe.service';
@@ -35,6 +36,7 @@ export class SubscriptionController {
     private readonly usageService: UsageService,
     private readonly stripeService: StripeService,
     private readonly configService: ConfigService,
+    private readonly planFeatureService: PlanFeatureService,
   ) {}
 
   @Get('usage')
@@ -140,6 +142,8 @@ export class SubscriptionController {
             'Unlimited reports',
             'Patient dossiers',
             'Mira instructions',
+            'Mood analytics',
+            'Full session analysis',
           ],
         },
         {
@@ -151,8 +155,11 @@ export class SubscriptionController {
           features: [
             'Unlimited patients',
             'Unlimited reports',
-            'Leadership dashboard',
-            'Custom branding',
+            'Patient dossiers',
+            'Mira instructions',
+            'Mood analytics',
+            'Full session analysis',
+            'Multi-therapist',
           ],
         },
       ],
@@ -164,6 +171,12 @@ export class SubscriptionController {
       yearlyDiscountPercent: YEARLY_DISCOUNT_PERCENT,
       userRole,
     };
+  }
+
+  @Get('therapist-features')
+  @UseGuards(JwtAuthGuard)
+  async getTherapistFeatures(@CurrentUser() user: { id: string }) {
+    return this.planFeatureService.getTherapistFeatures(user.id);
   }
 
   @Post('checkout')

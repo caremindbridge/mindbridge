@@ -3,7 +3,7 @@
 import type { UsageStatus } from '@mindbridge/types/src/subscription';
 import { useQuery } from '@tanstack/react-query';
 
-import { getPlans, getUsageStatus } from '@/shared/api/client';
+import { getPlans, getTherapistFeatures, getUsageStatus } from '@/shared/api/client';
 
 export function useUsageStatus(sessionId?: string, planType?: 'patient' | 'therapist') {
   return useQuery({
@@ -18,5 +18,13 @@ export function usePlans() {
     queryKey: ['plans'],
     queryFn: getPlans,
     staleTime: 300000,
+  });
+}
+
+export function useTherapistFeatures() {
+  return useQuery({
+    queryKey: ['therapist-features'],
+    queryFn: getTherapistFeatures,
+    staleTime: 60000,
   });
 }

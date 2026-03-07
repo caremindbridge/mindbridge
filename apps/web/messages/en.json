@@ -517,7 +517,9 @@
     "saving": "Saving...",
     "notesSaved": "Notes saved. Mira will use them next session.",
     "notesSaveError": "Failed to save notes",
-    "empty": "No data yet. Dossier will appear after the patient fills About Me or completes a session."
+    "empty": "No data yet. Dossier will appear after the patient fills About Me or completes a session.",
+    "upgradeForMiraInstructions": "Mira instructions are available on paid plans. Upgrade to guide Mira's focus for each patient.",
+    "upgrade": "Upgrade"
   },
   "pricing": {
     "title": "Simple, transparent pricing",
@@ -686,7 +688,14 @@
     "reportStatusReady": "Ready",
     "reportStatusGenerating": "Generating...",
     "reportStatusError": "Error",
-    "noEmotionDistribution": "No emotion data yet"
+    "noEmotionDistribution": "No emotion data yet",
+    "patientCounter": "{used} of {limit} patients used",
+    "reportCounter": "{used} of {limit} reports used this month",
+    "upgradeForAnalytics": "Mood analytics are available on paid plans.",
+    "upgradeForFullAnalysis": "Full session analysis is available on paid plans.",
+    "upgrade": "Upgrade",
+    "trialBannerTitle": "14-day trial — {days} days remaining",
+    "trialBannerDesc": "Upgrade to unlock Mira instructions, mood analytics, and full session analysis."
   },
   "analysis": {
     "distortions": "Distortions",
