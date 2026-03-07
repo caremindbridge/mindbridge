@@ -227,8 +227,17 @@ export class AuthController {
     const user = req.user as User;
     await this.authService.ensureTrialExists(user);
     const token = this.authService.generateToken(user);
-    const frontendUrl =
+
+    const defaultFrontendUrl =
       this.configService.get<string>('frontendUrl') ?? 'http://localhost:3000';
+
+    // Validate the state (origin passed by the frontend) against allowed origins
+    const corsOrigin = process.env.CORS_ORIGIN || defaultFrontendUrl;
+    const allowedOrigins = corsOrigin.split(',').map((o) => o.trim());
+    const stateUrl = (req.query as Record<string, string>)['state'];
+    const frontendUrl =
+      stateUrl && allowedOrigins.includes(stateUrl) ? stateUrl : defaultFrontendUrl;
+
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
   }
 }

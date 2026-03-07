@@ -13,7 +13,8 @@ export function GoogleSignInButton() {
       variant="outline"
       className="w-full gap-3"
       onClick={() => {
-        window.location.href = `${env.apiUrl}/api/auth/google`;
+        const returnTo = encodeURIComponent(window.location.origin);
+        window.location.href = `${env.apiUrl}/api/auth/google?return_to=${returnTo}`;
       }}
     >
       <GoogleIcon />
