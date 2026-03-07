@@ -39,7 +39,7 @@ export function DashboardPage() {
   const t = useTranslations('dashboard');
   const { user } = useUser();
   const router = useRouter();
-  const [moodLogged, setMoodLogged] = useState(false);
+  const [moodLoggedLocal, setMoodLoggedLocal] = useState(false);
 
   useEffect(() => {
     if (user?.role === UserRole.THERAPIST && (user.activeMode ?? 'therapist') === 'therapist') {
@@ -71,6 +71,9 @@ export function DashboardPage() {
     return isValidInsight(raw) ? raw : null;
   }, [metrics]);
 
+  const hasLoggedToday =
+    moodLoggedLocal || (moods?.some((m) => isToday(new Date(m.createdAt))) ?? false);
+
   const sparkData = useMemo(
     () => (moods ? [...moods].reverse().map((m) => ({ v: m.value })) : []),
     [moods],
@@ -100,7 +103,7 @@ export function DashboardPage() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium">{t('howAreYou')}</p>
-              {moodLogged && (
+              {hasLoggedToday && (
                 <p className="mt-0.5 text-xs text-emerald-600">{t('checkedInToday')}</p>
               )}
             </div>
@@ -109,8 +112,8 @@ export function DashboardPage() {
                 <button
                   key={value}
                   type="button"
-                  disabled={logging}
-                  onClick={() => logMood({ value }, { onSuccess: () => setMoodLogged(true) })}
+                  disabled={logging || hasLoggedToday}
+                  onClick={() => logMood({ value }, { onSuccess: () => setMoodLoggedLocal(true) })}
                   className="text-2xl transition-transform hover:scale-125 active:scale-95 disabled:opacity-50"
                   title={`${value}/10`}
                 >
