@@ -65,7 +65,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
 
   return (
     <BottomSheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onSkip(); }} title={t('title')}>
-
+      <div className="space-y-5">
         {/* Mood Scale */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -122,18 +122,19 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
         />
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-3">
           <Button
-            className="flex-1"
+            className="w-full"
             onClick={handleSave}
             disabled={createMood.isPending}
           >
             {createMood.isPending ? t('saving') : t('submit')}
           </Button>
-          <Button variant="ghost" onClick={onSkip} disabled={createMood.isPending}>
+          <Button variant="ghost" className="w-full" onClick={onSkip} disabled={createMood.isPending}>
             {t('skip')}
           </Button>
         </div>
+      </div>
     </BottomSheet>
   );
 }

@@ -10,6 +10,11 @@ export function useSessions(page = 1, limit = 20) {
     queryKey: ['sessions', page, limit],
     queryFn: () => getSessions(page, limit),
     staleTime: 30000,
+    refetchInterval: (query) => {
+      const sessions = (query.state.data as PaginatedSessionsDto | undefined)?.sessions;
+      if (!sessions) return false;
+      return sessions.some((s) => s.status === 'ended' || s.status === 'analyzing') ? 4000 : false;
+    },
   });
 }
 

@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/dashboard') && !token) {
     response = NextResponse.redirect(new URL('/login', request.url));
-  } else if ((pathname === '/login' || pathname === '/register') && token) {
+  } else if ((pathname === '/' || pathname === '/login' || pathname === '/register') && token) {
     const role = request.cookies.get('role')?.value;
     const dest = role === 'therapist' ? '/dashboard/therapist' : '/dashboard';
     response = NextResponse.redirect(new URL(dest, request.url));

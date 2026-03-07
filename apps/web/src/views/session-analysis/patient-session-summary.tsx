@@ -97,7 +97,7 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
   });
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-hidden p-6">
+    <div className="flex flex-col gap-3 overflow-y-auto px-4 pt-4 pb-28 sm:h-full sm:overflow-hidden sm:p-6">
 
       {/* ── Header ── */}
       <div className="flex shrink-0 items-center justify-between">
@@ -124,7 +124,7 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
       </div>
 
       {/* ── Tile grid ── */}
-      <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:min-h-0 sm:flex-1 sm:grid-cols-3 sm:grid-rows-2">
 
         {/* Topics */}
         <Tile title={t('whatWeDiscussed')} icon="💬">
@@ -166,7 +166,7 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
         <Tile
           title={t('whatWeNoticed')}
           icon="💡"
-          className="col-span-2"
+          className="sm:col-span-2"
           accent
           scrollable
         >
@@ -268,7 +268,7 @@ function Tile({
           {title}
         </p>
       </div>
-      <div className={cn('min-h-0 flex-1', scrollable && 'overflow-y-auto')}>
+      <div className={cn('flex-1', scrollable && 'sm:overflow-y-auto')}>
         {children}
       </div>
     </div>

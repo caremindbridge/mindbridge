@@ -4,16 +4,8 @@ import { Square } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
+import { Button } from '@/shared/ui';
 
 interface EndSessionButtonProps {
   onEnd: () => Promise<void>;
@@ -38,36 +30,39 @@ export function EndSessionButton({ onEnd, disabled, compact }: EndSessionButtonP
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {compact ? (
-          <button
-            disabled={disabled}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-rose-500 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40 dark:hover:bg-rose-950/30 dark:hover:text-rose-400"
-          >
-            <Square className="h-[18px] w-[18px] fill-current" strokeWidth={0} />
-          </button>
-        ) : (
-          <Button variant="outline" size="sm" disabled={disabled} className="gap-1.5 text-muted-foreground hover:text-foreground">
-            <Square className="h-3 w-3 fill-current" strokeWidth={0} />
-            {t('endSession')}
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('endSessionTitle')}</DialogTitle>
-          <DialogDescription>{t('endSessionDesc')}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
-            {tc('cancel')}
-          </Button>
-          <Button onClick={handleEnd} disabled={loading}>
+    <>
+      {compact ? (
+        <button
+          disabled={disabled}
+          onClick={() => setOpen(true)}
+          className="flex h-9 w-9 items-center justify-center rounded-full text-rose-500 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40 dark:hover:bg-rose-950/30 dark:hover:text-rose-400"
+        >
+          <Square className="h-[18px] w-[18px] fill-current" strokeWidth={0} />
+        </button>
+      ) : (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          onClick={() => setOpen(true)}
+          className="gap-1.5 text-muted-foreground hover:text-foreground"
+        >
+          <Square className="h-3 w-3 fill-current" strokeWidth={0} />
+          {t('endSession')}
+        </Button>
+      )}
+
+      <BottomSheet open={open} onOpenChange={setOpen} title={t('endSessionTitle')}>
+        <p className="mb-6 text-sm text-muted-foreground">{t('endSessionDesc')}</p>
+        <div className="flex flex-col gap-3">
+          <Button className="w-full" onClick={handleEnd} disabled={loading}>
             {loading ? t('ending') : t('endSession')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button variant="outline" className="w-full" onClick={() => setOpen(false)} disabled={loading}>
+            {tc('cancel')}
+          </Button>
+        </div>
+      </BottomSheet>
+    </>
   );
 }

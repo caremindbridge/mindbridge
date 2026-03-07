@@ -26,12 +26,13 @@ export interface DashboardMetrics {
   latestInsight: string | null;
 }
 
-export function useMoodMetrics(from?: string, to?: string) {
+export function useMoodMetrics(from?: string, to?: string, refetchInterval?: number | false) {
   return useQuery<DashboardMetrics>({
     queryKey: ['mood-metrics', from, to],
     queryFn: async () => {
       const data = await getMoodMetrics(from, to);
       return data as DashboardMetrics;
     },
+    refetchInterval,
   });
 }

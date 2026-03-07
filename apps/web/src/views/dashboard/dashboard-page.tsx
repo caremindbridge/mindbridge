@@ -2,7 +2,7 @@
 
 import { UserRole } from '@mindbridge/types/src/user';
 import { format, isToday, isYesterday, startOfDay, subDays } from 'date-fns';
-import { BarChart3, Brain, Flame, Heart, MessageCircle, Wind } from 'lucide-react';
+import { BarChart3, Brain, Flame, Heart, Loader2, MessageCircle, Wind } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -50,10 +50,21 @@ export function DashboardPage() {
   const from7d = useMemo(() => startOfDay(subDays(new Date(), 7)).toISOString(), []);
 
   const { data: stats, isLoading: statsLoading } = useMoodStats();
-  const { data: metrics, isLoading: metricsLoading } = useMoodMetrics(from7d);
-  const { data: moods } = useMoods(from7d);
   const { data: sessionsData, isLoading: sessionsLoading } = useSessions(1, 3);
+  const { data: moods } = useMoods(from7d);
   const { mutate: logMood, isPending: logging } = useCreateMood();
+
+  // derived before remaining queries so we can control their refetch interval
+  const hasAnalyzing =
+    sessionsData?.sessions.some((s) => s.status === 'ended' || s.status === 'analyzing') ?? false;
+  const lastCompletedSession =
+    sessionsData?.sessions.find((s) => s.status === 'completed') ?? null;
+
+  const { data: metrics, isLoading: metricsLoading } = useMoodMetrics(
+    from7d,
+    undefined,
+    hasAnalyzing ? 4000 : false,
+  );
 
   const insight = useMemo(() => {
     const raw = metrics?.latestInsight;
@@ -164,7 +175,7 @@ export function DashboardPage() {
       </div>
 
       {/* ── Mira's Insight ── */}
-      <Card className={cn(insight && 'border-blush-200 bg-blush-50/30')}>
+      <Card className={cn(insight && 'border-blush-200 bg-blush-50/30', hasAnalyzing && !insight && 'border-blush-200 bg-blush-50/20')}>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm font-semibold">
             <Brain className="h-4 w-4 text-primary" />
@@ -175,7 +186,23 @@ export function DashboardPage() {
           {metricsLoading ? (
             <Skeleton className="h-12 w-full" />
           ) : insight ? (
-            <p className="text-sm leading-relaxed text-foreground/80">{insight}</p>
+            <div>
+              <p className="text-sm leading-relaxed text-foreground/80">{insight}</p>
+              {lastCompletedSession && (
+                <div className="mt-3 flex justify-end">
+                  <Button asChild size="sm" variant="soft">
+                    <Link href={`/dashboard/chat/${lastCompletedSession.id}/analysis`}>
+                      {t('viewLastAnalysis')}
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : hasAnalyzing ? (
+            <div className="flex items-center gap-3">
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">{t('analyzingInsight')}</p>
+            </div>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-muted-foreground">{t('defaultInsight')}</p>
@@ -230,6 +257,12 @@ export function DashboardPage() {
             {t('allSessions')}
           </Link>
         </div>
+        {hasAnalyzing && (
+          <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-blush-200 bg-blush-50/40 px-4 py-2.5">
+            <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" />
+            <p className="text-sm text-foreground/70">{t('analyzingBanner')}</p>
+          </div>
+        )}
         <RecentSessionsList
           sessions={sessionsData?.sessions ?? []}
           isLoading={sessionsLoading}
@@ -353,27 +386,35 @@ function RecentSessionsList({
         const dateLabel = isToday(d) ? t('today') : isYesterday(d) ? t('yesterday') : format(d, 'MMM d');
         const title = s.title ?? tc('cbtSession');
         const isCompleted = s.status === 'completed';
+        const isAnalyzing = s.status === 'analyzing' || s.status === 'ended';
         return (
           <Link
             key={s.id}
             href={`/dashboard/chat/${s.id}`}
-            className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 transition-colors hover:bg-muted/30"
+            className="flex items-center gap-4 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:bg-muted/30"
           >
-            <div>
-              <p className="text-sm font-medium">{title}</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{title}</p>
               <p className="text-xs text-muted-foreground">{dateLabel}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span
-                className={cn(
-                  'rounded-full px-2 py-0.5 text-xs font-medium',
-                  s.status === 'active'
-                    ? 'bg-emerald-100 text-emerald-700'
-                    : 'bg-muted text-muted-foreground',
-                )}
-              >
-                {s.status === 'active' ? tc('statusActive') : tc('statusCompleted')}
-              </span>
+            <div className="flex shrink-0 items-center gap-2">
+              {isAnalyzing ? (
+                <span className="flex items-center gap-1.5 rounded-full bg-blush-100 px-2.5 py-0.5 text-xs font-medium text-blush-600">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  {tc('statusAnalyzing')}
+                </span>
+              ) : (
+                <span
+                  className={cn(
+                    'rounded-full px-2 py-0.5 text-xs font-medium',
+                    s.status === 'active'
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-muted text-muted-foreground',
+                  )}
+                >
+                  {s.status === 'active' ? tc('statusActive') : tc('statusCompleted')}
+                </span>
+              )}
               {isCompleted && (
                 <span
                   role="link"
