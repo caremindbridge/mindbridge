@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 
+import { siteConfig } from '@/shared/lib/site-config';
+
 import { LoginForm } from '@/features/auth';
 import { AuthLocaleToggle } from '@/features/locale';
 
+const isRu = siteConfig.forcedLocale === 'ru';
+
 export const metadata: Metadata = {
-  title: 'Login',
+  title: isRu ? 'Вход' : 'Log in',
   robots: { index: false },
 };
 

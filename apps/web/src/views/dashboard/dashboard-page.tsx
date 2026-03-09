@@ -192,15 +192,23 @@ export function DashboardPage() {
           ) : insight ? (
             <div>
               <p className="text-sm leading-relaxed text-foreground/80">{insight}</p>
-              {lastCompletedSession && (
-                <div className="mt-3 flex justify-end">
+              <div className="mt-3 flex items-center justify-between gap-3">
+                {hasAnalyzing ? (
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 shrink-0 animate-spin text-primary" />
+                    <span>{t('analyzingInsight')}</span>
+                  </div>
+                ) : (
+                  <span />
+                )}
+                {lastCompletedSession && !hasAnalyzing && (
                   <Button asChild size="sm" variant="soft">
                     <Link href={`/dashboard/chat/${lastCompletedSession.id}/analysis`}>
                       {t('viewLastAnalysis')}
                     </Link>
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           ) : hasAnalyzing ? (
             <div className="flex items-center gap-3">

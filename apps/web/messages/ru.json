@@ -13,7 +13,8 @@
     "submit": "Отправить",
     "done": "Готово",
     "skip": "Пропустить",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "toggleTheme": "Сменить тему"
   },
   "auth": {
     "login": "Войти",
@@ -122,7 +123,8 @@
     "emotionAnger": "Злость",
     "emotionHope": "Надежда",
     "emotionLoneliness": "Одиночество",
-    "emotionGratitude": "Благодарность"
+    "emotionGratitude": "Благодарность",
+    "failedToSave": "Не удалось сохранить настроение"
   },
   "nav": {
     "dashboard": "Дашборд",
@@ -298,7 +300,7 @@
       "b4": "Детальные отчёты о сессиях за секунды",
       "pricingTitle": "Прозрачные цены для терапевтов",
       "t1Name": "Solo",
-      "t1Price": "$29",
+      "t1Price": "2 900 ₽",
       "t1Period": "/мес",
       "t1Desc": "Для частной практики",
       "t1F1": "10 подключённых пациентов",
@@ -307,7 +309,7 @@
       "t1F4": "Инструкции для Миры",
       "t1Cta": "Начать бесплатно",
       "t2Name": "Practice",
-      "t2Price": "$59",
+      "t2Price": "5 900 ₽",
       "t2Period": "/мес",
       "t2Desc": "Для активной практики",
       "t2F1": "30 подключённых пациентов",
@@ -316,7 +318,7 @@
       "t2F4": "Инструкции для Миры",
       "t2Cta": "Начать бесплатно",
       "t3Name": "Clinic",
-      "t3Price": "$39",
+      "t3Price": "3 900 ₽",
       "t3Period": "/место/мес",
       "t3Desc": "Для клиник и команд",
       "t3F1": "Неограниченные пациенты",
@@ -328,13 +330,13 @@
     "pricing": {
       "title": "7 дней бесплатно. Потом — реши.",
       "liteTitle": "Lite",
-      "litePrice": "$9.99",
+      "litePrice": "999 ₽",
       "litePeriod": "/мес",
       "standardTitle": "Standard",
-      "standardPrice": "$19.99",
+      "standardPrice": "1 999 ₽",
       "standardPeriod": "/мес",
       "premiumTitle": "Premium",
-      "premiumPrice": "$39.99",
+      "premiumPrice": "3 999 ₽",
       "premiumPeriod": "/мес",
       "popular": "Популярный",
       "viewAllPlans": "Все тарифы и планы для терапевтов →",
@@ -457,7 +459,11 @@
     "deleteConfirmPlaceholder": "Введите DELETE для подтверждения",
     "deleteConfirmButton": "Удалить мой аккаунт",
     "deleting": "Удаление...",
-    "billingPortalError": "Не удалось открыть портал оплаты"
+    "billingPortalError": "Не удалось открыть портал оплаты",
+    "failedToUpdateProfile": "Не удалось обновить профиль",
+    "failedToChangePassword": "Не удалось изменить пароль",
+    "failedToDisconnect": "Не удалось отключиться",
+    "failedToDeleteAccount": "Не удалось удалить аккаунт"
   },
   "aboutMe": {
     "title": "О себе",
@@ -593,7 +599,9 @@
     "paymentComingSoon": "Скоро",
     "perMonth": "/мес",
     "yearShort": "год",
-    "perSeatPerMonth": "/место/мес"
+    "perSeatPerMonth": "/место/мес",
+    "bestValue": "Лучшая цена",
+    "packMessages": "{count} сообщений"
   },
   "subscription": {
     "messages": "Сообщения",
@@ -631,7 +639,8 @@
     "switchToPatient": "Личный режим",
     "switchToTherapist": "Режим терапевта",
     "personalMode": "Личный режим",
-    "switching": "Переключение..."
+    "switching": "Переключение...",
+    "failedToSwitch": "Не удалось переключить режим"
   },
   "therapist": {
     "patients": "Пациенты",
@@ -699,7 +708,23 @@
     "upgradeForFullAnalysis": "Полный анализ сессий доступен на платных тарифах.",
     "upgrade": "Перейти",
     "trialBannerTitle": "Пробный период — осталось {days} дней",
-    "trialBannerDesc": "Перейдите на тариф, чтобы получить доступ к инструкциям для Миры, аналитике настроения и полному анализу сессий."
+    "trialBannerDesc": "Перейдите на тариф, чтобы получить доступ к инструкциям для Миры, аналитике настроения и полному анализу сессий.",
+    "codeCopied": "Код скопирован!",
+    "copied": "Скопировано!",
+    "tapToCopy": "Нажмите чтобы скопировать",
+    "failedToSendInvite": "Не удалось отправить приглашение",
+    "reportReady": "Отчёт готов!",
+    "failedToGenerateReport": "Не удалось создать отчёт",
+    "periodStart": "Начало периода",
+    "periodEnd": "Конец периода",
+    "startingReport": "Запуск...",
+    "generate": "Создать",
+    "generatingReportMessage": "Создаём отчёт, подождите...",
+    "reportMoodTrend": "Динамика настроения",
+    "reportKeyThemes": "Ключевые темы",
+    "reportConcerns": "Опасения",
+    "reportCopingStrategies": "Стратегии совладания",
+    "reportProgressNotes": "Заметки о прогрессе"
   },
   "analysis": {
     "distortions": "Искажения",

@@ -7,8 +7,8 @@ import { toast } from 'sonner';
 
 import { useDisconnectFromTherapist, useMyTherapist } from '@/entities/therapist';
 import { AcceptInviteDialog } from '@/features/therapist';
-import { BottomSheet } from '@/shared/ui/bottom-sheet';
 import { Button, Card, CardContent, Skeleton } from '@/shared/ui';
+import { BottomSheet } from '@/shared/ui/bottom-sheet';
 
 export function TherapistConnectionSection() {
   const t = useTranslations('settings');
@@ -24,7 +24,7 @@ export function TherapistConnectionSection() {
       setConfirmOpen(false);
       toast.success(t('disconnectedSuccess'));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to disconnect');
+      toast.error(err instanceof Error ? err.message : t('failedToDisconnect'));
     }
   };
 

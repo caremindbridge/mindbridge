@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
+import { siteConfig } from '@/shared/lib/site-config';
+
 import { AuthLocaleToggle } from '@/features/locale';
 import { ResetPasswordPage } from '@/views/auth/reset-password-page';
 
+const isRu = siteConfig.forcedLocale === 'ru';
+
 export const metadata: Metadata = {
-  title: 'Reset Password',
+  title: isRu ? 'Сброс пароля' : 'Reset Password',
   robots: { index: false },
 };
 

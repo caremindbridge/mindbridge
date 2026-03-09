@@ -13,7 +13,8 @@
     "submit": "Submit",
     "done": "Done",
     "skip": "Skip",
-    "close": "Close"
+    "close": "Close",
+    "toggleTheme": "Toggle theme"
   },
   "auth": {
     "login": "Sign In",
@@ -122,7 +123,8 @@
     "emotionAnger": "Anger",
     "emotionHope": "Hope",
     "emotionLoneliness": "Loneliness",
-    "emotionGratitude": "Gratitude"
+    "emotionGratitude": "Gratitude",
+    "failedToSave": "Failed to save mood"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -457,7 +459,11 @@
     "deleteConfirmPlaceholder": "Type DELETE to confirm",
     "deleteConfirmButton": "Delete my account",
     "deleting": "Deleting...",
-    "billingPortalError": "Failed to open billing portal"
+    "billingPortalError": "Failed to open billing portal",
+    "failedToUpdateProfile": "Failed to update profile",
+    "failedToChangePassword": "Failed to change password",
+    "failedToDisconnect": "Failed to disconnect",
+    "failedToDeleteAccount": "Failed to delete account"
   },
   "aboutMe": {
     "title": "About Me",
@@ -593,7 +599,9 @@
     "paymentComingSoon": "Coming soon",
     "perMonth": "/mo",
     "yearShort": "year",
-    "perSeatPerMonth": "/seat/mo"
+    "perSeatPerMonth": "/seat/mo",
+    "bestValue": "Best Value",
+    "packMessages": "{count} messages"
   },
   "subscription": {
     "messages": "Messages",
@@ -631,7 +639,8 @@
     "switchToPatient": "Switch to Personal Mode",
     "switchToTherapist": "Switch to Therapist Mode",
     "personalMode": "Personal Mode",
-    "switching": "Switching..."
+    "switching": "Switching...",
+    "failedToSwitch": "Failed to switch mode"
   },
   "therapist": {
     "patients": "Patients",
@@ -699,7 +708,23 @@
     "upgradeForFullAnalysis": "Full session analysis is available on paid plans.",
     "upgrade": "Upgrade",
     "trialBannerTitle": "14-day trial — {days} days remaining",
-    "trialBannerDesc": "Upgrade to unlock Mira instructions, mood analytics, and full session analysis."
+    "trialBannerDesc": "Upgrade to unlock Mira instructions, mood analytics, and full session analysis.",
+    "codeCopied": "Code copied!",
+    "copied": "Copied!",
+    "tapToCopy": "Tap to copy",
+    "failedToSendInvite": "Failed to send invite",
+    "reportReady": "Report ready!",
+    "failedToGenerateReport": "Failed to generate report",
+    "periodStart": "Period start",
+    "periodEnd": "Period end",
+    "startingReport": "Starting...",
+    "generate": "Generate",
+    "generatingReportMessage": "Generating report, please wait...",
+    "reportMoodTrend": "Mood Trend",
+    "reportKeyThemes": "Key Themes",
+    "reportConcerns": "Concerns",
+    "reportCopingStrategies": "Coping Strategies",
+    "reportProgressNotes": "Progress Notes"
   },
   "analysis": {
     "distortions": "Distortions",

@@ -24,6 +24,8 @@ const PACKS = [
 
 export function MonthlyLimitModal({ open, onClose, usage }: Props) {
   const t = useTranslations('subscription');
+  const tc = useTranslations('common');
+  const tp = useTranslations('pricing');
 
   const handleBuyPack = async (packId: string) => {
     try {
@@ -31,10 +33,10 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
       if (url) {
         window.location.href = url;
       } else {
-        toast.info('Payments coming soon!');
+        toast.info(tp('comingSoon'));
       }
     } catch {
-      toast.error('Something went wrong');
+      toast.error(tc('error'));
     }
   };
 
@@ -70,11 +72,11 @@ export function MonthlyLimitModal({ open, onClose, usage }: Props) {
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{pack.messages} messages</span>
-                  {pack.popular && <Badge className="text-[10px]">Popular</Badge>}
+                  <span className="font-medium">{tp('packMessages', { count: pack.messages })}</span>
+                  {pack.popular && <Badge className="text-[10px]">{tp('popular')}</Badge>}
                   {pack.bestValue && (
                     <Badge variant="secondary" className="text-[10px]">
-                      Best Value
+                      {tp('bestValue')}
                     </Badge>
                   )}
                 </div>

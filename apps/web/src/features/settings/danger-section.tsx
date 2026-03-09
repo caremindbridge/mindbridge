@@ -31,7 +31,7 @@ export function DangerSection() {
       Cookies.remove('token');
       router.push('/login');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete account');
+      toast.error(err instanceof Error ? err.message : t('failedToDeleteAccount'));
       setDeleting(false);
     }
   };

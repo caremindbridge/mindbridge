@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 
+import { siteConfig } from '@/shared/lib/site-config';
+
 import { AuthLocaleToggle } from '@/features/locale';
 import { ForgotPasswordPage } from '@/views/auth/forgot-password-page';
 
+const isRu = siteConfig.forcedLocale === 'ru';
+
 export const metadata: Metadata = {
-  title: 'Forgot Password',
+  title: isRu ? 'Забыли пароль' : 'Forgot Password',
   robots: { index: false },
 };
 

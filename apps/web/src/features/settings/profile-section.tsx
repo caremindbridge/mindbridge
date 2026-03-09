@@ -31,7 +31,7 @@ export function ProfileSection({ user, onUpdated }: ProfileSectionProps) {
       onUpdated();
       toast.success(t('profileUpdated'));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to update profile');
+      toast.error(err instanceof Error ? err.message : t('failedToUpdateProfile'));
     } finally {
       setSaving(false);
     }

@@ -47,7 +47,7 @@ export function SecuritySection({ user }: SecuritySectionProps) {
       toast.success(t('passwordUpdated'));
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to change password');
+      setError(err instanceof Error ? err.message : t('failedToChangePassword'));
     } finally {
       setSaving(false);
     }

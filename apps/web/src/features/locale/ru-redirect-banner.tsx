@@ -32,7 +32,7 @@ export function RuRedirectBanner() {
   };
 
   return (
-    <div className="flex items-center justify-between gap-3 bg-primary px-4 py-2 text-sm text-primary-foreground">
+    <div className="fixed left-0 right-0 top-14 z-40 flex items-center justify-between gap-3 bg-primary px-4 py-2 text-sm text-primary-foreground md:top-16">
       <span>
         Есть русскоязычная версия MindBridge —{' '}
         <a href={RU_SITE_URL} className="font-semibold underline underline-offset-2">

@@ -27,7 +27,7 @@ export function ModeSwitcher() {
       // Hard redirect so all hooks re-initialize with fresh user data
       window.location.href = targetMode === 'therapist' ? '/dashboard/therapist' : '/dashboard';
     } catch {
-      toast.error('Failed to switch mode');
+      toast.error(t('failedToSwitch'));
       setSwitching(false);
     }
   };

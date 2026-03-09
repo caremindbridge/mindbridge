@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 
+import { siteConfig } from '@/shared/lib/site-config';
+
 import { RegisterForm } from '@/features/auth';
 import { AuthLocaleToggle } from '@/features/locale';
 
+const isRu = siteConfig.forcedLocale === 'ru';
+
 export const metadata: Metadata = {
-  title: 'Create Account',
+  title: isRu ? 'Регистрация' : 'Sign up',
   robots: { index: false },
 };
 

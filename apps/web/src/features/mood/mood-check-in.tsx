@@ -61,7 +61,7 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
       analytics.moodCheckedIn(value, 'post_session');
       onComplete();
     } catch {
-      toast.error('Failed to save mood');
+      toast.error(t('failedToSave'));
     }
   };
 

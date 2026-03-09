@@ -1,6 +1,12 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = "Anxiety doesn't wait for your next session. Neither does Mira.";
+import { siteConfig } from '@/shared/lib/site-config';
+
+export const runtime = 'edge';
+
+const isRu = siteConfig.forcedLocale === 'ru';
+
+export const alt = isRu ? 'Тревога не ждёт следующей сессии. Мира — тоже.' : "Anxiety doesn't wait for your next session. Neither does Mira.";
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -79,7 +85,7 @@ export default function OGImage() {
               letterSpacing: '-0.03em',
             }}
           >
-            Anxiety doesn&apos;t wait
+            {isRu ? 'Тревога не ждёт' : "Anxiety doesn't wait"}
           </div>
           <div
             style={{
@@ -91,7 +97,7 @@ export default function OGImage() {
               marginBottom: 16,
             }}
           >
-            for your next session.
+            {isRu ? 'следующей сессии.' : 'for your next session.'}
           </div>
           <div
             style={{
@@ -102,7 +108,7 @@ export default function OGImage() {
               letterSpacing: '-0.03em',
             }}
           >
-            Neither does Mira.
+            {isRu ? 'Мира — тоже.' : 'Neither does Mira.'}
           </div>
         </div>
 
@@ -115,7 +121,7 @@ export default function OGImage() {
           }}
         >
           <span style={{ color: 'rgba(43,35,32,0.45)', fontSize: 20 }}>
-            Talk to Mira when it&apos;s hard. Free 7-day trial, no card.
+            {isRu ? 'Поговори с Мирой когда тяжело. 7 дней бесплатно, без карты.' : "Talk to Mira when it's hard. Free 7-day trial, no card."}
           </span>
           <span
             style={{
@@ -124,7 +130,7 @@ export default function OGImage() {
               letterSpacing: '0.02em',
             }}
           >
-            mindbridge.me
+            {siteConfig.siteUrl.replace('https://', '')}
           </span>
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -15,6 +16,8 @@ interface GenerateReportDialogProps {
 }
 
 export function GenerateReportDialog({ patientId, open, onClose }: GenerateReportDialogProps) {
+  const t = useTranslations('therapist');
+  const tc = useTranslations('common');
   const today = format(new Date(), 'yyyy-MM-dd');
   const monthAgo = format(
     new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
@@ -29,9 +32,9 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
   const { data: report } = useReport(reportId);
 
   useEffect(() => {
-    if (report?.status === 'ready') toast.success('Report ready!');
-    if (report?.status === 'error') toast.error('Report generation failed');
-  }, [report?.status]);
+    if (report?.status === 'ready') toast.success(t('reportReady'));
+    if (report?.status === 'error') toast.error(t('reportFailed'));
+  }, [report?.status, t]);
 
   const handleClose = () => {
     setReportId(null);
@@ -45,7 +48,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
       const r = await generate.mutateAsync({ patientId, periodStart, periodEnd });
       setReportId(r.id);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate report');
+      setError(err instanceof Error ? err.message : t('failedToGenerateReport'));
     }
   };
 
@@ -57,14 +60,14 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
     <BottomSheet
       open={open}
       onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}
-      title="Generate Therapist Report"
+      title={t('generateReport')}
     >
         {/* Form — show until we have a report id */}
         {!reportId && (
           <div className="space-y-4 pb-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="period-start">Period start</Label>
+                <Label htmlFor="period-start">{t('periodStart')}</Label>
                 <input
                   id="period-start"
                   type="date"
@@ -74,7 +77,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="period-end">Period end</Label>
+                <Label htmlFor="period-end">{t('periodEnd')}</Label>
                 <input
                   id="period-end"
                   type="date"
@@ -87,9 +90,9 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex flex-col gap-2 pt-1">
               <Button onClick={handleGenerate} disabled={generate.isPending}>
-                {generate.isPending ? 'Starting...' : 'Generate'}
+                {generate.isPending ? t('startingReport') : t('generate')}
               </Button>
-              <Button variant="outline" onClick={handleClose}>Cancel</Button>
+              <Button variant="outline" onClick={handleClose}>{tc('cancel')}</Button>
             </div>
           </div>
         )}
@@ -97,7 +100,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
         {/* Generating state */}
         {isGenerating && (
           <div className="space-y-3 pb-2">
-            <p className="text-sm text-muted-foreground">Generating report, please wait...</p>
+            <p className="text-sm text-muted-foreground">{t('generatingReportMessage')}</p>
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-2/3" />
@@ -109,9 +112,9 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
         {isError && (
           <div className="space-y-4 pb-2">
             <p className="text-sm text-destructive">
-              {report?.errorMessage ?? 'Report generation failed.'}
+              {report?.errorMessage ?? t('reportFailed')}
             </p>
-            <Button variant="outline" className="w-full" onClick={handleClose}>Close</Button>
+            <Button variant="outline" className="w-full" onClick={handleClose}>{tc('close')}</Button>
           </div>
         )}
 
@@ -123,7 +126,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.moodTrend && (
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Mood Trend
+                  {t('reportMoodTrend')}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.content.moodTrend}</p>
               </div>
@@ -132,11 +135,11 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.keyThemes.length > 0 && (
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Key Themes
+                  {t('reportKeyThemes')}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {report.content.keyThemes.map((t) => (
-                    <Badge key={t} variant="secondary">{t}</Badge>
+                  {report.content.keyThemes.map((th) => (
+                    <Badge key={th} variant="secondary">{th}</Badge>
                   ))}
                 </div>
               </div>
@@ -145,7 +148,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.concerns.length > 0 && (
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Concerns
+                  {t('reportConcerns')}
                 </p>
                 <ul className="space-y-1">
                   {report.content.concerns.map((c) => (
@@ -161,7 +164,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.copingStrategiesUsed.length > 0 && (
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Coping Strategies
+                  {t('reportCopingStrategies')}
                 </p>
                 <ul className="space-y-1">
                   {report.content.copingStrategiesUsed.map((s) => (
@@ -177,7 +180,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.progressNotes && (
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Progress Notes
+                  {t('reportProgressNotes')}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.content.progressNotes}</p>
               </div>
@@ -186,7 +189,7 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.suggestedFocus && (
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                  Suggested Focus
+                  {t('suggestedFocus')}
                 </p>
                 <p className="text-sm">{report.content.suggestedFocus}</p>
               </div>
@@ -195,13 +198,13 @@ export function GenerateReportDialog({ patientId, open, onClose }: GenerateRepor
             {report.content.riskFlags && (
               <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-destructive">
-                  Risk Flags
+                  {t('riskFlags')}
                 </p>
                 <p className="text-sm text-destructive">{report.content.riskFlags}</p>
               </div>
             )}
 
-            <Button className="w-full" onClick={handleClose}>Close</Button>
+            <Button className="w-full" onClick={handleClose}>{tc('close')}</Button>
           </div>
         )}
     </BottomSheet>

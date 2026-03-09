@@ -1,10 +1,15 @@
 import type { MetadataRoute } from 'next';
 
+import { siteConfig } from '@/shared/lib/site-config';
+
 export default function manifest(): MetadataRoute.Manifest {
+  const isRu = siteConfig.forcedLocale === 'ru';
+
   return {
-    name: 'MindBridge — AI Companion for Mental Health',
+    name: isRu ? 'MindBridge — AI-компаньон для психического здоровья' : 'MindBridge — AI Companion for Mental Health',
     short_name: 'MindBridge',
-    description: 'Your AI companion between therapy sessions',
+    description: isRu ? 'AI-компаньон между сессиями терапии' : 'Your AI companion between therapy sessions',
+    lang: isRu ? 'ru' : 'en',
     start_url: '/dashboard',
     id: '/dashboard',
     display: 'standalone',

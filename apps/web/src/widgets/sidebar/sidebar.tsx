@@ -46,6 +46,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const tn = useTranslations('nav');
+  const tm = useTranslations('mode');
   const [acceptOpen, setAcceptOpen] = useState(false);
 
   const handleLogout = () => {
@@ -78,7 +79,7 @@ export function Sidebar() {
           <ModeSwitcher />
           {!isTherapistMode && (
             <p className="mt-1 px-3 text-[10px] text-muted-foreground">
-              Personal Mode
+              {tm('personalMode')}
             </p>
           )}
         </div>
