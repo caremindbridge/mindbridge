@@ -724,7 +724,9 @@
     "reportKeyThemes": "Ключевые темы",
     "reportConcerns": "Опасения",
     "reportCopingStrategies": "Стратегии совладания",
-    "reportProgressNotes": "Заметки о прогрессе"
+    "reportProgressNotes": "Заметки о прогрессе",
+    "copingStrategiesLabel": "Стратегии совладания",
+    "viewFullAnalysis": "Полный анализ"
   },
   "analysis": {
     "distortions": "Искажения",
@@ -757,7 +759,7 @@
     "defaultMessage": "Спасибо за эту сессию. Каждый разговор — это шаг вперёд.",
     "whatWeDiscussed": "О чём мы говорили",
     "yourMood": "Твоё эмоциональное состояние",
-    "whatWeNoticed": "Что мы заметили",
+    "whatWeNoticed": "Что я заметила",
     "whatToTry": "Что можно попробовать",
     "homework": "До следующей сессии",
     "progressNote": "Твой прогресс",

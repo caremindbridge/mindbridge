@@ -1,6 +1,10 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { LogOut } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { useUser } from '@/entities/user';
 import { ModeSwitcher } from '@/features/auth';
@@ -12,11 +16,21 @@ import {
   SubscriptionSection,
   TherapistConnectionSection,
 } from '@/features/settings';
-import { Card, CardContent } from '@/shared/ui';
+import { analytics } from '@/shared/lib/analytics';
+import { Button, Card, CardContent } from '@/shared/ui';
 
 export function SettingsPage() {
   const t = useTranslations('settings');
   const { user, mutate } = useUser();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    analytics.reset();
+    Cookies.remove('token');
+    queryClient.clear();
+    router.push('/login');
+  };
 
   if (!user) return null;
 
@@ -43,6 +57,19 @@ export function SettingsPage() {
           <SubscriptionSection />
           <SecuritySection user={user} />
           {!isTherapist && <TherapistConnectionSection />}
+
+          {/* Logout — mobile only */}
+          <Card className="lg:hidden">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between px-5 py-4">
+                <p className="text-sm font-medium">{t('logout')}</p>
+                <Button variant="outline" size="sm" onClick={handleLogout} className="shrink-0 gap-1.5">
+                  <LogOut className="h-4 w-4" />
+                  {t('logout')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right column */}

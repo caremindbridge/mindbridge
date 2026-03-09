@@ -28,6 +28,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/shared/ui';
+import { cn } from '@/shared/lib/utils';
 import { AnxietyChart, StatCard } from '@/widgets/patient-dashboard';
 
 interface PatientProfilePageProps {
@@ -220,7 +221,9 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                 {profile.analyses.length === 0 ? (
                   <p className="py-8 text-center text-sm text-muted-foreground">{t('noAnalyses')}</p>
                 ) : (
-                  profile.analyses.map((a) => <AnalysisCard key={a.id} analysis={a} />)
+                  profile.analyses.map((a, i) => (
+                    <AnalysisCard key={a.id} analysis={a} index={i} total={profile.analyses.length} />
+                  ))
                 )}
               </div>
 
@@ -269,60 +272,114 @@ const EMOTION_RU: Record<string, string> = {
   relief: 'Облегчение', contentment: 'Удовлетворение', grief: 'Горе',
 };
 
-function AnalysisCard({ analysis }: { analysis: ProfileAnalysis }) {
+function AnalysisCard({
+  analysis,
+  index,
+  total,
+}: {
+  analysis: ProfileAnalysis;
+  index: number;
+  total: number;
+}) {
   const t = useTranslations('therapist');
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
   const localizeEmotion = (e: string) => (locale === 'ru' ? (EMOTION_RU[e.toLowerCase()] ?? e) : e);
 
+  const sessionNum = total - index;
+
+  const levelColor = (level: number | null) => {
+    if (level == null) return 'text-muted-foreground';
+    if (level >= 7) return 'text-destructive font-bold';
+    if (level >= 4) return 'text-amber-500 font-semibold';
+    return 'text-emerald-600 font-semibold';
+  };
+
   return (
-    <Card>
-      <CardContent className="p-4">
-        <button
-          className="flex w-full items-start justify-between gap-2 text-left"
-          onClick={() => setExpanded((v) => !v)}
-        >
-          <div className="min-w-0 space-y-1.5">
-            <span className="block text-sm font-medium">
-              {format(new Date(analysis.createdAt), 'MMM d, yyyy')}
+    <div className="overflow-hidden rounded-xl border bg-card">
+      <button
+        className="flex w-full items-start gap-3 p-4 text-left transition-colors hover:bg-muted/30"
+        onClick={() => setExpanded((v) => !v)}
+      >
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+          {sessionNum}
+        </div>
+
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-medium">
+              {format(new Date(analysis.createdAt), 'd MMM yyyy')}
             </span>
-            <div className="flex flex-wrap gap-1.5">
-              <Badge variant={analysis.anxietyLevel != null && analysis.anxietyLevel >= 7 ? 'destructive' : 'secondary'}>
-                {t('anxietyBadge')} {analysis.anxietyLevel ?? '—'}
-              </Badge>
-              <Badge variant="outline">
-                {t('depressionBadge')} {analysis.depressionLevel ?? '—'}
-              </Badge>
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">{t('anxietyBadge')}</span>
+                <span className={cn('text-sm tabular-nums', levelColor(analysis.anxietyLevel))}>
+                  {analysis.anxietyLevel ?? '—'}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">{t('depressionBadge')}</span>
+                <span className={cn('text-sm tabular-nums', levelColor(analysis.depressionLevel))}>
+                  {analysis.depressionLevel ?? '—'}
+                </span>
+              </div>
+              {expanded ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
             </div>
           </div>
-          <span className="mt-0.5 shrink-0 text-muted-foreground">
-            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </span>
-        </button>
 
-        {expanded && (
-          <div className="mt-3 space-y-2 border-t pt-3">
-            {analysis.moodInsight && (
-              <div className="text-sm text-muted-foreground">
-                <MarkdownMessage content={analysis.moodInsight} />
+          {analysis.keyTopics && analysis.keyTopics.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {analysis.keyTopics.map((topic, i) => (
+                <Badge key={i} variant="outline" className="py-0 text-xs font-normal">
+                  {topic}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+      </button>
+
+      {expanded && (
+        <div className="space-y-3 border-t bg-muted/20 px-4 py-3">
+          {analysis.therapistBrief && (
+            <div className="text-sm leading-relaxed text-foreground/80">
+              <MarkdownMessage content={analysis.therapistBrief} />
+            </div>
+          )}
+
+          {analysis.keyEmotions && analysis.keyEmotions.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {analysis.keyEmotions.map((e) => (
+                <Badge key={e} variant="secondary" className="text-xs capitalize">
+                  {localizeEmotion(e)}
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          {analysis.copingStrategies && analysis.copingStrategies.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium">{t('copingStrategiesLabel')}: </span>
+              {analysis.copingStrategies.join(' · ')}
+            </p>
+          )}
+
+          {analysis.riskFlags && (
+            <div className="rounded-lg border border-destructive/25 bg-destructive/5 p-3">
+              <div className="flex gap-2 text-xs text-destructive">
+                <span className="mt-0.5 shrink-0">⚠️</span>
+                <MarkdownMessage content={analysis.riskFlags} />
               </div>
-            )}
-            {analysis.keyEmotions && analysis.keyEmotions.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {analysis.keyEmotions.map((e) => (
-                  <Badge key={e} variant="secondary" className="text-xs">{localizeEmotion(e)}</Badge>
-                ))}
-              </div>
-            )}
-            {analysis.riskFlags && (
-              <div className="text-xs text-destructive">
-                ⚠️ <MarkdownMessage content={analysis.riskFlags} />
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            </div>
+          )}
+
+        </div>
+      )}
+    </div>
   );
 }
 

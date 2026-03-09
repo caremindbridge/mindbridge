@@ -34,7 +34,7 @@ export function TwoPathsSection() {
             <h3 className="mb-2 text-base font-semibold text-foreground">{t('therapistTitle')}</h3>
             <p className="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground">{t('therapistDesc')}</p>
             <Button variant="outline" className="mt-auto w-full" asChild>
-              <Link href="/pricing?role=therapist">{t('therapistCta')}</Link>
+              <Link href="/register?role=therapist">{t('therapistCta')}</Link>
             </Button>
           </Card>
         </div>

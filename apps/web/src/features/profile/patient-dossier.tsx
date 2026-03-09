@@ -333,38 +333,57 @@ function parseAIProfile(content: string): {
   lastSession?: string;
   riskFlags?: string;
 } {
-  const getBullets = (header: string): string[] => {
-    const regex = new RegExp(
-      `${header}[^\\n]*\\n([\\s\\S]*?)(?=\\n[A-Z]{2,}[^a-z]|---\\s*$|$)`,
-      'i',
+  // If the content looks like a conversational AI response rather than a structured profile, bail out
+  const hasExpectedStructure =
+    /CORE ISSUES|CURRENT PATTERNS|COPING STRATEGIES|LAST SESSION SUMMARY|ОСНОВНЫЕ ПРОБЛЕМЫ|ТЕКУЩИЕ ПАТТЕРНЫ|СТРАТЕГИИ СОВЛАДАНИЯ|РЕЗЮМЕ ПОСЛЕДНЕЙ СЕССИИ/i.test(
+      content,
     );
-    const match = content.match(regex);
-    if (!match) return [];
-    return match[1]
-      .split('\n')
-      .map((l) => l.replace(/^[\s\-•*]+/, '').trim())
-      .filter(Boolean);
+  if (!hasExpectedStructure) return {};
+
+  // Each field maps to [English header, Russian header]
+  const HEADERS = {
+    coreIssues: ['CORE ISSUES', 'ОСНОВНЫЕ ПРОБЛЕМЫ'],
+    patterns: ['CURRENT PATTERNS', 'ТЕКУЩИЕ ПАТТЕРНЫ'],
+    coping: ['COPING STRATEGIES', 'СТРАТЕГИИ СОВЛАДАНИЯ'],
+    progress: ['PROGRESS', 'ПРОГРЕСС'],
+    lastSession: ['LAST SESSION SUMMARY', 'РЕЗЮМЕ ПОСЛЕДНЕЙ СЕССИИ'],
+    riskFlags: ['RISK FLAGS', 'ФАКТОРЫ РИСКА'],
+  } as const;
+
+  // Section ends at next all-caps header (2+ uppercase chars not followed by lowercase) or ---
+  const SECTION_END = `(?=\\n[А-ЯA-Z][А-ЯA-Z\\s]{1,}[^а-яa-z\\n]|---\\s*$|$)`;
+
+  const getBullets = (aliases: readonly string[]): string[] => {
+    for (const alias of aliases) {
+      const regex = new RegExp(`${alias}[^\\n]*\\n([\\s\\S]*?)${SECTION_END}`, 'i');
+      const match = content.match(regex);
+      if (match) {
+        return match[1]
+          .split('\n')
+          .map((l) => l.replace(/^[\s\-•*]+/, '').trim())
+          .filter(Boolean);
+      }
+    }
+    return [];
   };
 
-  const getBlock = (header: string): string | undefined => {
-    const regex = new RegExp(
-      `${header}[^\\n]*\\n([\\s\\S]*?)(?=\\n[A-Z]{2,}[^a-z]|---\\s*$|$)`,
-      'i',
-    );
-    const match = content.match(regex);
-    const raw = match?.[1]?.trim();
-    if (!raw) return undefined;
-    // strip leading bullet if single line
-    return raw.replace(/^[-•*]\s*/, '').trim() || undefined;
+  const getBlock = (aliases: readonly string[]): string | undefined => {
+    for (const alias of aliases) {
+      const regex = new RegExp(`${alias}[^\\n]*\\n([\\s\\S]*?)${SECTION_END}`, 'i');
+      const match = content.match(regex);
+      const raw = match?.[1]?.trim();
+      if (raw) return raw.replace(/^[-•*]\s*/, '').trim() || undefined;
+    }
+    return undefined;
   };
 
   return {
-    coreIssues: getBullets('CORE ISSUES'),
-    patterns: getBullets('CURRENT PATTERNS'),
-    coping: getBullets('COPING STRATEGIES'),
-    progress: getBullets('PROGRESS'),
-    lastSession: getBlock('LAST SESSION SUMMARY'),
-    riskFlags: getBlock('RISK FLAGS'),
+    coreIssues: getBullets(HEADERS.coreIssues),
+    patterns: getBullets(HEADERS.patterns),
+    coping: getBullets(HEADERS.coping),
+    progress: getBullets(HEADERS.progress),
+    lastSession: getBlock(HEADERS.lastSession),
+    riskFlags: getBlock(HEADERS.riskFlags),
   };
 }
 

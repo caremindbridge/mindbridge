@@ -724,7 +724,9 @@
     "reportKeyThemes": "Key Themes",
     "reportConcerns": "Concerns",
     "reportCopingStrategies": "Coping Strategies",
-    "reportProgressNotes": "Progress Notes"
+    "reportProgressNotes": "Progress Notes",
+    "copingStrategiesLabel": "Coping strategies",
+    "viewFullAnalysis": "View full analysis"
   },
   "analysis": {
     "distortions": "Distortions",
@@ -757,7 +759,7 @@
     "defaultMessage": "Thank you for this session. Every conversation is a step forward.",
     "whatWeDiscussed": "What we discussed",
     "yourMood": "Your emotional state",
-    "whatWeNoticed": "What we noticed",
+    "whatWeNoticed": "What I noticed",
     "whatToTry": "What you can try",
     "homework": "Between sessions",
     "progressNote": "Your progress",

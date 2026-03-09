@@ -77,6 +77,7 @@ export interface PatientSummary {
 
 export interface ProfileAnalysis {
   id: string;
+  sessionId: string;
   anxietyLevel: number | null;
   depressionLevel: number | null;
   keyEmotions: string[] | null;
@@ -84,6 +85,7 @@ export interface ProfileAnalysis {
   copingStrategies: string[] | null;
   riskFlags: string | null;
   moodInsight: string | null;
+  therapistBrief: string | null;
   createdAt: string;
 }
 

@@ -72,6 +72,7 @@ export class DashboardService {
         copingStrategies: a.copingStrategies,
         riskFlags: a.riskFlags,
         moodInsight: a.moodInsight,
+        therapistBrief: a.therapistBrief ?? null,
         createdAt: a.createdAt,
       })),
       averageAnxiety: Math.round(averageAnxiety * 10) / 10,

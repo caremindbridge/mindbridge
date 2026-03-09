@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { buildLangInstruction } from '../claude/claude-prompts';
 import { ClaudeService } from '../claude/claude.service';
 import { PatientContextData, PatientProfile } from './entities/patient-profile.entity';
 import {
@@ -39,7 +40,7 @@ export class ProfileService {
       .join('\n\n');
 
     const content = await this.claudeService.complete(
-      PROFILE_INIT_PROMPT,
+      PROFILE_INIT_PROMPT + this.detectLanguageOverride(messagesText),
       [{ role: 'user', content: messagesText }],
       { model: HAIKU_MODEL, maxTokens: 1500 },
     );
@@ -62,18 +63,43 @@ export class ProfileService {
 
     let profile: PatientProfile;
 
-    if (!existing) {
-      profile = await this.createInitialProfile(userId, sessionMessages);
+    const noAiContent =
+      !existing ||
+      existing.content === NO_AI_SESSIONS_CONTENT ||
+      !this.isValidProfile(existing.content);
+
+    if (noAiContent) {
+      if (!existing) {
+        profile = await this.createInitialProfile(userId, sessionMessages);
+      } else {
+        // Profile exists (e.g. therapist wrote notes) but no AI content yet — generate initial
+        const messagesText = sessionMessages
+          .filter((m) => m.role !== 'system')
+          .map((m) => `${m.role}: ${m.content}`)
+          .join('\n\n');
+
+        const content = await this.claudeService.complete(
+          PROFILE_INIT_PROMPT + this.detectLanguageOverride(messagesText),
+          [{ role: 'user', content: messagesText }],
+          { model: HAIKU_MODEL, maxTokens: 1500 },
+        );
+
+        existing.content = content;
+        existing.sessionsIncorporated = Math.max(existing.sessionsIncorporated, 1);
+        existing.version += 1;
+        profile = await this.profileRepo.save(existing);
+      }
     } else {
       const messagesText = sessionMessages
         .filter((m) => m.role !== 'system')
         .map((m) => `${m.role}: ${m.content}`)
         .join('\n\n');
 
-      const prompt = PROFILE_UPDATE_PROMPT.replace(
-        '{current_profile}',
-        existing.content,
-      ).replace('{session_messages}', messagesText);
+      const prompt =
+        PROFILE_UPDATE_PROMPT.replace('{current_profile}', existing!.content).replace(
+          '{session_messages}',
+          messagesText,
+        ) + this.detectLanguageOverride(messagesText);
 
       const newContent = await this.claudeService.complete(
         prompt,
@@ -91,10 +117,10 @@ export class ProfileService {
         finalContent = await this.condenseProfile(newContent);
       }
 
-      existing.content = finalContent;
-      existing.sessionsIncorporated += 1;
-      existing.version += 1;
-      profile = await this.profileRepo.save(existing);
+      existing!.content = finalContent;
+      existing!.sessionsIncorporated += 1;
+      existing!.version += 1;
+      profile = await this.profileRepo.save(existing!);
     }
 
     await this.extractAndMergeContext(profile, sessionMessages);
@@ -102,8 +128,23 @@ export class ProfileService {
     return (await this.profileRepo.findOne({ where: { userId } }))!;
   }
 
+  private detectLanguageOverride(text: string): string {
+    const cyrillicChars = (text.match(/[\u0400-\u04FF]/g) ?? []).length;
+    const totalChars = text.replace(/\s/g, '').length;
+    const locale = totalChars > 0 && cyrillicChars / totalChars > 0.1 ? 'ru' : 'en';
+    return buildLangInstruction(locale);
+  }
+
+  private isValidProfile(content: string): boolean {
+    return /CORE ISSUES|CURRENT PATTERNS|COPING STRATEGIES|LAST SESSION SUMMARY|ОСНОВНЫЕ ПРОБЛЕМЫ|ТЕКУЩИЕ ПАТТЕРНЫ|СТРАТЕГИИ СОВЛАДАНИЯ|РЕЗЮМЕ ПОСЛЕДНЕЙ СЕССИИ/i.test(
+      content,
+    );
+  }
+
   private async condenseProfile(profileText: string): Promise<string> {
-    const prompt = PROFILE_CONDENSE_PROMPT.replace('{profile}', profileText);
+    const prompt =
+      PROFILE_CONDENSE_PROMPT.replace('{profile}', profileText) +
+      this.detectLanguageOverride(profileText);
 
     return this.claudeService.complete(
       prompt,

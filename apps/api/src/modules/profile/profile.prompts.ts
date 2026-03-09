@@ -27,7 +27,7 @@ RISK FLAGS:
 ---
 
 Rules:
-- Use the SAME LANGUAGE as the patient (if they spoke Russian, write in Russian)
+- Use the SAME LANGUAGE as the patient (if they spoke Russian, write everything in Russian including section headers)
 - Be concise — max 600 words total
 - Only include information actually discussed — don't invent
 - If patient didn't share something (e.g. name), omit that field
