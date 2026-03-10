@@ -1,14 +1,20 @@
 import { Platform } from 'react-native';
-import { Tabs } from 'expo-router';
+
+import { Redirect, Tabs } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+
+import { useAuthStore } from '@/shared/api/auth-store';
 import { fonts } from '@/shared/lib/theme';
 import { useThemeColors } from '@/shared/lib/useTheme';
 
 export default function TabLayout() {
   const { t } = useTranslation();
   const c = useThemeColors();
+  const { user } = useAuthStore();
+
+  if (!user) return <Redirect href="/(auth)/login" />;
 
   return (
     <Tabs

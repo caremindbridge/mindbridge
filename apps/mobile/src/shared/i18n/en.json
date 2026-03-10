@@ -11,7 +11,33 @@
   },
   "sessions": {
     "title": "Sessions",
-    "placeholder": "Your conversations with Mira will appear here"
+    "placeholder": "Your conversations with Mira will appear here",
+    "empty": "No sessions yet",
+    "emptyDesc": "Start your first conversation with Mira",
+    "startFirst": "Talk to Mira",
+    "untitled": "New session",
+    "messages": "messages"
+  },
+  "chat": {
+    "placeholder": "Type a message...",
+    "end": "End",
+    "emptyHint": "Say hi to Mira. She's here to listen.",
+    "sessionLimit": "Session message limit reached",
+    "monthlyLimit": "Monthly message limit reached",
+    "trialExpired": "Free trial ended",
+    "upgrade": "See plans"
+  },
+  "mood": {
+    "title": "How are you feeling?",
+    "subtitle": "After this session with Mira",
+    "bad": "Really bad",
+    "rough": "Rough",
+    "okay": "Okay",
+    "good": "Good",
+    "great": "Great",
+    "notePlaceholder": "Anything you want to note? (optional)",
+    "save": "Save & finish",
+    "skip": "Skip"
   },
   "analytics": {
     "title": "Analytics",
@@ -25,5 +51,28 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Retry"
+  },
+  "auth": {
+    "login": "Log in",
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to continue to MindBridge",
+    "register": "Sign up",
+    "registerTitle": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordDesc": "Enter your email and we'll send you a reset link",
+    "sendResetLink": "Send reset link",
+    "resetEmailSent": "Check your email",
+    "resetEmailSentDesc": "If an account exists, you'll receive a reset link shortly",
+    "backToLogin": "← Back to login",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "invalidCredentials": "Invalid email or password",
+    "passwordsMismatch": "Passwords don't match",
+    "rolePatient": "I need support",
+    "roleTherapist": "I'm a therapist"
   }
 }

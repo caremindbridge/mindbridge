@@ -1,9 +1,14 @@
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 
+import { useAuthStore } from '@/shared/api/auth-store';
 import { useThemeColors } from '@/shared/lib/useTheme';
 
-export default function ChatLayout() {
+export default function AuthLayout() {
+  const { user } = useAuthStore();
   const c = useThemeColors();
+
+  if (user) return <Redirect href="/(tabs)" />;
+
   return (
     <Stack
       screenOptions={{
@@ -11,10 +16,6 @@ export default function ChatLayout() {
         contentStyle: { backgroundColor: c.background },
         animation: 'slide_from_right',
       }}
-    >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="[id]" />
-      <Stack.Screen name="mood" options={{ animation: 'slide_from_bottom', presentation: 'modal' }} />
-    </Stack>
+    />
   );
 }

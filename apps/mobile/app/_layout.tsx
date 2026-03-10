@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
+
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -13,6 +14,8 @@ import {
   useFonts,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import * as SplashScreen from 'expo-splash-screen';
+
+import { useAuthStore } from '@/shared/api/auth-store';
 import { useThemeColors } from '@/shared/lib/useTheme';
 import '@/shared/i18n';
 
@@ -26,6 +29,7 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const c = useThemeColors();
+  const { initialized } = useAuthStore();
 
   const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,
@@ -34,19 +38,22 @@ export default function RootLayout() {
     PlusJakartaSans_700Bold,
   });
 
+  useEffect(() => {
+    useAuthStore.getState().initialize();
+  }, []);
+
   const onReady = useCallback(async () => {
-    if (fontsLoaded || fontError) {
+    if ((fontsLoaded || fontError) && initialized) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError, initialized]);
 
   useEffect(() => {
     onReady();
   }, [onReady]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  if (!fontsLoaded && !fontError) return null;
+  if (!initialized) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -55,6 +62,7 @@ export default function RootLayout() {
           <View style={{ flex: 1, backgroundColor: c.background }}>
             <StatusBar style="auto" />
             <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)" />
               <Stack.Screen name="(tabs)" />
             </Stack>
           </View>

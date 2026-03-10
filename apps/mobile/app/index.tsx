@@ -1,7 +1,8 @@
 import { Redirect } from 'expo-router';
 
+import { useAuthStore } from '@/shared/api/auth-store';
+
 export default function Index() {
-  // No auth yet — go straight to tabs
-  // Phase 1B will add auth check
-  return <Redirect href="/(tabs)" />;
+  const { user } = useAuthStore();
+  return <Redirect href={user ? '/(tabs)' : '/(auth)/login'} />;
 }

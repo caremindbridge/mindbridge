@@ -11,7 +11,33 @@
   },
   "sessions": {
     "title": "Сессии",
-    "placeholder": "Здесь будут ваши разговоры с Мирой"
+    "placeholder": "Здесь будут ваши разговоры с Мирой",
+    "empty": "Пока нет сессий",
+    "emptyDesc": "Начните первый разговор с Мирой",
+    "startFirst": "Поговорить с Мирой",
+    "untitled": "Новая сессия",
+    "messages": "сообщений"
+  },
+  "chat": {
+    "placeholder": "Напишите сообщение...",
+    "end": "Завершить",
+    "emptyHint": "Напишите Мире. Она готова слушать.",
+    "sessionLimit": "Лимит сообщений за сессию",
+    "monthlyLimit": "Месячный лимит сообщений",
+    "trialExpired": "Пробный период закончился",
+    "upgrade": "Посмотреть планы"
+  },
+  "mood": {
+    "title": "Как вы себя чувствуете?",
+    "subtitle": "После этой сессии с Мирой",
+    "bad": "Очень плохо",
+    "rough": "Тяжело",
+    "okay": "Нормально",
+    "good": "Хорошо",
+    "great": "Отлично",
+    "notePlaceholder": "Хотите что-то отметить? (необязательно)",
+    "save": "Сохранить",
+    "skip": "Пропустить"
   },
   "analytics": {
     "title": "Аналитика",
@@ -25,5 +51,28 @@
     "loading": "Загрузка...",
     "error": "Что-то пошло не так",
     "retry": "Повторить"
+  },
+  "auth": {
+    "login": "Войти",
+    "loginTitle": "С возвращением",
+    "loginSubtitle": "Войдите чтобы продолжить",
+    "register": "Создать аккаунт",
+    "registerTitle": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "forgotPassword": "Забыли пароль?",
+    "forgotPasswordTitle": "Сброс пароля",
+    "forgotPasswordDesc": "Введите email и мы отправим ссылку для сброса",
+    "sendResetLink": "Отправить ссылку",
+    "resetEmailSent": "Проверьте почту",
+    "resetEmailSentDesc": "Если аккаунт существует, ссылка для сброса будет отправлена",
+    "backToLogin": "← Назад ко входу",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "invalidCredentials": "Неверный email или пароль",
+    "passwordsMismatch": "Пароли не совпадают",
+    "rolePatient": "Мне нужна поддержка",
+    "roleTherapist": "Я терапевт"
   }
 }
