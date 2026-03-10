@@ -1,0 +1,29 @@
+{
+  "tabs": {
+    "home": "Home",
+    "sessions": "Sessions",
+    "analytics": "Analytics",
+    "profile": "Profile"
+  },
+  "home": {
+    "greeting": "Welcome back",
+    "placeholder": "Your dashboard will appear here"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "placeholder": "Your conversations with Mira will appear here"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "placeholder": "Your mood and progress charts will appear here"
+  },
+  "settings": {
+    "title": "Profile",
+    "placeholder": "Your settings will appear here"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry"
+  }
+}

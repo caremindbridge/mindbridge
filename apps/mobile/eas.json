@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 12.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://api.mindbridge.me",
+        "PAYMENT_PROVIDER": "none",
+        "SITE_REGION": "international"
+      }
+    },
+    "production": {
+      "env": {
+        "API_URL": "https://api.mindbridge.me",
+        "PAYMENT_PROVIDER": "stripe",
+        "SITE_REGION": "international"
+      }
+    },
+    "production-ru": {
+      "env": {
+        "API_URL": "https://api.mindbridge.me",
+        "FORCED_LOCALE": "ru",
+        "PAYMENT_PROVIDER": "yookassa",
+        "SITE_REGION": "russia"
+      }
+    }
+  }
+}

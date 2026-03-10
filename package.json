@@ -18,5 +18,8 @@
   "devDependencies": {
     "prettier": "^3.2.0",
     "turbo": "^2.0.0"
+  },
+  "overrides": {
+    "@types/react": "^18.3.0"
   }
 }
