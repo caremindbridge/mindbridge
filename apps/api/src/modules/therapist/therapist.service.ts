@@ -94,7 +94,8 @@ export class TherapistService {
       await this.linkRepo.remove(pending);
     }
 
-    // Check therapist's patient limit
+    // TODO: Re-enable patient limit when monetization is ready
+    /*
     const therapistSub = await this.subscriptionService.getActive(therapistId);
     if (
       therapistSub?.patientLimit !== null &&
@@ -111,6 +112,7 @@ export class TherapistService {
         });
       }
     }
+    */
 
     const code = generateCode();
 
@@ -168,7 +170,8 @@ export class TherapistService {
 
     await this.redisService.deleteInviteCode(inviteCode);
 
-    // Therapist connection requires Standard+ plan
+    // TODO: Re-enable plan check when monetization is ready
+    /*
     const currentSub = await this.subscriptionService.getActive(patientId);
     const isUnderStandard =
       !currentSub ||
@@ -180,6 +183,7 @@ export class TherapistService {
         message: 'Upgrade to Standard to connect with a therapist',
       });
     }
+    */
 
     return link;
   }

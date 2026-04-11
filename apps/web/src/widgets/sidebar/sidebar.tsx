@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 
 import { useUser } from '@/entities/user';
 import { ModeSwitcher } from '@/features/auth';
-import { UsageBar } from '@/features/subscription';
+// import { UsageBar } from '@/features/subscription'; // TODO: Re-enable when monetization is ready
 import { ThemeToggle } from '@/features/theme';
 import { AcceptInviteDialog } from '@/features/therapist';
 import { cn } from '@/shared/lib/utils';
@@ -125,8 +125,8 @@ export function Sidebar() {
 
       </nav>
 
-      {/* Usage bar — patients only */}
-      {!isTherapistMode && <UsageBar />}
+      {/* Usage bar — patients only — TODO: Re-enable when monetization is ready */}
+      {/* {!isTherapistMode && <UsageBar />} */}
 
       {/* Profile */}
       <div className="shrink-0 p-3">

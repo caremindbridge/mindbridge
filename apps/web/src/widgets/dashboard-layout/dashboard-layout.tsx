@@ -1,44 +1,40 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { Suspense, useEffect } from 'react';
-import { toast } from 'sonner';
+// TODO: Re-enable when monetization is ready
+// import { useQueryClient } from '@tanstack/react-query';
+import { usePathname, useRouter } from 'next/navigation';
+// import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+// import { toast } from 'sonner';
 
 import { useUser } from '@/entities/user';
-import { SubscriptionBanner } from '@/features/subscription';
-import { completeCheckout } from '@/shared/api/client';
+// import { SubscriptionBanner } from '@/features/subscription';
+// import { completeCheckout } from '@/shared/api/client';
 import { useMediaQuery } from '@/shared/lib/use-media-query';
 import { MobileTabBar } from '@/widgets/mobile-nav/mobile-tab-bar';
 import { Sidebar } from '@/widgets/sidebar';
 
-function StripeReturnHandler() {
-  const searchParams = useSearchParams();
-  const t = useTranslations('subscription');
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const upgraded = searchParams.get('upgraded');
-    const packPurchased = searchParams.get('pack_purchased');
-    const sessionId = searchParams.get('session_id');
-
-    if (upgraded === 'true' || packPurchased === 'true') {
-      const activate = async () => {
-        if (sessionId) {
-          // Synchronous activation — works even if webhook hasn't arrived yet
-          await completeCheckout(sessionId).catch(() => {});
-        }
-        await queryClient.invalidateQueries({ queryKey: ['usage-status'] });
-        toast.success(upgraded === 'true' ? t('planUpgraded') : t('packPurchased'));
-        window.history.replaceState({}, '', window.location.pathname);
-      };
-      void activate();
-    }
-  }, [searchParams, t, queryClient]);
-
-  return null;
-}
+// TODO: Re-enable when monetization is ready
+// function StripeReturnHandler() {
+//   const searchParams = useSearchParams();
+//   const t = useTranslations('subscription');
+//   const queryClient = useQueryClient();
+//   useEffect(() => {
+//     const upgraded = searchParams.get('upgraded');
+//     const packPurchased = searchParams.get('pack_purchased');
+//     const sessionId = searchParams.get('session_id');
+//     if (upgraded === 'true' || packPurchased === 'true') {
+//       const activate = async () => {
+//         if (sessionId) await completeCheckout(sessionId).catch(() => {});
+//         await queryClient.invalidateQueries({ queryKey: ['usage-status'] });
+//         toast.success(upgraded === 'true' ? t('planUpgraded') : t('packPurchased'));
+//         window.history.replaceState({}, '', window.location.pathname);
+//       };
+//       void activate();
+//     }
+//   }, [searchParams, t, queryClient]);
+//   return null;
+// }
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -81,11 +77,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex h-screen bg-background">
         <Sidebar />
         <main className="flex flex-1 flex-col overflow-hidden pl-64">
-          <SubscriptionBanner />
-
-          <Suspense>
-            <StripeReturnHandler />
-          </Suspense>
+          {/* TODO: Re-enable when monetization is ready */}
+          {/* <SubscriptionBanner /> */}
+          {/* <Suspense><StripeReturnHandler /></Suspense> */}
           {children}
         </main>
       </div>
@@ -95,10 +89,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   // Mobile layout
   return (
     <div className="flex flex-col bg-background" style={{ height: '100dvh' }}>
-      <SubscriptionBanner />
-      <Suspense>
-        <StripeReturnHandler />
-      </Suspense>
+      {/* TODO: Re-enable when monetization is ready */}
+      {/* <SubscriptionBanner /> */}
+      {/* <Suspense><StripeReturnHandler /></Suspense> */}
       <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
         {children}
       </main>

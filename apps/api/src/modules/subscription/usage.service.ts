@@ -33,6 +33,10 @@ export class UsageService {
       | 'subscription_expired';
     usage?: UsageStatus;
   }> {
+    // TODO: Re-enable limits when monetization is ready
+    void userId; void sessionId;
+    return { allowed: true };
+    /*
     const sub = await this.subService.getActive(userId);
     if (!sub) return { allowed: false, reason: 'no_subscription' };
 
@@ -129,9 +133,14 @@ export class UsageService {
       allowed: true,
       usage: await this.buildStatus(sub, userId, sessionId, sessionMsgCount, paymentWarning),
     };
+    */
   }
 
   async recordMessage(userId: string): Promise<void> {
+    // TODO: Re-enable when monetization is ready
+    void userId;
+    return;
+    /*
     const sub = await this.subService.getActive(userId);
     if (!sub) return;
 
@@ -147,6 +156,7 @@ export class UsageService {
     }
 
     await this.usageRepo.save(usage);
+    */
   }
 
   async addBonusMessages(userId: string, count: number): Promise<void> {

@@ -47,6 +47,8 @@ export class ReportService {
       throw new NotFoundException('Patient not found or not linked');
     }
 
+    // TODO: Re-enable report limit when monetization is ready
+    /*
     const sub = await this.subscriptionService.getActive(therapistId);
     if (sub && sub.reportLimit !== null && sub.reportLimit !== -1) {
       const reportsThisPeriod = await this.reportRepo.count({
@@ -62,6 +64,7 @@ export class ReportService {
         });
       }
     }
+    */
 
     const key = `ratelimit:reports:${therapistId}`;
     const count = await this.redisService.incrementRateLimit(key, 3600);
