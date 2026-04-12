@@ -7,7 +7,6 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
 import { useMoodMetrics } from '@/entities/dashboard';
-import { useUsageStatus } from '@/entities/subscription';
 import { Badge, Button, Tabs, TabsList, TabsTrigger } from '@/shared/ui';
 import { AnxietyChart, EmotionChart, MoodChart } from '@/widgets/patient-dashboard';
 
@@ -16,8 +15,8 @@ export function AnalyticsPage() {
   const tp = useTranslations('pricing');
   const [period, setPeriod] = useState<'week' | 'month'>('week');
 
-  const { data: usage } = useUsageStatus();
-  const isLitePlan = !usage?.plan || usage.plan === 'lite' || usage.plan === 'trial';
+  // TODO: Re-enable plan gating when monetization is ready
+  const isLitePlan = false;
 
   const from = useMemo(
     () => startOfDay(subDays(new Date(), period === 'week' ? 7 : 30)).toISOString(),

@@ -230,7 +230,9 @@
     "viewAll": "Все →",
     "continueSession": "Продолжить сессию",
     "recentSession": "Последняя сессия",
-    "miraInsightEmoji": "💡 Инсайт от Миры"
+    "miraInsightEmoji": "💡 Инсайт от Миры",
+    "weeklyGoal": "Цель на неделю",
+    "moodScore": "настроение"
   },
   "landing": {
     "nav": {

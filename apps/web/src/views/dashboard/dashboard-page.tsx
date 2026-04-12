@@ -3,7 +3,6 @@
 import { UserRole } from '@mindbridge/types/src/user';
 import { format, isToday, isYesterday, startOfDay, subDays } from 'date-fns';
 import {
-  Bell,
   BookOpen,
   Brain,
   Lightbulb,
@@ -42,6 +41,8 @@ const QUICK_TOOLS = [
   { icon: Lightbulb, key: 'reflect', href: undefined, bg: 'bg-purple-light', color: 'text-purple-accent' },
 ] as const;
 
+const WEEKLY_GOAL = 5;
+
 function isValidInsight(s: string | null | undefined): s is string {
   if (!s) return false;
   if (
@@ -51,6 +52,13 @@ function isValidInsight(s: string | null | undefined): s is string {
   )
     return false;
   return s.length >= 20;
+}
+
+/** Map any 1-10 mood value to the nearest QUICK_MOODS value (2,4,6,8,10) */
+function nearestMoodEmoji(value: number): number {
+  return QUICK_MOODS.reduce((prev, curr) =>
+    Math.abs(curr.value - value) < Math.abs(prev.value - value) ? curr : prev,
+  ).value;
 }
 
 function getGreetingKey(): 'goodMorning' | 'goodAfternoon' | 'goodEvening' {
@@ -67,6 +75,7 @@ export function DashboardPage() {
   const { user } = useUser();
   const router = useRouter();
   const [moodLoggedLocal, setMoodLoggedLocal] = useState(false);
+  const [localMoodValue, setLocalMoodValue] = useState<number | null>(null);
 
   // Theme state
   const [isDark, setIsDark] = useState(false);
@@ -109,8 +118,10 @@ export function DashboardPage() {
     return isValidInsight(raw) ? raw : null;
   }, [metrics]);
 
-  const hasLoggedToday =
-    moodLoggedLocal || (moods?.some((m) => isToday(new Date(m.createdAt))) ?? false);
+  const todayMoodFromApi = moods?.find((m) => isToday(new Date(m.createdAt)));
+  const hasLoggedToday = moodLoggedLocal || !!todayMoodFromApi;
+  const todayMoodValue =
+    localMoodValue ?? (todayMoodFromApi ? nearestMoodEmoji(todayMoodFromApi.value) : null);
 
   const firstName = user?.name?.split(' ')[0] ?? null;
   const initials = (user?.name?.charAt(0) ?? user?.email?.charAt(0) ?? '?').toUpperCase();
@@ -118,16 +129,34 @@ export function DashboardPage() {
   const weekStart = format(subDays(new Date(), 6), 'MMM d');
   const weekEnd = format(new Date(), 'd');
 
+  const sessionsThisWeek = useMemo(() => {
+    if (!sessionsData?.sessions) return 0;
+    const weekAgo = subDays(new Date(), 7);
+    return sessionsData.sessions.filter((s) => new Date(s.createdAt) >= weekAgo).length;
+  }, [sessionsData]);
+
+  const moodChange = useMemo(() => {
+    if (!stats?.average) return '—';
+    const pct = Math.round(((stats.average - 5) / 5) * 100);
+    return `${pct > 0 ? '+' : ''}${pct}%`;
+  }, [stats]);
+
   return (
     <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
       <div className="space-y-4 p-5 pb-6">
         {/* ── Header ── */}
         <div className="flex items-start justify-between lg:hidden">
           <div>
-            <p className="text-[13px] text-muted-foreground">{t(getGreetingKey())}</p>
-            <h1 className="text-[26px] font-bold leading-tight tracking-tight">
-              {firstName ?? t('greetingDefault')}
-            </h1>
+            {firstName ? (
+              <>
+                <p className="text-[13px] text-muted-foreground">{t(getGreetingKey())}</p>
+                <h1 className="text-[26px] font-bold leading-tight tracking-tight">
+                  {firstName}
+                </h1>
+              </>
+            ) : (
+              <h1 className="text-xl font-bold tracking-tight">{t(getGreetingKey())}</h1>
+            )}
           </div>
           <div className="flex items-center gap-2.5">
             <button
@@ -141,9 +170,6 @@ export function DashboardPage() {
                 <Sun className="h-[18px] w-[18px] text-muted-foreground" />
               )}
             </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-card shadow-soft">
-              <Bell className="h-[18px] w-[18px] text-foreground" />
-            </button>
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-avatar-bg">
               <span className="text-sm font-bold text-blush-700">{initials}</span>
             </div>
@@ -152,7 +178,7 @@ export function DashboardPage() {
 
         {/* Desktop-only greeting (sidebar has the nav, but we still greet) */}
         <h1 className="hidden text-2xl font-bold tracking-tight lg:block">
-          {firstName ? t('greetingWithName', { name: firstName }) : t('greetingDefault')}
+          {firstName ? t('greetingWithName', { name: firstName }) : t(getGreetingKey())}
         </h1>
 
         {/* ── Mira Hero Card ── */}
@@ -195,40 +221,74 @@ export function DashboardPage() {
                     { value },
                     {
                       onSuccess: () => {
+                        setLocalMoodValue(value);
                         setMoodLoggedLocal(true);
                         analytics.moodCheckedIn(value, 'dashboard');
                       },
                     },
                   )
                 }
-                className="flex flex-col items-center gap-1.5 disabled:opacity-50"
+                className={cn(
+                  'flex flex-col items-center gap-1.5 transition-opacity',
+                  hasLoggedToday && todayMoodValue !== value && 'opacity-40',
+                )}
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-warm transition-transform hover:scale-110 active:scale-95">
-                  <span className="text-xl">{emoji}</span>
+                <div
+                  className={cn(
+                    'flex h-12 w-12 items-center justify-center rounded-full bg-warm transition-transform',
+                    hasLoggedToday && todayMoodValue === value
+                      ? 'ring-2 ring-primary ring-offset-2 ring-offset-card'
+                      : !hasLoggedToday && 'hover:scale-110 active:scale-95',
+                  )}
+                >
+                  <span className="text-[22px]">{emoji}</span>
                 </div>
-                <span className="text-[11px] font-medium text-muted-foreground">{t(key)}</span>
+                <span
+                  className={cn(
+                    'text-[11px] font-medium',
+                    hasLoggedToday && todayMoodValue === value
+                      ? 'text-primary font-semibold'
+                      : 'text-muted-foreground',
+                  )}
+                >
+                  {t(key)}
+                </span>
               </button>
             ))}
           </div>
           {hasLoggedToday && (
-            <p className="mt-3 text-center text-xs text-emerald-600">{t('checkedInToday')}</p>
+            <p className="mt-3 text-center text-xs font-medium text-green-accent">
+              {t('checkedInToday')}
+            </p>
           )}
         </div>
 
         {/* ── Quick Tools ── */}
         <div className="flex gap-2.5">
           {QUICK_TOOLS.map(({ icon: Icon, key, href, bg, color }) => {
+            const disabled = true;
             const inner = (
-              <div className="flex flex-1 flex-col items-center gap-1.5">
+              <div
+                className={cn(
+                  'flex flex-1 flex-col items-center gap-1.5',
+                  disabled && 'opacity-50',
+                )}
+              >
                 <div
                   className={cn(
-                    'flex h-11 w-11 items-center justify-center rounded-full transition-transform hover:scale-110 active:scale-95',
+                    'flex h-11 w-11 items-center justify-center rounded-full',
                     bg,
+                    !disabled && 'transition-transform hover:scale-110 active:scale-95',
                   )}
                 >
                   <Icon className={cn('h-[18px] w-[18px]', color)} />
                 </div>
                 <span className="text-[11px] font-medium text-muted-foreground">{t(key)}</span>
+                {disabled && (
+                  <span className="text-[9px] font-semibold text-muted-foreground/70">
+                    {t('comingSoon')}
+                  </span>
+                )}
               </div>
             );
             if (href) {
@@ -239,63 +299,101 @@ export function DashboardPage() {
               );
             }
             return (
-              <button key={key} className="flex-1" type="button">
+              <div key={key} className="flex-1 cursor-default">
                 {inner}
-              </button>
+              </div>
             );
           })}
         </div>
 
         {/* ── This Week Stats ── */}
-        <div className="rounded-xl border border-border/50 bg-card p-[18px] shadow-soft">
+        <div className="rounded-xl border border-border/50 bg-card px-4 py-[18px] shadow-soft">
+          {/* Header */}
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-[15px] font-bold">{t('thisWeek')}</h3>
-            <span className="text-[11px] text-muted-foreground">
+            <h3 className="text-[13px] font-semibold">{t('thisWeek')}</h3>
+            <span className="text-xs text-muted-foreground">
               {weekStart}–{weekEnd}
             </span>
           </div>
+
           {statsLoading ? (
-            <Skeleton className="h-16 w-full rounded-lg" />
+            <Skeleton className="h-20 w-full rounded-lg" />
           ) : (
-            <div className="flex gap-3">
-              <div className="flex flex-1 flex-col items-center gap-0.5">
-                <span className="text-xl font-bold">{stats?.streak ?? 0}</span>
-                <span className="text-[11px] text-muted-foreground">{t('daysInRow')}</span>
+            <>
+              {/* Stats row with dividers */}
+              <div className="flex items-center">
+                <div className="flex flex-1 flex-col items-center gap-0.5">
+                  <span className="text-[22px] font-bold">{stats?.streak ?? 0}</span>
+                  <span className="text-[11px] text-green-accent">{t('daysInRow')}</span>
+                </div>
+                <div className="h-9 w-px bg-border" />
+                <div className="flex flex-1 flex-col items-center gap-0.5">
+                  <span className="text-[22px] font-bold">{sessionsThisWeek}</span>
+                  <span className="text-[11px] text-muted-foreground">{t('sessionsShort')}</span>
+                </div>
+                <div className="h-9 w-px bg-border" />
+                <div className="flex flex-1 flex-col items-center gap-0.5">
+                  <span className="text-[22px] font-bold text-green-accent">
+                    {moodChange}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">{t('moodScore')}</span>
+                </div>
               </div>
-              <div className="flex flex-1 flex-col items-center gap-0.5">
-                <span className="text-xl font-bold">{sessionsData?.total ?? 0}</span>
-                <span className="text-[11px] text-muted-foreground">{t('sessionsShort')}</span>
+
+              {/* Weekly goal progress */}
+              <div className="mt-3">
+                <div className="mb-1.5 flex items-center justify-between">
+                  <span className="text-[11px] text-muted-foreground">{t('weeklyGoal')}</span>
+                  <span className="text-[11px] font-semibold text-primary">
+                    {sessionsThisWeek} / {WEEKLY_GOAL}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-blush-300 to-primary transition-all"
+                    style={{ width: `${Math.min(100, (sessionsThisWeek / WEEKLY_GOAL) * 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="flex flex-1 flex-col items-center gap-0.5">
-                <span
-                  className={cn(
-                    'text-xl font-bold',
-                    stats?.trend === 'improving' && 'text-emerald-600',
-                    stats?.trend === 'declining' && 'text-rose-500',
-                  )}
-                >
-                  {stats?.average ? `${stats.average > 0 ? '+' : ''}${Math.round(((stats.average - 5) / 5) * 100)}%` : '—'}
-                </span>
-                <span className="text-[11px] text-muted-foreground">{t('moodShort')}</span>
-              </div>
-            </div>
+            </>
           )}
         </div>
 
         {/* ── Mira's Insight ── */}
-        <div className="rounded-xl border border-border/50 bg-warm p-4">
-          <h3 className="text-[13px] font-semibold text-primary">{t('miraInsightEmoji')}</h3>
+        <div className="rounded-2xl border border-border/50 bg-warm p-4">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <h3 className="text-[11px] font-semibold tracking-wide text-primary">
+              {t('miraInsight')}
+            </h3>
+          </div>
           {metricsLoading ? (
-            <Skeleton className="mt-2 h-10 w-full" />
+            <div className="mt-2.5 space-y-1.5">
+              <Skeleton className="h-2.5 w-4/5 rounded-full" />
+              <Skeleton className="h-2.5 w-3/5 rounded-full" />
+            </div>
           ) : insight ? (
-            <p className="mt-2 text-[13px] leading-relaxed text-foreground/80">{insight}</p>
+            <p className="mt-2 text-[13px] font-medium leading-relaxed text-foreground/80">
+              {insight}
+            </p>
           ) : hasAnalyzing ? (
-            <div className="mt-2 flex items-center gap-2">
-              <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" />
-              <p className="text-[13px] text-muted-foreground">{t('analyzingInsight')}</p>
+            <div className="mt-2.5">
+              <div className="space-y-1.5">
+                <Skeleton className="h-2.5 w-[85%] rounded-full" />
+                <Skeleton className="h-2.5 w-[65%] rounded-full" />
+                <Skeleton className="h-2.5 w-[45%] rounded-full" />
+              </div>
+              <div className="mt-3 flex items-center gap-1.5">
+                <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                <p className="text-[11px] font-medium text-muted-foreground">
+                  {t('analyzingInsight')}
+                </p>
+              </div>
             </div>
           ) : (
-            <p className="mt-2 text-[13px] text-muted-foreground">{t('defaultInsight')}</p>
+            <p className="mt-2 text-[13px] font-medium text-muted-foreground">
+              {t('defaultInsight')}
+            </p>
           )}
         </div>
 

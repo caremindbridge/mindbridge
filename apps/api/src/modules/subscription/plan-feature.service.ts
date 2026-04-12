@@ -50,17 +50,18 @@ export class PlanFeatureService {
       where: { therapistId: userId, createdAt: Between(monthStart, nextMonthStart) },
     });
 
+    // TODO: Re-enable feature gating when monetization is ready
     return {
       plan,
-      isTrial,
+      isTrial: false,
       trialEndsAt: sub?.trialEndsAt ?? null,
-      patientLimit: patientLimit as number,
-      reportLimit: reportLimit as number,
+      patientLimit: -1,
+      reportLimit: -1,
       activePatientCount,
       reportsThisMonth,
-      canWriteMiraInstructions: !isTrial,
-      canViewMoodAnalytics: !isTrial && !isSolo,
-      canViewFullAnalysis: !isTrial && !isSolo,
+      canWriteMiraInstructions: true,
+      canViewMoodAnalytics: true,
+      canViewFullAnalysis: true,
     };
   }
 }

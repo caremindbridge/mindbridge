@@ -230,7 +230,9 @@
     "viewAll": "View all",
     "continueSession": "Continue Session",
     "recentSession": "Recent Session",
-    "miraInsightEmoji": "💡 Mira's Insight"
+    "miraInsightEmoji": "💡 Mira's Insight",
+    "weeklyGoal": "Weekly goal",
+    "moodScore": "mood score"
   },
   "landing": {
     "nav": {

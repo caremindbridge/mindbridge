@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
-import { useUsageStatus } from '@/entities/subscription';
 import { Badge, Button } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 
@@ -82,8 +81,8 @@ export function PatientSessionSummary({ analysis, sessionId }: Props) {
   const tm = useTranslations('mood');
   const tp = useTranslations('pricing');
 
-  const { data: usage } = useUsageStatus();
-  const isLitePlan = !usage?.plan || usage.plan === 'lite' || usage.plan === 'trial';
+  // TODO: Re-enable plan gating when monetization is ready
+  const isLitePlan = false;
 
   const ext = analysis as ExtendedAnalysis;
 
