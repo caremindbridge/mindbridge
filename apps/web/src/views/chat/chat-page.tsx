@@ -8,7 +8,7 @@ import { BarChart3, ChevronLeft, MoreVertical, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useSession } from '@/entities/session';
@@ -39,9 +39,10 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
   const isActive = session?.status === 'active';
 
+  const sessionMessages = useMemo(() => session?.messages ?? [], [session]);
   const { messages, isStreaming, analysisReady, addUserMessage } = useChatStream({
     sessionId,
-    initialMessages: session?.messages || [],
+    initialMessages: sessionMessages,
     enabled: isActive,
   });
 

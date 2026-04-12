@@ -5,6 +5,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
+import { useMediaQuery } from '@/shared/lib/use-media-query';
+
 import { VoiceWaveform } from './voice-waveform';
 import { useVoiceRecorder } from './use-voice-recorder';
 
@@ -25,6 +27,8 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
   const [content, setContent] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasContent = content.trim().length > 0;
+
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const { state: voiceState, levels, duration, error, start, stop, cancel } = useVoiceRecorder(
     (text) => setContent((prev) => (prev ? `${prev} ${text}` : text)),
@@ -58,7 +62,9 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // On mobile, Enter inserts a newline (no physical Shift key on virtual keyboards).
+    // On desktop, Enter sends; Shift+Enter inserts a newline.
+    if (isDesktop && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
