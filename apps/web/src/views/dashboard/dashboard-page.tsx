@@ -163,10 +163,11 @@ export function DashboardPage() {
           }}
         >
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white">
-              <Sparkles className="h-4 w-4 text-[#C4856F]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
+              <Sparkles className="h-4 w-4 text-white" />
             </div>
-            <span className="text-[13px] font-semibold text-white">{t('miraName')}</span>
+            <span className="text-[13px] font-bold text-white">{t('miraName')}</span>
+            <div className="h-2 w-2 rounded-full bg-[#4ADE80]" />
           </div>
           <div className="mt-2.5">
             <h2 className="text-lg font-bold text-white">{t('miraReady')}</h2>
