@@ -2,12 +2,22 @@
 
 import { UserRole } from '@mindbridge/types/src/user';
 import { format, isToday, isYesterday, startOfDay, subDays } from 'date-fns';
-import { BarChart3, Brain, Flame, Heart, Loader2, MessageCircle, Wind } from 'lucide-react';
+import {
+  Bell,
+  BookOpen,
+  Brain,
+  Lightbulb,
+  Loader2,
+  Moon,
+  Phone,
+  Sparkles,
+  Sun,
+  Wind,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { Line, LineChart, ResponsiveContainer } from 'recharts';
 
 import { useMoodMetrics } from '@/entities/dashboard';
 import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
@@ -15,14 +25,21 @@ import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
 import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
-import { Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/shared/ui';
+import { Button, Skeleton } from '@/shared/ui';
 
 const QUICK_MOODS = [
-  { emoji: '😰', value: 2 },
-  { emoji: '😔', value: 4 },
-  { emoji: '😐', value: 6 },
-  { emoji: '🙂', value: 8 },
-  { emoji: '😊', value: 10 },
+  { emoji: '😟', value: 2, key: 'moodBad' },
+  { emoji: '😔', value: 4, key: 'moodLow' },
+  { emoji: '😐', value: 6, key: 'moodOkay' },
+  { emoji: '🙂', value: 8, key: 'moodGood' },
+  { emoji: '😊', value: 10, key: 'moodGreat' },
+] as const;
+
+const QUICK_TOOLS = [
+  { icon: BookOpen, key: 'journal', href: '/dashboard/chat', bg: 'bg-warm', color: 'text-primary' },
+  { icon: Wind, key: 'breathe', href: undefined, bg: 'bg-green-light', color: 'text-green-accent' },
+  { icon: Phone, key: 'sos', href: undefined, bg: 'bg-sos-bg', color: 'text-destructive' },
+  { icon: Lightbulb, key: 'reflect', href: undefined, bg: 'bg-purple-light', color: 'text-purple-accent' },
 ] as const;
 
 function isValidInsight(s: string | null | undefined): s is string {
@@ -36,11 +53,33 @@ function isValidInsight(s: string | null | undefined): s is string {
   return s.length >= 20;
 }
 
+function getGreetingKey(): 'goodMorning' | 'goodAfternoon' | 'goodEvening' {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'goodMorning';
+  if (hour < 18) return 'goodAfternoon';
+  return 'goodEvening';
+}
+
 export function DashboardPage() {
   const t = useTranslations('dashboard');
+  const tc = useTranslations('chat');
+  const tCommon = useTranslations('common');
   const { user } = useUser();
   const router = useRouter();
   const [moodLoggedLocal, setMoodLoggedLocal] = useState(false);
+
+  // Theme state
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const toggleTheme = () => {
+    const newDark = !isDark;
+    document.documentElement.classList.toggle('dark', newDark);
+    localStorage.setItem('theme', newDark ? 'dark' : 'light');
+    setIsDark(newDark);
+  };
 
   useEffect(() => {
     if (user?.role === UserRole.THERAPIST && (user.activeMode ?? 'therapist') === 'therapist') {
@@ -55,11 +94,9 @@ export function DashboardPage() {
   const { data: moods } = useMoods(from7d);
   const { mutate: logMood, isPending: logging } = useCreateMood();
 
-  // derived before remaining queries so we can control their refetch interval
   const hasAnalyzing =
     sessionsData?.sessions.some((s) => s.status === 'ended' || s.status === 'analyzing') ?? false;
-  const lastCompletedSession =
-    sessionsData?.sessions.find((s) => s.status === 'completed') ?? null;
+  const lastSession = sessionsData?.sessions[0] ?? null;
 
   const { data: metrics, isLoading: metricsLoading } = useMoodMetrics(
     from7d,
@@ -75,374 +112,276 @@ export function DashboardPage() {
   const hasLoggedToday =
     moodLoggedLocal || (moods?.some((m) => isToday(new Date(m.createdAt))) ?? false);
 
-  const sparkData = useMemo(
-    () => (moods ? [...moods].reverse().map((m) => ({ v: m.value })) : []),
-    [moods],
-  );
-
   const firstName = user?.name?.split(' ')[0] ?? null;
+  const initials = (user?.name?.charAt(0) ?? user?.email?.charAt(0) ?? '?').toUpperCase();
 
-  const trendLabel =
-    stats?.trend === 'improving'
-      ? t('improvingTrend')
-      : stats?.trend === 'declining'
-        ? t('decliningTrend')
-        : t('stableTrend');
+  const weekStart = format(subDays(new Date(), 6), 'MMM d');
+  const weekEnd = format(new Date(), 'd');
 
   return (
     <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
-
-      <div className="p-4 md:p-6 space-y-4 md:space-y-5 pb-6">
-      {/* ── Greeting ── */}
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-        {firstName ? t('greetingWithName', { name: firstName }) : t('greetingDefault')}
-      </h1>
-
-      {/* ── Quick Mood Check-in ── */}
-      <Card>
-        <CardContent className="py-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium">{t('howAreYou')}</p>
-              {hasLoggedToday && (
-                <p className="mt-0.5 text-xs text-emerald-600">{t('checkedInToday')}</p>
-              )}
-            </div>
-            <div className="flex gap-3">
-              {QUICK_MOODS.map(({ emoji, value }) => (
-                <button
-                  key={value}
-                  type="button"
-                  disabled={logging || hasLoggedToday}
-                  onClick={() => logMood({ value }, { onSuccess: () => { setMoodLoggedLocal(true); analytics.moodCheckedIn(value, 'dashboard'); } })}
-                  className="text-2xl transition-transform hover:scale-125 active:scale-95 disabled:opacity-50"
-                  title={`${value}/10`}
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
-            <Link
-              href="/dashboard/chat"
-              className="text-sm text-primary underline-offset-4 hover:underline whitespace-nowrap"
-            >
-              {t('tellMiraMore')}
-            </Link>
+      <div className="space-y-4 p-5 pb-6">
+        {/* ── Header ── */}
+        <div className="flex items-start justify-between lg:hidden">
+          <div>
+            <p className="text-[13px] text-muted-foreground">{t(getGreetingKey())}</p>
+            <h1 className="text-[26px] font-bold leading-tight tracking-tight">
+              {firstName ?? t('greetingDefault')}
+            </h1>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={toggleTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-muted/60"
+              aria-label={tCommon('toggleTheme')}
+            >
+              {isDark ? (
+                <Moon className="h-[18px] w-[18px] text-primary" />
+              ) : (
+                <Sun className="h-[18px] w-[18px] text-muted-foreground" />
+              )}
+            </button>
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-card shadow-soft">
+              <Bell className="h-[18px] w-[18px] text-foreground" />
+            </button>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-avatar-bg">
+              <span className="text-sm font-bold text-blush-700">{initials}</span>
+            </div>
+          </div>
+        </div>
 
-      {/* ── Progress Stats ── */}
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-        {statsLoading ? (
-          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)
-        ) : (
-          <>
-            <StatCard
-              label={t('avgMood')}
-              value={stats?.average ? stats.average.toFixed(1) : '—'}
-              sub={t('avgMoodDesc')}
-            />
-            <StatCard
-              label={t('sessions')}
-              value={sessionsData?.total ?? (sessionsLoading ? '…' : '0')}
-            />
-            <StatCard
-              label={t('streak')}
-              value={t('streakDays', { count: stats?.streak ?? 0 })}
-              icon={<Flame className="h-3.5 w-3.5 text-amber-500" />}
-            />
-            <StatCard
-              label={t('trend')}
-              value={trendLabel}
-              trend={stats?.trend}
-              extra={
-                sparkData.length > 1 ? (
-                  <div className="mt-2 h-8">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={sparkData}>
-                        <Line
-                          type="monotone"
-                          dataKey="v"
-                          stroke="hsl(var(--primary))"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                ) : null
-              }
-            />
-          </>
-        )}
-      </div>
+        {/* Desktop-only greeting (sidebar has the nav, but we still greet) */}
+        <h1 className="hidden text-2xl font-bold tracking-tight lg:block">
+          {firstName ? t('greetingWithName', { name: firstName }) : t('greetingDefault')}
+        </h1>
 
-      {/* ── Mira's Insight ── */}
-      <Card className={cn(insight && 'border-blush-200 bg-blush-50/30', hasAnalyzing && !insight && 'border-blush-200 bg-blush-50/20')}>
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-            <Brain className="h-4 w-4 text-primary" />
-            {t('miraInsight')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {metricsLoading ? (
-            <Skeleton className="h-12 w-full" />
-          ) : insight ? (
-            <div>
-              <p className="text-sm leading-relaxed text-foreground/80">{insight}</p>
-              <div className="mt-3 flex items-center justify-between gap-3">
-                {hasAnalyzing ? (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Loader2 className="h-3 w-3 shrink-0 animate-spin text-primary" />
-                    <span>{t('analyzingInsight')}</span>
-                  </div>
-                ) : (
-                  <span />
-                )}
-                {lastCompletedSession && !hasAnalyzing && (
-                  <Button asChild size="sm" variant="soft">
-                    <Link href={`/dashboard/chat/${lastCompletedSession.id}/analysis`}>
-                      {t('viewLastAnalysis')}
-                    </Link>
-                  </Button>
-                )}
+        {/* ── Mira Hero Card ── */}
+        <div
+          className="rounded-2xl p-5"
+          style={{
+            background: 'linear-gradient(135deg, #B56756 0%, #C4856F 50%, #E0A88A 100%)',
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white">
+              <Sparkles className="h-4 w-4 text-[#C4856F]" />
+            </div>
+            <span className="text-[13px] font-semibold text-white">{t('miraName')}</span>
+          </div>
+          <div className="mt-2.5">
+            <h2 className="text-lg font-bold text-white">{t('miraReady')}</h2>
+            <p className="mt-1 text-[13px] text-white/80">{t('miraDesc')}</p>
+          </div>
+          <Link
+            href="/dashboard/chat"
+            className="mt-3 flex h-11 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#C4856F] transition-opacity hover:opacity-90 active:opacity-80"
+          >
+            {t('startSessionCta')}
+          </Link>
+        </div>
+
+        {/* ── Mood Check-in ── */}
+        <div className="rounded-xl border border-border/50 bg-card p-[18px] shadow-soft">
+          <h3 className="mb-3.5 text-[15px] font-bold">{t('howAreYou')}</h3>
+          <div className="flex justify-between">
+            {QUICK_MOODS.map(({ emoji, value, key }) => (
+              <button
+                key={value}
+                type="button"
+                disabled={logging || hasLoggedToday}
+                onClick={() =>
+                  logMood(
+                    { value },
+                    {
+                      onSuccess: () => {
+                        setMoodLoggedLocal(true);
+                        analytics.moodCheckedIn(value, 'dashboard');
+                      },
+                    },
+                  )
+                }
+                className="flex flex-col items-center gap-1.5 disabled:opacity-50"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-warm transition-transform hover:scale-110 active:scale-95">
+                  <span className="text-xl">{emoji}</span>
+                </div>
+                <span className="text-[11px] font-medium text-muted-foreground">{t(key)}</span>
+              </button>
+            ))}
+          </div>
+          {hasLoggedToday && (
+            <p className="mt-3 text-center text-xs text-emerald-600">{t('checkedInToday')}</p>
+          )}
+        </div>
+
+        {/* ── Quick Tools ── */}
+        <div className="flex gap-2.5">
+          {QUICK_TOOLS.map(({ icon: Icon, key, href, bg, color }) => {
+            const inner = (
+              <div className="flex flex-1 flex-col items-center gap-1.5">
+                <div
+                  className={cn(
+                    'flex h-11 w-11 items-center justify-center rounded-full transition-transform hover:scale-110 active:scale-95',
+                    bg,
+                  )}
+                >
+                  <Icon className={cn('h-[18px] w-[18px]', color)} />
+                </div>
+                <span className="text-[11px] font-medium text-muted-foreground">{t(key)}</span>
+              </div>
+            );
+            if (href) {
+              return (
+                <Link key={key} href={href} className="flex-1">
+                  {inner}
+                </Link>
+              );
+            }
+            return (
+              <button key={key} className="flex-1" type="button">
+                {inner}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── This Week Stats ── */}
+        <div className="rounded-xl border border-border/50 bg-card p-[18px] shadow-soft">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-[15px] font-bold">{t('thisWeek')}</h3>
+            <span className="text-[11px] text-muted-foreground">
+              {weekStart}–{weekEnd}
+            </span>
+          </div>
+          {statsLoading ? (
+            <Skeleton className="h-16 w-full rounded-lg" />
+          ) : (
+            <div className="flex gap-3">
+              <div className="flex flex-1 flex-col items-center gap-0.5">
+                <span className="text-xl font-bold">{stats?.streak ?? 0}</span>
+                <span className="text-[11px] text-muted-foreground">{t('daysInRow')}</span>
+              </div>
+              <div className="flex flex-1 flex-col items-center gap-0.5">
+                <span className="text-xl font-bold">{sessionsData?.total ?? 0}</span>
+                <span className="text-[11px] text-muted-foreground">{t('sessionsShort')}</span>
+              </div>
+              <div className="flex flex-1 flex-col items-center gap-0.5">
+                <span
+                  className={cn(
+                    'text-xl font-bold',
+                    stats?.trend === 'improving' && 'text-emerald-600',
+                    stats?.trend === 'declining' && 'text-rose-500',
+                  )}
+                >
+                  {stats?.average ? `${stats.average > 0 ? '+' : ''}${Math.round(((stats.average - 5) / 5) * 100)}%` : '—'}
+                </span>
+                <span className="text-[11px] text-muted-foreground">{t('moodShort')}</span>
               </div>
             </div>
+          )}
+        </div>
+
+        {/* ── Mira's Insight ── */}
+        <div className="rounded-xl border border-border/50 bg-warm p-4">
+          <h3 className="text-[13px] font-semibold text-primary">{t('miraInsightEmoji')}</h3>
+          {metricsLoading ? (
+            <Skeleton className="mt-2 h-10 w-full" />
+          ) : insight ? (
+            <p className="mt-2 text-[13px] leading-relaxed text-foreground/80">{insight}</p>
           ) : hasAnalyzing ? (
-            <div className="flex items-center gap-3">
-              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
-              <p className="text-sm text-muted-foreground">{t('analyzingInsight')}</p>
+            <div className="mt-2 flex items-center gap-2">
+              <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" />
+              <p className="text-[13px] text-muted-foreground">{t('analyzingInsight')}</p>
             </div>
           ) : (
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-muted-foreground">{t('defaultInsight')}</p>
-              <Button asChild size="sm" variant="soft">
+            <p className="mt-2 text-[13px] text-muted-foreground">{t('defaultInsight')}</p>
+          )}
+        </div>
+
+        {/* ── Recent Session ── */}
+        <div>
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-[15px] font-bold">{t('recentSession')}</h3>
+            <Link
+              href="/dashboard/chat"
+              className="text-[13px] font-semibold text-primary hover:underline"
+            >
+              {t('viewAll')}
+            </Link>
+          </div>
+
+          {sessionsLoading ? (
+            <Skeleton className="h-32 w-full rounded-xl" />
+          ) : lastSession ? (
+            <RecentSessionCard session={lastSession} />
+          ) : (
+            <div className="flex flex-col items-center gap-3 rounded-xl border border-border/50 bg-card py-8 text-center shadow-soft">
+              <p className="text-sm text-muted-foreground">{t('noSessionsYet')}</p>
+              <Button asChild size="sm">
                 <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
               </Button>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* ── Quick Actions ── */}
-      <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          {t('quickActions')}
-        </p>
-        <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
-          <ActionCard
-            href="/dashboard/chat"
-            icon={<MessageCircle className="h-5 w-5" />}
-            label={t('talkToMira')}
-            primary
-          />
-          <ActionCard
-            href="/dashboard/analytics"
-            icon={<BarChart3 className="h-5 w-5" />}
-            label={t('detailedAnalytics')}
-          />
-          <ActionCard
-            icon={<Heart className="h-5 w-5" />}
-            label={t('thoughtJournal')}
-            comingSoon={t('comingSoon')}
-          />
-          <ActionCard
-            icon={<Wind className="h-5 w-5" />}
-            label={t('breathingExercise')}
-            comingSoon={t('comingSoon')}
-          />
         </div>
       </div>
-
-      {/* ── Recent Sessions ── */}
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {t('recentSessions')}
-          </p>
-          <Link
-            href="/dashboard/chat"
-            className="text-sm text-primary underline-offset-4 hover:underline"
-          >
-            {t('allSessions')}
-          </Link>
-        </div>
-        {hasAnalyzing && (
-          <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-blush-200 bg-blush-50/40 px-4 py-2.5">
-            <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" />
-            <p className="text-sm text-foreground/70">{t('analyzingBanner')}</p>
-          </div>
-        )}
-        <RecentSessionsList
-          sessions={sessionsData?.sessions ?? []}
-          isLoading={sessionsLoading}
-        />
-      </div>
-      </div>
     </div>
   );
 }
 
-function StatCard({
-  label,
-  value,
-  sub,
-  icon,
-  trend,
-  extra,
+function RecentSessionCard({
+  session,
 }: {
-  label: string;
-  value: string | number;
-  sub?: string;
-  icon?: React.ReactNode;
-  trend?: string;
-  extra?: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border bg-card p-4 shadow-sm">
-      <p className="mb-1 text-xs text-muted-foreground">{label}</p>
-      <div className="flex items-center gap-1.5">
-        {icon}
-        <p
-          className={cn(
-            'text-xl font-bold',
-            trend === 'improving' && 'text-emerald-600',
-            trend === 'declining' && 'text-rose-500',
-          )}
-        >
-          {value}
-        </p>
-      </div>
-      {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}
-      {extra}
-    </div>
-  );
-}
-
-function ActionCard({
-  href,
-  icon,
-  label,
-  primary,
-  comingSoon,
-}: {
-  href?: string;
-  icon: React.ReactNode;
-  label: string;
-  primary?: boolean;
-  comingSoon?: string;
-}) {
-  const inner = (
-    <div
-      className={cn(
-        'relative flex flex-col items-start gap-2 rounded-xl border p-4 transition-colors',
-        primary
-          ? 'border-primary/20 bg-primary/5 hover:bg-primary/10'
-          : comingSoon
-            ? 'cursor-default border-border/50 bg-muted/30'
-            : 'border-border bg-card hover:bg-muted/30',
-      )}
-    >
-      <div className={cn('text-muted-foreground', primary && 'text-primary')}>{icon}</div>
-      <p className={cn('text-sm font-medium', comingSoon && 'text-muted-foreground')}>{label}</p>
-      {comingSoon && (
-        <span className="absolute right-2 top-2 rounded-full bg-muted px-1.5 py-px text-[10px] text-muted-foreground">
-          {comingSoon}
-        </span>
-      )}
-    </div>
-  );
-
-  if (href) return <Link href={href}>{inner}</Link>;
-  return inner;
-}
-
-function RecentSessionsList({
-  sessions,
-  isLoading,
-}: {
-  sessions: Array<{ id: string; status: string; title?: string | null; createdAt: string }>;
-  isLoading: boolean;
+  session: { id: string; status: string; title?: string | null; createdAt: string };
 }) {
   const t = useTranslations('dashboard');
   const tc = useTranslations('chat');
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-14 rounded-xl" />
-        ))}
-      </div>
-    );
-  }
 
-  if (!sessions.length) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
-          <p className="text-sm text-muted-foreground">{t('noSessionsYet')}</p>
-          <Button asChild size="sm">
-            <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
+  const d = new Date(session.createdAt);
+  const dateLabel = isToday(d) ? t('today') : isYesterday(d) ? t('yesterday') : format(d, 'MMM d');
+  const title = session.title ?? tc('cbtSession');
+  const isActive = session.status === 'active';
+  const isAnalyzing = session.status === 'analyzing' || session.status === 'ended';
 
   return (
-    <div className="space-y-3">
-      {sessions.map((s) => {
-        const d = new Date(s.createdAt);
-        const dateLabel = isToday(d) ? t('today') : isYesterday(d) ? t('yesterday') : format(d, 'MMM d');
-        const title = s.title ?? tc('cbtSession');
-        const isCompleted = s.status === 'completed';
-        const isAnalyzing = s.status === 'analyzing' || s.status === 'ended';
-        return (
-          <Link
-            key={s.id}
-            href={`/dashboard/chat/${s.id}`}
-            className="flex items-center gap-4 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:bg-muted/30"
+    <div className="rounded-xl border border-border/50 bg-card p-4 shadow-soft">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-muted">
+          <Brain className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold">{title}</p>
+          <p className="text-xs text-muted-foreground">{dateLabel}</p>
+        </div>
+        {isAnalyzing ? (
+          <span className="flex items-center gap-1.5 rounded-full bg-blush-100 px-2.5 py-0.5 text-xs font-medium text-blush-600">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            {tc('statusAnalyzing')}
+          </span>
+        ) : (
+          <span
+            className={cn(
+              'rounded-full px-2.5 py-0.5 text-xs font-medium',
+              isActive
+                ? 'bg-green-light text-green-accent'
+                : 'bg-muted text-muted-foreground',
+            )}
           >
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{title}</p>
-              <p className="text-xs text-muted-foreground">{dateLabel}</p>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              {isAnalyzing ? (
-                <span className="flex items-center gap-1.5 rounded-full bg-blush-100 px-2.5 py-0.5 text-xs font-medium text-blush-600">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                  {tc('statusAnalyzing')}
-                </span>
-              ) : (
-                <span
-                  className={cn(
-                    'rounded-full px-2 py-0.5 text-xs font-medium',
-                    s.status === 'active'
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-muted text-muted-foreground',
-                  )}
-                >
-                  {s.status === 'active' ? tc('statusActive') : tc('statusCompleted')}
-                </span>
-              )}
-              {isCompleted && (
-                <span
-                  role="link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = `/dashboard/chat/${s.id}/analysis`;
-                  }}
-                  className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  {tc('viewAnalysis')}
-                </span>
-              )}
-            </div>
-          </Link>
-        );
-      })}
+            {isActive ? tc('statusActive') : 'CBT'}
+          </span>
+        )}
+      </div>
+
+      <Link
+        href={`/dashboard/chat/${session.id}`}
+        className={cn(
+          'mt-3 flex h-10 items-center justify-center rounded-full text-sm font-semibold transition-opacity hover:opacity-90',
+          isActive
+            ? 'bg-green-accent text-white'
+            : 'bg-primary text-primary-foreground',
+        )}
+      >
+        {isActive ? t('continueSession') : t('viewLastAnalysis')}
+      </Link>
     </div>
   );
 }

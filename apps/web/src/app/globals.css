@@ -130,6 +130,15 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-ring: 15 45% 58%;
 
+    /* === SEMANTIC ACCENTS === */
+    --warm: 30 75% 97%;
+    --green-accent: 135 17% 55%;
+    --green-light: 130 35% 93%;
+    --purple-accent: 268 35% 59%;
+    --purple-light: 265 35% 94%;
+    --sos-bg: 10 80% 94%;
+    --avatar-bg: 17 50% 85%;
+
     /* === SOFT BLUSH PALETTE === */
     --blush-50: 15 55% 97%;
     --blush-100: 15 50% 94%;
@@ -187,6 +196,14 @@
     --sidebar-primary: 15 45% 62%;
     --sidebar-primary-foreground: 20 15% 10%;
     --sidebar-ring: 15 45% 62%;
+
+    --warm: 20 20% 13%;
+    --green-accent: 135 17% 55%;
+    --green-light: 135 30% 14%;
+    --purple-accent: 268 40% 65%;
+    --purple-light: 268 25% 15%;
+    --sos-bg: 0 30% 16%;
+    --avatar-bg: 17 25% 20%;
 
     --blush-50: 15 15% 14%;
     --blush-100: 15 15% 17%;

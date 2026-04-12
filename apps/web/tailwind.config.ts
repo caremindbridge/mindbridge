@@ -64,6 +64,13 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        warm: 'hsl(var(--warm))',
+        'green-accent': 'hsl(var(--green-accent))',
+        'green-light': 'hsl(var(--green-light))',
+        'purple-accent': 'hsl(var(--purple-accent))',
+        'purple-light': 'hsl(var(--purple-light))',
+        'sos-bg': 'hsl(var(--sos-bg))',
+        'avatar-bg': 'hsl(var(--avatar-bg))',
         blush: {
           50: 'hsl(var(--blush-50))',
           100: 'hsl(var(--blush-100))',
