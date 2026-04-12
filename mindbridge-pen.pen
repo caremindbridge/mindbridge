@@ -17411,7 +17411,8 @@
                               "width": "fill_container",
                               "content": "Yesterday · 24 min",
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -17452,7 +17453,8 @@
                   "content": "You showed great progress identifying cognitive distortions.",
                   "lineHeight": 1.5,
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -17619,7 +17621,8 @@
                               "width": "fill_container",
                               "content": "Yesterday · 24 min",
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -17660,7 +17663,8 @@
                   "content": "You showed great progress identifying cognitive distortions.",
                   "lineHeight": 1.5,
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -17826,7 +17830,8 @@
                               "width": "fill_container",
                               "content": "Today · 18 min",
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -18075,7 +18080,8 @@
                               "width": "fill_container",
                               "content": "Today · 18 min",
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -20073,7 +20079,8 @@
                           "fill": "#8A9E8C",
                           "content": "Started 18 min ago",
                           "fontFamily": "Plus Jakarta Sans",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -20231,7 +20238,8 @@
                           "fill": "#8A9E8C",
                           "content": "Started 5 min ago",
                           "fontFamily": "Plus Jakarta Sans",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -20305,8 +20313,8 @@
     {
       "type": "frame",
       "id": "Nq9Df",
-      "x": 600,
-      "y": 4400,
+      "x": -1545,
+      "y": 2958,
       "name": "Sessions - Completed Filter",
       "clip": true,
       "width": 390,
@@ -21639,8 +21647,8 @@
     {
       "type": "frame",
       "id": "7HD7r",
-      "x": 1060,
-      "y": 4400,
+      "x": -2531,
+      "y": 2958,
       "name": "Sessions - Empty Filter State",
       "clip": true,
       "width": 390,

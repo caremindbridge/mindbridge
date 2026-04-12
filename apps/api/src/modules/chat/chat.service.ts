@@ -43,17 +43,24 @@ export class ChatService {
   ) {}
 
   async createSession(userId: string): Promise<Session> {
-    // Auto-end any other active sessions before starting a new one
+    // Auto-end any other active sessions before starting a new one.
+    // If a session has no messages, delete it — nothing to analyze.
     const activeSessions = await this.sessionRepo.find({
       where: { userId, status: SessionStatusEnum.Active },
     });
     for (const s of activeSessions) {
-      s.status = SessionStatusEnum.Ended;
-      s.endedAt = new Date();
-      await this.sessionRepo.save(s);
-      this.generateAnalysis(s.id).catch((err) => {
-        this.logger.error(`Auto-analysis error for session ${s.id}:`, err);
-      });
+      const msgCount = await this.messageRepo.count({ where: { sessionId: s.id } });
+      if (msgCount === 0) {
+        await this.redisService.clearSessionMessages(s.id);
+        await this.sessionRepo.remove(s);
+      } else {
+        s.status = SessionStatusEnum.Ended;
+        s.endedAt = new Date();
+        await this.sessionRepo.save(s);
+        this.generateAnalysis(s.id).catch((err) => {
+          this.logger.error(`Auto-analysis error for session ${s.id}:`, err);
+        });
+      }
     }
 
     const session = this.sessionRepo.create({ userId, status: SessionStatusEnum.Active });

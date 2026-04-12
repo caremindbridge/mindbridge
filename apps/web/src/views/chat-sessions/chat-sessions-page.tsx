@@ -287,7 +287,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
                     <span className="text-[11px] font-medium text-primary">{t('analyzing')}</span>
                   </div>
                 ) : (
-                  <div className={cn('inline-flex shrink-0 items-center rounded-lg px-2 py-[3px] leading-none', cat.tagBg, cat.darkTagBg)}>
+                  <div className={cn('inline-flex h-[22px] shrink-0 items-center rounded-lg px-2 leading-none', cat.tagBg, cat.darkTagBg)}>
                     <span className={cn('text-[11px] font-medium', cat.tagText, cat.darkTagText)}>
                       {(t as (k: string) => string)(cat.labelKey)}
                     </span>
@@ -300,7 +300,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
                   {MoodIcon && moodOutcome ? (
                     <div
                       className={cn(
-                        'flex items-center gap-1 rounded-lg px-2 py-[3px]',
+                        'flex h-[22px] items-center gap-1 rounded-lg px-2',
                         cat.tagBg,
                         'dark:bg-[#2E2824]',
                       )}
@@ -374,7 +374,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
           {/* Tags row: category tag + mood outcome pill */}
           {!isAnalyzing && (
             <div className="flex items-center gap-2">
-              <div className={cn('inline-flex items-center rounded-xl px-2.5 py-1 leading-none', cat.tagBg, cat.darkTagBg)}>
+              <div className={cn('inline-flex h-6 items-center rounded-xl px-2.5 leading-none', cat.tagBg, cat.darkTagBg)}>
                 <span className={cn('text-[11px] font-medium', cat.tagText, cat.darkTagText)}>
                   {(t as (k: string) => string)(cat.labelKey)}
                 </span>
@@ -382,7 +382,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
               {MoodIcon && moodOutcome && (
                 <div
                   className={cn(
-                    'flex items-center gap-1 rounded-xl px-2.5 py-1',
+                    'flex h-6 items-center gap-1 rounded-xl px-2.5',
                     cat.tagBg,
                     'dark:bg-[#2E2824]',
                   )}
