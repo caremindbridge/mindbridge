@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -400,5 +403,40 @@ export class ChatService {
 
   verifySessionOwnership(sessionId: string, userId: string): Promise<Session> {
     return this.getSession(sessionId, userId);
+  }
+
+  async transcribeAudio(
+    buffer: Buffer,
+    mimeType: string,
+    userId: string,
+    language?: string,
+  ): Promise<{ text: string }> {
+    // Rate limit: 10 transcriptions per minute per user
+    const key = `ratelimit:transcribe:${userId}`;
+    const count = await this.redisService.incrementRateLimit(key, 60);
+    if (count > 10) {
+      throw new HttpException('Transcription rate limit exceeded: 10 per minute', HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    const formData = new FormData();
+    const ext = mimeType.includes('webm') ? 'webm' : 'mp4';
+    formData.append('file', new Blob([buffer], { type: mimeType }), `audio.${ext}`);
+    formData.append('model', 'whisper-1');
+    if (language) formData.append('language', language);
+
+    const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      this.logger.error(`Whisper API error: ${err}`);
+      throw new InternalServerErrorException('Transcription failed');
+    }
+
+    const data = (await res.json()) as { text: string };
+    return { text: data.text };
   }
 }
