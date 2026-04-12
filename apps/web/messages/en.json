@@ -100,7 +100,13 @@
     "analysisTitle": "Session Analysis",
     "analysisSubtitle": "CBT session insights and recommendations",
     "anxiety": "Anxiety",
-    "sessionInProgress": "Session in progress"
+    "sessionInProgress": "Session in progress",
+    "mic": "Voice input",
+    "transcribing": "Transcribing...",
+    "micDenied": "Microphone access denied. Enable it in browser settings.",
+    "micUnavailable": "Microphone is not available in this browser.",
+    "tooShort": "Recording too short, try again.",
+    "transcribeError": "Couldn't transcribe audio. Please try again."
   },
   "sessions": {
     "title": "Sessions",
