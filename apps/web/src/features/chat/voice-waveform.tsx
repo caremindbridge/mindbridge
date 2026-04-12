@@ -6,7 +6,7 @@ interface VoiceWaveformProps {
 
 export function VoiceWaveform({ levels }: VoiceWaveformProps) {
   return (
-    <div className="flex flex-1 items-center justify-center gap-[2px]">
+    <div className="flex flex-1 items-center justify-center gap-[2px]" aria-hidden="true">
       {levels.map((v, i) => (
         <div
           key={i}
