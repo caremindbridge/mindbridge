@@ -26,7 +26,7 @@ import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
 import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
-import { Button, Skeleton } from '@/shared/ui';
+import { Skeleton } from '@/shared/ui';
 
 const QUICK_MOODS = [
   { emoji: '😟', value: 2, key: 'moodBad' },
@@ -416,11 +416,23 @@ export function DashboardPage() {
           ) : lastSession ? (
             <RecentSessionCard session={lastSession} />
           ) : (
-            <div className="flex flex-col items-center gap-3 rounded-[20px] bg-card py-8 text-center shadow-soft">
-              <p className="text-sm text-muted-foreground">{t('noSessionsYet')}</p>
-              <Button asChild size="sm">
-                <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
-              </Button>
+            <div className="flex flex-col gap-3.5 rounded-[20px] bg-card p-[18px] shadow-soft">
+              <div className="flex justify-center">
+                <div className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[#F0E4DE] dark:bg-[#3A2E28]">
+                  <Brain className="h-[22px] w-[22px] text-primary" />
+                </div>
+              </div>
+              <p className="text-center text-[15px] font-bold">{t('noSessionsYet')}</p>
+              <p className="text-center text-[13px] leading-[1.5] text-muted-foreground">
+                {t('emptySessionsDesc')}
+              </p>
+              <Link
+                href="/dashboard/chat"
+                className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-primary text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                {t('startFirstSession')}
+              </Link>
             </div>
           )}
         </div>
