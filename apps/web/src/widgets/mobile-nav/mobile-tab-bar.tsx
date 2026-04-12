@@ -1,7 +1,7 @@
 'use client';
 
 import { UserRole } from '@mindbridge/types/src/user';
-import { BarChart3, Home, MessageSquare, Settings, User, Users } from 'lucide-react';
+import { Activity, Home, MessageCircle, Settings, User, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -11,8 +11,8 @@ import { cn } from '@/shared/lib/utils';
 
 const PATIENT_TABS = [
   { href: '/dashboard', icon: Home, key: 'home', match: /^\/dashboard$/ },
-  { href: '/dashboard/chat', icon: MessageSquare, key: 'sessions', match: /^\/dashboard\/chat/ },
-  { href: '/dashboard/analytics', icon: BarChart3, key: 'analytics', match: /^\/dashboard\/analytics/ },
+  { href: '/dashboard/chat', icon: MessageCircle, key: 'sessions', match: /^\/dashboard\/chat/ },
+  { href: '/dashboard/analytics', icon: Activity, key: 'analytics', match: /^\/dashboard\/analytics/ },
   { href: '/dashboard/settings', icon: User, key: 'profile', match: /^\/dashboard\/(settings|about-me)/ },
 ];
 
@@ -37,8 +37,8 @@ export function MobileTabBar({ hide = false }: MobileTabBarProps) {
   const tabs = isTherapistMode ? THERAPIST_TABS : PATIENT_TABS;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden px-5 pt-2 pb-[max(env(safe-area-inset-bottom,0px),12px)]">
-      <div className="glass-nav flex h-[62px] items-center justify-around rounded-[26px] px-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden px-5 pt-2.5 pb-[max(env(safe-area-inset-bottom,0px),12px)]">
+      <div className="glass-nav flex h-[62px] items-center rounded-[32px] p-1">
         {tabs.map((tab) => {
           const active = tab.match.test(pathname);
           const Icon = tab.icon;
@@ -47,27 +47,25 @@ export function MobileTabBar({ hide = false }: MobileTabBarProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="flex flex-1 flex-col items-center justify-center h-full gap-0.5 transition-opacity active:opacity-50"
+              className={cn(
+                'flex flex-1 flex-col items-center justify-center h-full gap-[3px] rounded-[28px] transition-all duration-200 active:opacity-50',
+                active && 'tab-active',
+              )}
             >
-              <div
+              <Icon
                 className={cn(
-                  'flex items-center justify-center rounded-[14px] transition-all duration-200',
-                  active ? 'glass-pill h-8 w-12' : 'h-8 w-10',
+                  'h-5 w-5 transition-colors duration-200',
+                  active
+                    ? 'text-foreground'
+                    : 'text-[#B0A098] dark:text-[#7A6F65]',
                 )}
-              >
-                <Icon
-                  className={cn(
-                    'transition-all duration-200',
-                    active
-                      ? 'h-[20px] w-[20px] text-primary stroke-[2px]'
-                      : 'h-[18px] w-[18px] text-muted-foreground/70 stroke-[1.5px]',
-                  )}
-                />
-              </div>
+              />
               <span
                 className={cn(
-                  'text-[10px] font-medium leading-none',
-                  active ? 'text-primary' : 'text-muted-foreground/70',
+                  'text-[10px] tracking-[0.2px] leading-none transition-colors duration-200',
+                  active
+                    ? 'font-semibold text-foreground'
+                    : 'font-medium text-[#B0A098] dark:text-[#7A6F65]',
                 )}
               >
                 {t(tab.key)}

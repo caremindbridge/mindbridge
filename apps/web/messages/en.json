@@ -190,6 +190,8 @@
     "recentSessions": "Recent Sessions",
     "allSessions": "All sessions →",
     "viewLastAnalysis": "View last analysis",
+    "viewAnalysis": "View Analysis",
+    "preparingAnalysis": "Preparing Analysis...",
     "analyzingBanner": "Mira is analyzing your session — this usually takes a minute…",
     "analyzingInsight": "Mira is preparing your insight, almost ready…",
     "noSessionsYet": "No sessions yet. Start your first — Mira is waiting.",
@@ -489,7 +491,8 @@
     "failedToUpdateProfile": "Failed to update profile",
     "failedToChangePassword": "Failed to change password",
     "failedToDisconnect": "Failed to disconnect",
-    "failedToDeleteAccount": "Failed to delete account"
+    "failedToDeleteAccount": "Failed to delete account",
+    "logout": "Log out"
   },
   "aboutMe": {
     "title": "About Me",

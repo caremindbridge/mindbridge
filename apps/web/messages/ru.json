@@ -190,6 +190,8 @@
     "recentSessions": "Последние сессии",
     "allSessions": "Все сессии →",
     "viewLastAnalysis": "Посмотреть анализ",
+    "viewAnalysis": "Смотреть анализ",
+    "preparingAnalysis": "Подготовка анализа...",
     "analyzingBanner": "Мира анализирует сессию — обычно это занимает минуту…",
     "analyzingInsight": "Мира готовит инсайт, уже скоро…",
     "noSessionsYet": "Пока нет сессий. Начни первую — Мира уже ждёт.",
@@ -489,7 +491,8 @@
     "failedToUpdateProfile": "Не удалось обновить профиль",
     "failedToChangePassword": "Не удалось изменить пароль",
     "failedToDisconnect": "Не удалось отключиться",
-    "failedToDeleteAccount": "Не удалось удалить аккаунт"
+    "failedToDeleteAccount": "Не удалось удалить аккаунт",
+    "logout": "Выйти"
   },
   "aboutMe": {
     "title": "О себе",

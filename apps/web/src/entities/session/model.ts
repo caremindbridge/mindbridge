@@ -9,7 +9,8 @@ export function useSessions(page = 1, limit = 20) {
   return useQuery<PaginatedSessionsDto>({
     queryKey: ['sessions', page, limit],
     queryFn: () => getSessions(page, limit),
-    staleTime: 30000,
+    staleTime: 0,
+    refetchOnMount: 'always',
     refetchInterval: (query) => {
       const sessions = (query.state.data as PaginatedSessionsDto | undefined)?.sessions;
       if (!sessions) return false;

@@ -337,6 +337,16 @@ nav,
   box-shadow: 0 1px 4px rgba(196, 133, 111, 0.18) inset;
 }
 
+/* Active tab pill inside glass-nav */
+.tab-active {
+  background: rgba(247, 243, 238, 0.88);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) inset;
+}
+.dark .tab-active {
+  background: rgba(46, 40, 36, 0.88);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) inset;
+}
+
 /* === SLIM SCROLLBAR === */
 ::-webkit-scrollbar {
   width: 6px;

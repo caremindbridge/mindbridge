@@ -75,6 +75,9 @@ export const metadata: Metadata = {
     title: 'MindBridge',
     statusBarStyle: 'default',
   },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
 };
 
 export const viewport: Viewport = {

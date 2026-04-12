@@ -3,12 +3,14 @@
 import { UserRole } from '@mindbridge/types/src/user';
 import { format, isToday, isYesterday, startOfDay, subDays } from 'date-fns';
 import {
+  BarChart3,
   BookOpen,
   Brain,
   Lightbulb,
   Loader2,
   Moon,
   Phone,
+  Play,
   Sparkles,
   Sun,
   Wind,
@@ -183,7 +185,7 @@ export function DashboardPage() {
 
         {/* ── Mira Hero Card ── */}
         <div
-          className="rounded-2xl p-5"
+          className="rounded-3xl p-5"
           style={{
             background: 'linear-gradient(135deg, #B56756 0%, #C4856F 50%, #E0A88A 100%)',
           }}
@@ -192,23 +194,23 @@ export function DashboardPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
               <Sparkles className="h-4 w-4 text-white" />
             </div>
-            <span className="text-[13px] font-bold text-white">{t('miraName')}</span>
+            <span className="text-sm font-bold text-white">{t('miraName')}</span>
             <div className="h-2 w-2 rounded-full bg-[#4ADE80]" />
           </div>
           <div className="mt-2.5">
-            <h2 className="text-lg font-bold text-white">{t('miraReady')}</h2>
-            <p className="mt-1 text-[13px] text-white/80">{t('miraDesc')}</p>
+            <h2 className="text-[22px] font-bold leading-tight text-white">{t('miraReady')}</h2>
+            <p className="mt-1 text-xs text-white/75">{t('miraDesc')}</p>
           </div>
           <Link
             href="/dashboard/chat"
-            className="mt-3 flex h-11 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#C4856F] transition-opacity hover:opacity-90 active:opacity-80"
+            className="mt-3 flex h-11 items-center justify-center rounded-[22px] bg-white text-sm font-bold text-[#B56756] transition-opacity hover:opacity-90 active:opacity-80"
           >
             {t('startSessionCta')}
           </Link>
         </div>
 
         {/* ── Mood Check-in ── */}
-        <div className="rounded-xl border border-border/50 bg-card p-[18px] shadow-soft">
+        <div className="rounded-[20px] bg-card p-[18px] shadow-soft">
           <h3 className="mb-3.5 text-[15px] font-bold">{t('howAreYou')}</h3>
           <div className="flex justify-between">
             {QUICK_MOODS.map(({ emoji, value, key }) => (
@@ -241,11 +243,11 @@ export function DashboardPage() {
                       : !hasLoggedToday && 'hover:scale-110 active:scale-95',
                   )}
                 >
-                  <span className="text-[22px]">{emoji}</span>
+                  <span className="text-2xl">{emoji}</span>
                 </div>
                 <span
                   className={cn(
-                    'text-[11px] font-medium',
+                    'text-xs font-medium',
                     hasLoggedToday && todayMoodValue === value
                       ? 'text-primary font-semibold'
                       : 'text-muted-foreground',
@@ -266,7 +268,7 @@ export function DashboardPage() {
         {/* ── Quick Tools ── */}
         <div className="flex gap-2.5">
           {QUICK_TOOLS.map(({ icon: Icon, key, href, bg, color }) => {
-            const disabled = true;
+            const disabled = !href;
             const inner = (
               <div
                 className={cn(
@@ -281,7 +283,7 @@ export function DashboardPage() {
                     !disabled && 'transition-transform hover:scale-110 active:scale-95',
                   )}
                 >
-                  <Icon className={cn('h-[18px] w-[18px]', color)} />
+                  <Icon className={cn('h-5 w-5', color)} />
                 </div>
                 <span className="text-[11px] font-medium text-muted-foreground">{t(key)}</span>
                 {disabled && (
@@ -291,7 +293,7 @@ export function DashboardPage() {
                 )}
               </div>
             );
-            if (href) {
+            if (href && !disabled) {
               return (
                 <Link key={key} href={href} className="flex-1">
                   {inner}
@@ -307,7 +309,7 @@ export function DashboardPage() {
         </div>
 
         {/* ── This Week Stats ── */}
-        <div className="rounded-xl border border-border/50 bg-card px-4 py-[18px] shadow-soft">
+        <div className="rounded-[20px] bg-card px-4 py-[18px] shadow-soft">
           {/* Header */}
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-[13px] font-semibold">{t('thisWeek')}</h3>
@@ -360,38 +362,38 @@ export function DashboardPage() {
         </div>
 
         {/* ── Mira's Insight ── */}
-        <div className="rounded-2xl border border-border/50 bg-warm p-4">
+        <div className="flex flex-col gap-2 rounded-2xl border border-[#F0E4DE] bg-warm px-[14px] py-4 dark:border-[#3A332E]">
           <div className="flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
             <h3 className="text-[11px] font-semibold tracking-wide text-primary">
               {t('miraInsight')}
             </h3>
           </div>
-          {metricsLoading ? (
-            <div className="mt-2.5 space-y-1.5">
-              <Skeleton className="h-2.5 w-4/5 rounded-full" />
-              <Skeleton className="h-2.5 w-3/5 rounded-full" />
+          {metricsLoading && !hasAnalyzing ? (
+            <div className="flex flex-col gap-1.5">
+              <Skeleton className="h-2.5 w-4/5 rounded-[5px]" />
+              <Skeleton className="h-2.5 w-3/5 rounded-[5px]" />
             </div>
-          ) : insight ? (
-            <p className="mt-2 text-[13px] font-medium leading-relaxed text-foreground/80">
-              {insight}
-            </p>
           ) : hasAnalyzing ? (
-            <div className="mt-2.5">
-              <div className="space-y-1.5">
-                <Skeleton className="h-2.5 w-[85%] rounded-full" />
-                <Skeleton className="h-2.5 w-[65%] rounded-full" />
-                <Skeleton className="h-2.5 w-[45%] rounded-full" />
+            <>
+              <div className="flex flex-col gap-1.5">
+                <Skeleton className="h-2.5 w-[85%] rounded-[5px]" />
+                <Skeleton className="h-2.5 w-[65%] rounded-[5px]" />
+                <Skeleton className="h-2.5 w-[45%] rounded-[5px]" />
               </div>
-              <div className="mt-3 flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 <Loader2 className="h-3 w-3 animate-spin text-primary" />
                 <p className="text-[11px] font-medium text-muted-foreground">
                   {t('analyzingInsight')}
                 </p>
               </div>
-            </div>
+            </>
+          ) : insight ? (
+            <p className="text-[13px] font-medium leading-[1.5] text-foreground/80">
+              {insight}
+            </p>
           ) : (
-            <p className="mt-2 text-[13px] font-medium text-muted-foreground">
+            <p className="text-[13px] font-medium text-muted-foreground">
               {t('defaultInsight')}
             </p>
           )}
@@ -403,7 +405,7 @@ export function DashboardPage() {
             <h3 className="text-[15px] font-bold">{t('recentSession')}</h3>
             <Link
               href="/dashboard/chat"
-              className="text-[13px] font-semibold text-primary hover:underline"
+              className="text-[13px] font-medium text-primary hover:underline"
             >
               {t('viewAll')}
             </Link>
@@ -414,7 +416,7 @@ export function DashboardPage() {
           ) : lastSession ? (
             <RecentSessionCard session={lastSession} />
           ) : (
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-border/50 bg-card py-8 text-center shadow-soft">
+            <div className="flex flex-col items-center gap-3 rounded-[20px] bg-card py-8 text-center shadow-soft">
               <p className="text-sm text-muted-foreground">{t('noSessionsYet')}</p>
               <Button asChild size="sm">
                 <Link href="/dashboard/chat">{t('startFirstSession')}</Link>
@@ -440,47 +442,69 @@ function RecentSessionCard({
   const title = session.title ?? tc('cbtSession');
   const isActive = session.status === 'active';
   const isAnalyzing = session.status === 'analyzing' || session.status === 'ended';
+  const isCompleted = session.status === 'completed';
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card p-4 shadow-soft">
+    <div className="flex flex-col gap-3.5 rounded-[20px] bg-card p-[18px] shadow-soft">
+      {/* ── Top row: icon + title + badge ── */}
       <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-muted">
-          <Brain className="h-5 w-5 text-muted-foreground" />
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[#F0E4DE] dark:bg-[#3A2E28]">
+          <Brain className="h-5 w-5 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">{title}</p>
+          <p className="truncate text-sm font-bold">{title}</p>
           <p className="text-xs text-muted-foreground">{dateLabel}</p>
         </div>
-        {isAnalyzing ? (
-          <span className="flex items-center gap-1.5 rounded-full bg-blush-100 px-2.5 py-0.5 text-xs font-medium text-blush-600">
-            <Loader2 className="h-3 w-3 animate-spin" />
-            {tc('statusAnalyzing')}
+        {isActive ? (
+          <span className="rounded-[10px] bg-green-light px-2.5 py-1 text-[11px] font-semibold text-green-accent">
+            {tc('statusActive')}
+          </span>
+        ) : isAnalyzing ? (
+          <span className="flex items-center gap-1.5 rounded-[10px] border border-[#F0E4DE] bg-warm px-2.5 py-1 dark:border-[#3A332E]">
+            <Loader2 className="h-3 w-3 animate-spin text-primary" />
+            <span className="text-[11px] font-semibold text-primary">
+              {tc('statusAnalyzing')}
+            </span>
           </span>
         ) : (
-          <span
-            className={cn(
-              'rounded-full px-2.5 py-0.5 text-xs font-medium',
-              isActive
-                ? 'bg-green-light text-green-accent'
-                : 'bg-muted text-muted-foreground',
-            )}
-          >
-            {isActive ? tc('statusActive') : 'CBT'}
+          <span className="rounded-[10px] bg-[#F0E4DE] px-2.5 py-1 text-[11px] font-semibold text-primary dark:bg-[#3A2E28]">
+            CBT
           </span>
         )}
       </div>
 
-      <Link
-        href={`/dashboard/chat/${session.id}`}
-        className={cn(
-          'mt-3 flex h-10 items-center justify-center rounded-full text-sm font-semibold transition-opacity hover:opacity-90',
-          isActive
-            ? 'bg-green-accent text-white'
-            : 'bg-primary text-primary-foreground',
-        )}
-      >
-        {isActive ? t('continueSession') : t('viewLastAnalysis')}
-      </Link>
+      {/* ── Content area (varies by state) ── */}
+      {isAnalyzing && (
+        <div className="flex flex-col gap-1.5">
+          <Skeleton className="h-2.5 w-[85%] rounded-[5px]" />
+          <Skeleton className="h-2.5 w-[65%] rounded-[5px]" />
+          <Skeleton className="h-2.5 w-[45%] rounded-[5px]" />
+        </div>
+      )}
+
+      {/* ── Action button ── */}
+      {isActive ? (
+        <Link
+          href={`/dashboard/chat/${session.id}`}
+          className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-[#7A9E7E] text-sm font-bold text-white transition-opacity hover:opacity-90"
+        >
+          <Play className="h-3.5 w-3.5" />
+          {t('continueSession')}
+        </Link>
+      ) : isAnalyzing ? (
+        <div className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-[#EDE7E1] text-sm font-semibold text-[#B0A098] dark:bg-[#3A332E] dark:text-[#7A6F65]">
+          <BarChart3 className="h-3.5 w-3.5" />
+          {t('preparingAnalysis')}
+        </div>
+      ) : (
+        <Link
+          href={`/dashboard/chat/${session.id}/analysis`}
+          className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-primary text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          <BarChart3 className="h-3.5 w-3.5" />
+          {t('viewAnalysis')}
+        </Link>
+      )}
     </div>
   );
 }
