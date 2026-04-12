@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getAuthToken } from '@/shared/api/client';
 import { env } from '@/shared/config/env';
@@ -53,17 +53,28 @@ export function useVoiceRecorder(
   const onTranscribedRef = useRef(onTranscribed);
   onTranscribedRef.current = onTranscribed;
 
+  const mountedRef = useRef(true);
+
   const cleanupRefs = useCallback(() => {
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     if (timerRef.current !== null) clearInterval(timerRef.current);
     streamRef.current?.getTracks().forEach((t) => t.stop());
     audioCtxRef.current?.close().catch(() => {});
+    chunksRef.current = [];
     streamRef.current = null;
     audioCtxRef.current = null;
     mediaRecorderRef.current = null;
     rafRef.current = null;
     timerRef.current = null;
   }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      cleanupRefs();
+    };
+  }, [cleanupRefs]);
 
   const start = useCallback(async () => {
     setError(null);
@@ -109,26 +120,27 @@ export function useVoiceRecorder(
       startTimeRef.current = Date.now();
       setDuration(0);
       timerRef.current = setInterval(() => {
-        setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
+        if (mountedRef.current) setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
       }, 1000);
 
       // Waveform loop at ~30fps
       const frequencyBuffer = new Uint8Array(analyser.frequencyBinCount);
       let frame = 0;
       const tick = () => {
-        rafRef.current = requestAnimationFrame(tick);
         frame++;
-        if (frame % 2 !== 0) return; // ~30 fps
-        analyser.getByteFrequencyData(frequencyBuffer);
-        const bars = 32;
-        const step = Math.floor(frequencyBuffer.length / bars);
-        const out: number[] = [];
-        for (let i = 0; i < bars; i++) {
-          let sum = 0;
-          for (let j = 0; j < step; j++) sum += frequencyBuffer[i * step + j];
-          out.push(sum / step / 255);
+        if (frame % 2 === 0) {
+          analyser.getByteFrequencyData(frequencyBuffer);
+          const bars = 32;
+          const step = Math.floor(frequencyBuffer.length / bars);
+          const out: number[] = [];
+          for (let i = 0; i < bars; i++) {
+            let sum = 0;
+            for (let j = 0; j < step; j++) sum += frequencyBuffer[i * step + j];
+            out.push(sum / step / 255);
+          }
+          if (mountedRef.current) setLevels(out);
         }
-        setLevels(out);
+        rafRef.current = requestAnimationFrame(tick);
       };
       tick();
 
@@ -138,7 +150,7 @@ export function useVoiceRecorder(
       if (navigator.vibrate) navigator.vibrate(10);
     } catch (e) {
       const name = e instanceof Error ? e.name : '';
-      setError(name === 'NotAllowedError' ? 'micDenied' : 'micError');
+      setError(name === 'NotAllowedError' ? 'micDenied' : 'micUnavailable');
       setState('idle');
     }
   }, []);
