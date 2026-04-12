@@ -129,6 +129,7 @@ export class ChatController {
     @Body('language') language?: string,
   ) {
     if (!file) throw new BadRequestException('No audio file provided');
+    if (language && language.length > 10) throw new BadRequestException('Invalid language code');
     return this.chatService.transcribeAudio(file.buffer, file.mimetype, user.id, language);
   }
 }
