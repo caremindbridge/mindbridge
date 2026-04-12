@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,8 +9,11 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 import { CurrentUser } from '@common/decorators/current-user.decorator';
@@ -111,5 +115,20 @@ export class ChatController {
   ) {
     await this.chatService.deleteSession(id, user.id);
     return { success: true };
+  }
+
+  @Post('transcribe')
+  @UseInterceptors(
+    FileInterceptor('audio', {
+      limits: { fileSize: 25 * 1024 * 1024 }, // 25 MB — Whisper hard limit
+    }),
+  )
+  async transcribe(
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: { id: string },
+    @Body('language') language?: string,
+  ) {
+    if (!file) throw new BadRequestException('No audio file provided');
+    return this.chatService.transcribeAudio(file.buffer, file.mimetype, user.id, language);
   }
 }
