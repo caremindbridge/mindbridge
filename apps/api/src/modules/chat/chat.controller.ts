@@ -14,7 +14,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { SessionStatusEnum } from './entities/session.entity';
+import { SessionCategoryEnum, SessionStatusEnum } from './entities/session.entity';
 import { ChatService } from './chat.service';
 
 class SendMessageBodyDto {
@@ -39,11 +39,35 @@ export class ChatController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('status') status?: SessionStatusEnum,
+    @Query('category') category?: SessionCategoryEnum,
   ) {
     const p = page ? parseInt(page, 10) : 1;
     const l = limit ? parseInt(limit, 10) : 20;
-    const { sessions, total } = await this.chatService.getSessions(user.id, p, l, status);
-    return { sessions, total, page: p, limit: l };
+    const { sessions, total } = await this.chatService.getSessions(user.id, p, l, status, category);
+
+    return {
+      sessions: sessions.map((s) => ({
+        id: s.id,
+        status: s.status,
+        title: s.title,
+        category: s.category,
+        userId: s.userId,
+        createdAt: s.createdAt,
+        updatedAt: s.updatedAt,
+        endedAt: s.endedAt,
+        analysis: s.analysis
+          ? {
+              anxietyLevel: s.analysis.anxietyLevel,
+              depressionLevel: s.analysis.depressionLevel,
+              moodOutcome: s.analysis.moodOutcome,
+              shortSummary: s.analysis.shortSummary,
+            }
+          : null,
+      })),
+      total,
+      page: p,
+      limit: l,
+    };
   }
 
   @Get('sessions/:id')

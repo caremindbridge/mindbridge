@@ -347,6 +347,14 @@ nav,
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) inset;
 }
 
+/* Active session card gradient */
+.active-session-card {
+  background: linear-gradient(210deg, #DDF0DE 0%, #F5FBF5 100%);
+}
+.dark .active-session-card {
+  background: linear-gradient(210deg, #1E2E1F 0%, #222E22 100%);
+}
+
 /* === SLIM SCROLLBAR === */
 ::-webkit-scrollbar {
   width: 6px;

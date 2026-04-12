@@ -13,11 +13,11 @@ import {
   PreferencesSection,
   ProfileSection,
   SecuritySection,
-  SubscriptionSection,
+  // SubscriptionSection, // commented out for MVP
   TherapistConnectionSection,
 } from '@/features/settings';
 import { analytics } from '@/shared/lib/analytics';
-import { Button, Card, CardContent } from '@/shared/ui';
+import { Card, CardContent } from '@/shared/ui';
 
 export function SettingsPage() {
   const t = useTranslations('settings');
@@ -37,47 +37,50 @@ export function SettingsPage() {
   const isTherapist = user.role === 'therapist';
 
   return (
-    <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">
+    <div className="flex-1 overflow-x-hidden overflow-y-auto pb-24 lg:pb-0">
+      <div className="w-full p-4 md:p-6">
+        <h1 className="mb-6 hidden text-2xl font-semibold tracking-tight lg:block">
+          {t('title')}
+        </h1>
 
-      <div className="p-4 md:p-6">
-      <h1 className="mb-6 hidden lg:block text-2xl font-semibold tracking-tight">{t('title')}</h1>
+        <div className="grid gap-5 lg:grid-cols-2">
+          {/* Left column */}
+          <div className="space-y-5">
+            {/* Mode switcher — mobile only, therapists only */}
+            {isTherapist && (
+              <Card className="lg:hidden">
+                <CardContent className="p-4">
+                  <ModeSwitcher />
+                </CardContent>
+              </Card>
+            )}
+            <ProfileSection user={user} onUpdated={mutate} />
+            {/* <SubscriptionSection /> */}
+            <SecuritySection user={user} />
+            {!isTherapist && <TherapistConnectionSection />}
+          </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        {/* Left column */}
-        <div className="space-y-5">
-          {/* Mode switcher — mobile only, therapists only */}
-          {isTherapist && (
-            <Card className="lg:hidden">
-              <CardContent className="p-4">
-                <ModeSwitcher />
-              </CardContent>
-            </Card>
-          )}
-          <ProfileSection user={user} onUpdated={mutate} />
-          <SubscriptionSection />
-          <SecuritySection user={user} />
-          {!isTherapist && <TherapistConnectionSection />}
+          {/* Right column */}
+          <div className="space-y-5">
+            <PreferencesSection />
+            <DangerSection />
+          </div>
+        </div>
 
-          {/* Logout — mobile only */}
-          <Card className="lg:hidden">
+        {/* Logout — mobile only, always at the very bottom */}
+        <div className="mt-5 lg:hidden">
+          <Card>
             <CardContent className="p-0">
-              <div className="flex items-center justify-between px-5 py-4">
-                <p className="text-sm font-medium">{t('logout')}</p>
-                <Button variant="outline" size="sm" onClick={handleLogout} className="shrink-0 gap-1.5">
-                  <LogOut className="h-4 w-4" />
-                  {t('logout')}
-                </Button>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 px-5 py-4 text-left text-destructive transition-colors active:bg-muted/50"
+              >
+                <LogOut className="h-4 w-4 shrink-0" />
+                <span className="text-sm font-medium">{t('logout')}</span>
+              </button>
             </CardContent>
           </Card>
         </div>
-
-        {/* Right column */}
-        <div className="space-y-5">
-          <PreferencesSection />
-          <DangerSection />
-        </div>
-      </div>
       </div>
     </div>
   );

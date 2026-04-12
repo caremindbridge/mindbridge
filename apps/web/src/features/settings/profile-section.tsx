@@ -53,21 +53,21 @@ export function ProfileSection({ user, onUpdated }: ProfileSectionProps) {
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{displayName}</p>
-              <p className="text-xs text-muted-foreground">{t('joinedOn', { date: joinedDate })}</p>
+              <p className="truncate text-xs text-muted-foreground">{t('joinedOn', { date: joinedDate })}</p>
             </div>
           </div>
 
           {/* Name */}
           <div className="px-5 py-3 space-y-2">
             <p className="text-xs font-medium text-muted-foreground">{t('name')}</p>
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t('namePlaceholder')}
-                className="h-9 flex-1 text-sm"
+                className="h-9 min-w-0 flex-1 text-sm"
               />
               <Button
                 size="sm"
@@ -81,9 +81,9 @@ export function ProfileSection({ user, onUpdated }: ProfileSectionProps) {
           </div>
 
           {/* Email */}
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="px-5 py-4">
             <p className="text-sm font-medium">{t('email')}</p>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <p className="mt-0.5 break-all text-sm text-muted-foreground">{user.email}</p>
           </div>
 
           {/* Auth provider */}

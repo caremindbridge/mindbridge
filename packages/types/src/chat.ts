@@ -5,6 +5,13 @@ export enum SessionStatus {
   Completed = 'completed',
 }
 
+export enum SessionCategory {
+  CBT = 'cbt',
+  Interpersonal = 'interpersonal',
+  Mindfulness = 'mindfulness',
+  Wellness = 'wellness',
+}
+
 export enum MessageRole {
   User = 'user',
   Assistant = 'assistant',
@@ -24,11 +31,17 @@ export interface SessionDto {
   id: string;
   status: SessionStatus;
   title: string | null;
+  category: SessionCategory | null;
   userId: string;
   createdAt: string;
   updatedAt: string;
   endedAt: string | null;
-  analysis?: { anxietyLevel: number | null; depressionLevel: number | null } | null;
+  analysis?: {
+    anxietyLevel: number | null;
+    depressionLevel: number | null;
+    moodOutcome: string | null;
+    shortSummary: string | null;
+  } | null;
 }
 
 export interface SessionWithMessagesDto extends SessionDto {
@@ -62,6 +75,8 @@ export interface SessionAnalysisDto {
   therapistBrief: string;
   moodInsight?: string | null;
   patientSummary?: string | null;
+  category?: SessionCategory | null;
+  moodOutcome?: string | null;
   createdAt: string;
 }
 

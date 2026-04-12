@@ -83,6 +83,15 @@ export class SessionAnalysis {
   @Column({ type: 'text', nullable: true })
   patientSummary!: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  category!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  moodOutcome!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  shortSummary!: string | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

@@ -224,7 +224,11 @@ Return ONLY valid JSON with this exact structure:
   "copingStrategies": ["string - coping strategies mentioned or practiced, e.g. breathing exercises, cognitive reframing, journaling, exercise"],
   "riskFlags": "null if no concerns, or a string describing warning signals such as suicidal ideation, self-harm mentions, or acute crisis",
   "moodInsight": "string - 1 to 2 sentence observation about the patient's emotional state for their dashboard. Write TO the patient using 'ты'/'you'. Specific to this session, not generic.",
-  "patientSummary": "string - A warm personal message FROM Mira TO the patient, written in Mira's voice. 3-5 sentences. This is NOT a clinical summary."
+  "patientSummary": "string - A warm personal message FROM Mira TO the patient, written in Mira's voice. 3-5 sentences. This is NOT a clinical summary.",
+  "category": "string - classify the session into exactly ONE of these categories based on what was discussed: 'cbt' (cognitive behavioral therapy techniques, thought records, cognitive distortions), 'interpersonal' (relationships, communication, social dynamics, loneliness), 'mindfulness' (meditation, breathing, grounding, present-moment awareness), 'wellness' (general wellbeing, self-care, sleep, gratitude, lifestyle). Choose the BEST fit.",
+  "moodOutcome": "string - a SHORT label describing the patient's emotional state at the end of the session. MUST be exactly one of these values — pick the closest match based on where the patient actually landed emotionally, not where you wish they had landed. NEVER invent new values. Positive shift: 'Feeling better', 'Calmer', 'Hopeful', 'Motivated', 'Grateful', 'Relaxed', 'Empowered'. Processing / neutral: 'Reflected', 'Exploring', 'Processing', 'Opened up'. Hard session but continuing: 'Working through it', 'Sitting with it', 'First steps'.",
+  "title": "string - 4 to 7 word title capturing the main theme of this session. Warm and specific, NOT clinical. No quotes, no punctuation at the end. Written in the SAME language as the patient. Examples (EN): 'Working through work anxiety', 'Processing a difficult breakup', 'Building boundaries with family'. Examples (RU): 'Работа с тревогой на работе', 'Принятие сложного расставания'.",
+  "shortSummary": "string - exactly 1 sentence (max 100 characters) describing what was explored in this session. Written warmly in second person (ты/you). No clinical language. Written in the SAME language as the patient. Examples (EN): 'We explored your anxiety around an upcoming job interview.', 'You shared difficult feelings about your relationship with your mother.' Examples (RU): 'Мы разобрали твою тревогу перед важным разговором с руководителем.'"
 }
 
 FIELD-SPECIFIC TONE RULES:
@@ -239,6 +243,11 @@ For patientSummary:
 - NEVER start with 'Ваша тревога...' or any clinical framing
 - Good openings: 'Сегодня было непросто, но...', 'Знаешь что меня зацепило сегодня...', 'Today I noticed something important...'
 
+For title and shortSummary:
+- title: capture the specific theme, not a generic description. "Processing work stress" beats "Session about feelings". No quotes around it.
+- shortSummary: must fit on one line in a mobile card. Be concrete about what was actually discussed.
+- Both MUST be in the patient's language (Russian if patient wrote in Russian, English if English)
+
 For progressSummary and recommendations:
 - Address the patient as 'ты' (Russian) or 'you' (English)
 - No third person ('пациент', 'the patient')
@@ -251,7 +260,8 @@ For therapistBrief:
 LANGUAGE RULES (strictly enforced):
 - keyEmotions values MUST always be from the fixed English list above — never translate them
 - ALL other text fields MUST be in the same language as the patient's messages. Never mix languages.
-- If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, patientSummary, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
+- If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, patientSummary, title, shortSummary, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
+- moodOutcome values are ALWAYS in English regardless of session language (they are UI keys)
 - cognitiveDistortions.type MUST also use the patient's language. Russian translations to use:
   Catastrophizing → Катастрофизация | All-or-Nothing Thinking → Чёрно-белое мышление
   Mind Reading → Чтение мыслей | Fortune Telling → Предсказание будущего

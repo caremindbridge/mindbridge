@@ -20,6 +20,13 @@ export enum SessionStatusEnum {
   Completed = 'completed',
 }
 
+export enum SessionCategoryEnum {
+  CBT = 'cbt',
+  Interpersonal = 'interpersonal',
+  Mindfulness = 'mindfulness',
+  Wellness = 'wellness',
+}
+
 @Entity('sessions')
 export class Session {
   @PrimaryGeneratedColumn('uuid')
@@ -30,6 +37,9 @@ export class Session {
 
   @Column({ type: 'varchar', nullable: true })
   title!: string | null;
+
+  @Column({ type: 'enum', enum: SessionCategoryEnum, nullable: true })
+  category!: SessionCategoryEnum | null;
 
   @Column()
   userId!: string;
@@ -43,10 +53,10 @@ export class Session {
   @OneToOne(() => SessionAnalysis, (analysis) => analysis.session, { cascade: true })
   analysis!: SessionAnalysis;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
   @Column({ type: 'timestamptz', nullable: true })

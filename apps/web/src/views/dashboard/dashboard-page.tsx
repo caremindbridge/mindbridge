@@ -24,6 +24,7 @@ import { useMoodMetrics } from '@/entities/dashboard';
 import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
 import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
+import { createSession } from '@/shared/api/client';
 import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
 import { Skeleton } from '@/shared/ui';
@@ -78,12 +79,23 @@ export function DashboardPage() {
   const router = useRouter();
   const [moodLoggedLocal, setMoodLoggedLocal] = useState(false);
   const [localMoodValue, setLocalMoodValue] = useState<number | null>(null);
+  const [startingSession, setStartingSession] = useState(false);
 
   // Theme state
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains('dark'));
   }, []);
+
+  const handleStartSession = async () => {
+    setStartingSession(true);
+    try {
+      const session = await createSession();
+      router.push(`/dashboard/chat/${session.id}`);
+    } catch {
+      setStartingSession(false);
+    }
+  };
 
   const toggleTheme = () => {
     const newDark = !isDark;
@@ -201,12 +213,14 @@ export function DashboardPage() {
             <h2 className="text-[22px] font-bold leading-tight text-white">{t('miraReady')}</h2>
             <p className="mt-1 text-xs text-white/75">{t('miraDesc')}</p>
           </div>
-          <Link
-            href="/dashboard/chat"
-            className="mt-3 flex h-11 items-center justify-center rounded-[22px] bg-white text-sm font-bold text-[#B56756] transition-opacity hover:opacity-90 active:opacity-80"
+          <button
+            onClick={handleStartSession}
+            disabled={startingSession}
+            className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-[22px] bg-white text-sm font-bold text-[#B56756] transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60"
           >
+            {startingSession && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             {t('startSessionCta')}
-          </Link>
+          </button>
         </div>
 
         {/* ── Mood Check-in ── */}
@@ -444,7 +458,13 @@ export function DashboardPage() {
 function RecentSessionCard({
   session,
 }: {
-  session: { id: string; status: string; title?: string | null; createdAt: string };
+  session: {
+    id: string;
+    status: string;
+    title?: string | null;
+    createdAt: string;
+    analysis?: { moodOutcome: string | null; shortSummary: string | null } | null;
+  };
 }) {
   const t = useTranslations('dashboard');
   const tc = useTranslations('chat');
@@ -455,6 +475,7 @@ function RecentSessionCard({
   const isActive = session.status === 'active';
   const isAnalyzing = session.status === 'analyzing' || session.status === 'ended';
   const isCompleted = session.status === 'completed';
+  const shortSummary = session.analysis?.shortSummary;
 
   return (
     <div className="flex flex-col gap-3.5 rounded-[20px] bg-card p-[18px] shadow-soft">
@@ -486,13 +507,17 @@ function RecentSessionCard({
       </div>
 
       {/* ── Content area (varies by state) ── */}
-      {isAnalyzing && (
+      {isAnalyzing ? (
         <div className="flex flex-col gap-1.5">
           <Skeleton className="h-2.5 w-[85%] rounded-[5px]" />
           <Skeleton className="h-2.5 w-[65%] rounded-[5px]" />
           <Skeleton className="h-2.5 w-[45%] rounded-[5px]" />
         </div>
-      )}
+      ) : isCompleted && shortSummary ? (
+        <p className="text-[12px] leading-[1.5] text-muted-foreground line-clamp-2">
+          {shortSummary}
+        </p>
+      ) : null}
 
       {/* ── Action button ── */}
       {isActive ? (

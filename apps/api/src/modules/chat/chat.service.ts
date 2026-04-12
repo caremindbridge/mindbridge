@@ -22,7 +22,7 @@ import { UsageService } from '../subscription/usage.service';
 
 import { Message, MessageRoleEnum } from './entities/message.entity';
 import { SessionAnalysis } from './entities/session-analysis.entity';
-import { Session, SessionStatusEnum } from './entities/session.entity';
+import { Session, SessionCategoryEnum, SessionStatusEnum } from './entities/session.entity';
 
 @Injectable()
 export class ChatService {
@@ -43,6 +43,19 @@ export class ChatService {
   ) {}
 
   async createSession(userId: string): Promise<Session> {
+    // Auto-end any other active sessions before starting a new one
+    const activeSessions = await this.sessionRepo.find({
+      where: { userId, status: SessionStatusEnum.Active },
+    });
+    for (const s of activeSessions) {
+      s.status = SessionStatusEnum.Ended;
+      s.endedAt = new Date();
+      await this.sessionRepo.save(s);
+      this.generateAnalysis(s.id).catch((err) => {
+        this.logger.error(`Auto-analysis error for session ${s.id}:`, err);
+      });
+    }
+
     const session = this.sessionRepo.create({ userId, status: SessionStatusEnum.Active });
     return this.sessionRepo.save(session);
   }
@@ -52,12 +65,15 @@ export class ChatService {
     page = 1,
     limit = 20,
     status?: SessionStatusEnum,
+    category?: SessionCategoryEnum,
   ): Promise<{ sessions: Session[]; total: number }> {
     const where: Record<string, unknown> = { userId };
     if (status) where.status = status;
+    if (category) where.category = category;
 
     const [sessions, total] = await this.sessionRepo.findAndCount({
       where,
+      relations: ['analysis'],
       order: { createdAt: 'DESC' },
       skip: (page - 1) * limit,
       take: limit,
@@ -300,10 +316,27 @@ export class ChatService {
         riskFlags: typeof parsed.riskFlags === 'string' ? parsed.riskFlags : null,
         moodInsight: typeof parsed.moodInsight === 'string' ? parsed.moodInsight : null,
         patientSummary: typeof parsed.patientSummary === 'string' ? parsed.patientSummary : null,
+        category: typeof parsed.category === 'string' ? parsed.category : null,
+        moodOutcome: typeof parsed.moodOutcome === 'string' ? parsed.moodOutcome : null,
+        shortSummary: typeof parsed.shortSummary === 'string' ? parsed.shortSummary.slice(0, 120) : null,
       });
       await this.analysisRepo.save(analysis);
 
-      await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Completed });
+      const validCategories = ['cbt', 'interpersonal', 'mindfulness', 'wellness'];
+      const sessionCategory = validCategories.includes(parsed.category)
+        ? (parsed.category as SessionCategoryEnum)
+        : null;
+
+      const sessionTitle =
+        typeof parsed.title === 'string' && parsed.title.trim().length > 0
+          ? parsed.title.trim().slice(0, 80)
+          : null;
+
+      await this.sessionRepo.update(sessionId, {
+        status: SessionStatusEnum.Completed,
+        category: sessionCategory,
+        title: sessionTitle,
+      });
 
       this.eventEmitter.emit(`chat.${sessionId}`, {
         type: 'analysis_ready',

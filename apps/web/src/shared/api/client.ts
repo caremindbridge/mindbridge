@@ -180,9 +180,11 @@ export async function getSessions(
   page = 1,
   limit = 20,
   status?: string,
+  category?: string,
 ): Promise<PaginatedSessionsDto> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   if (status) params.set('status', status);
+  if (category) params.set('category', category);
   return apiClient.get<PaginatedSessionsDto>(`/chat/sessions?${params}`);
 }
 

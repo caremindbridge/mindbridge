@@ -5,10 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getSession, getSessions } from '@/shared/api/client';
 
-export function useSessions(page = 1, limit = 20) {
+export function useSessions(
+  page = 1,
+  limit = 20,
+  status?: string,
+  category?: string,
+) {
   return useQuery<PaginatedSessionsDto>({
-    queryKey: ['sessions', page, limit],
-    queryFn: () => getSessions(page, limit),
+    queryKey: ['sessions', page, limit, status, category],
+    queryFn: () => getSessions(page, limit, status, category),
     staleTime: 0,
     refetchOnMount: 'always',
     refetchInterval: (query) => {
