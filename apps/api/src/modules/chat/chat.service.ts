@@ -8,6 +8,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -43,6 +44,7 @@ export class ChatService {
     private readonly eventEmitter: EventEmitter2,
     private readonly profileService: ProfileService,
     private readonly usageService: UsageService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createSession(userId: string): Promise<Session> {
@@ -426,7 +428,7 @@ export class ChatService {
 
     const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      headers: { Authorization: `Bearer ${this.configService.get<string>('openaiApiKey')}` },
       body: formData,
     });
 
