@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef } from 'react';
 
@@ -27,16 +27,8 @@ const PROSE =
 
 function MiraAvatar() {
   return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blush-100">
-      <span className="text-sm">🌿</span>
-    </div>
-  );
-}
-
-function UserAvatar() {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-      <User className="h-4 w-4" />
+    <div className="mira-avatar-gradient flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
+      <Sparkles className="h-3.5 w-3.5 text-white" />
     </div>
   );
 }
@@ -44,19 +36,27 @@ function UserAvatar() {
 function MessageBubble({ message }: { message: ChatMessage }) {
   if (message.role === 'user') {
     return (
-      <div className="message-bubble flex justify-end gap-3">
-        <div data-ph-mask className="max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+      <div className="message-bubble flex justify-end">
+        <div
+          data-ph-mask
+          className="user-bubble-gradient max-w-[260px] rounded-2xl rounded-tr-none px-3.5 py-3.5 text-sm shadow-[0_2px_6px_#C4856F20]"
+        >
+          <p className="whitespace-pre-wrap leading-relaxed text-white">{message.content}</p>
         </div>
-        <UserAvatar />
       </div>
     );
   }
 
   return (
-    <div className="message-bubble flex gap-3">
+    <div className="message-bubble flex gap-2.5">
       <MiraAvatar />
-      <div data-ph-mask className={cn('max-w-[85%] rounded-2xl rounded-bl-md bg-muted/60 px-4 py-2.5', PROSE)}>
+      <div
+        data-ph-mask
+        className={cn(
+          'max-w-[260px] rounded-2xl rounded-tl-none bg-white px-3.5 py-3.5 shadow-[0_1px_4px_#0000000A] dark:bg-[#221E1B] dark:shadow-[0_1px_4px_#00000020]',
+          PROSE,
+        )}
+      >
         <MarkdownMessage content={message.content} isStreaming={message.isStreaming} />
       </div>
     </div>
@@ -65,12 +65,12 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
 function TypingIndicator() {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-2.5">
       <MiraAvatar />
-      <div className="flex items-center gap-1 rounded-2xl bg-muted px-4 py-3">
-        <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:0ms]" />
-        <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:150ms]" />
-        <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:300ms]" />
+      <div className="flex items-center gap-1 rounded-2xl rounded-tl-none bg-white px-3.5 py-3.5 shadow-[0_1px_4px_#0000000A] dark:bg-[#221E1B] dark:shadow-[0_1px_4px_#00000020]">
+        <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[#C4856F]" />
+        <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[#C4856F]" />
+        <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[#C4856F]" />
       </div>
     </div>
   );
@@ -97,11 +97,11 @@ export function ChatWindow({ messages, isStreaming }: ChatWindowProps) {
 
   return (
     <ScrollArea className="flex-1">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
+      <div className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-5">
         {messages.length === 0 && !isStreaming && (
           <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blush-100 text-3xl">
-              🌿
+            <div className="mira-avatar-gradient mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <Sparkles className="h-7 w-7 text-white" />
             </div>
             <h3 className="mb-2 text-lg font-medium text-foreground">{t('chatEmptyTitle')}</h3>
             <p className="max-w-sm text-sm">{t('chatEmptyDesc')}</p>

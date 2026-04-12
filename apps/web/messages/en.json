@@ -99,7 +99,8 @@
     "ending": "Ending...",
     "analysisTitle": "Session Analysis",
     "analysisSubtitle": "CBT session insights and recommendations",
-    "anxiety": "Anxiety"
+    "anxiety": "Anxiety",
+    "sessionInProgress": "Session in progress"
   },
   "sessions": {
     "title": "Sessions",

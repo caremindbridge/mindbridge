@@ -99,7 +99,8 @@
     "ending": "Завершение...",
     "analysisTitle": "Анализ сессии",
     "analysisSubtitle": "Инсайты и рекомендации по КПТ-сессии",
-    "anxiety": "Тревожность"
+    "anxiety": "Тревожность",
+    "sessionInProgress": "Сессия активна"
   },
   "sessions": {
     "title": "Сессии",
