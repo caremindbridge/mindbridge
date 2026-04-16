@@ -209,11 +209,29 @@ export class ChatService {
 
       if (locale === 'ru') {
         systemPrompt +=
-          '\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST respond ONLY in Russian (Русский язык). ' +
-          'All your messages, questions, suggestions, and exercises must be in Russian. ' +
-          'Do NOT use English under any circumstances, even though this system prompt is in English. ' +
-          'Address the patient naturally in Russian using "ты" unless they prefer "вы". ' +
-          'Use Russian names for therapy techniques where possible (КПТ instead of CBT).';
+          '\n\n# RUSSIAN LANGUAGE — CRITICAL\n\n' +
+          'You MUST respond ONLY in Russian. Do NOT use English at all, even though this system prompt is in English.\n\n' +
+          'Address the patient using "ты". Use Russian therapy terms: КПТ, тревожность, когнитивные искажения, катастрофизация.\n\n' +
+          '## Grammar quality — write as a native Russian speaker, not a translation:\n\n' +
+          '**Forbidden — English calques and unnatural constructions:**\n' +
+          '- "делать смысл" → "иметь смысл"\n' +
+          '- "в конце дня" (literal "at the end of the day") → "в итоге" / "в конечном счёте"\n' +
+          '- "это является правдой" → "это правда"\n' +
+          '- "принимать во внимание факт, что" → "учитывая, что"\n' +
+          '- "я слышу тебя говорящего" → "я слышу, что ты говоришь"\n\n' +
+          '**Forbidden — bookish/formal words in conversation:**\n' +
+          '- данный → этот\n' +
+          '- осуществлять → делать\n' +
+          '- представлять собой → быть\n' +
+          '- в настоящее время → сейчас\n' +
+          '- замечательно / превосходно → хорошо / отлично (unless sarcastic)\n\n' +
+          '**Verb aspects — use correctly:**\n' +
+          '- Imperfective for ongoing/repeated: "ты часто думаешь об этом?" (not "подумываешь")\n' +
+          '- Perfective for completed single action: "расскажи мне" (not "рассказывай")\n\n' +
+          '**Word order — Russian stress falls on the last meaningful word:**\n' +
+          '- Put new/important information at the end of the sentence\n' +
+          '- Omit subject pronouns when context is clear: "знаешь что?" not "ты знаешь что?"\n\n' +
+          'Читай вслух мысленно каждое предложение — если звучит как перевод, перепиши.';
       }
 
       let fullResponse = '';
