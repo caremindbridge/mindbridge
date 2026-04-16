@@ -25,11 +25,11 @@ export function LandingFooter() {
                   {t('features')}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="#pricing" className="transition-colors hover:text-foreground">
                   {t('pricing')}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="#therapists" className="transition-colors hover:text-foreground">
                   {t('forTherapists')}

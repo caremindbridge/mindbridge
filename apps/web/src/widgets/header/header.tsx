@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui';
 import { LogoutButton } from '@/features/auth';
-import { LanguageSwitcher } from '@/features/locale';
 import { Logo } from '@/shared/ui/logo';
 
 interface HeaderProps {
@@ -31,7 +30,6 @@ export function Header({ user }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <LanguageSwitcher />
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

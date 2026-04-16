@@ -30,7 +30,7 @@ export function HeroSection() {
           <Link href="/login">{t('cta')}</Link>
         </Button>
 
-        <p className="text-sm text-muted-foreground">{t('note')}</p>
+        {/* <p className="text-sm text-muted-foreground">{t('note')}</p> */}
 
         {/* Founder quote */}
         <div className="mx-auto max-w-2xl">

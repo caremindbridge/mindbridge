@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 
 import { siteConfig } from '@/shared/lib/site-config';
-
-import { AuthLocaleToggle } from '@/features/locale';
 import { ForgotPasswordPage } from '@/views/auth/forgot-password-page';
 
 const isRu = siteConfig.forcedLocale === 'ru';
@@ -15,9 +13,6 @@ export const metadata: Metadata = {
 export default function ForgotPassword() {
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="absolute right-4 top-4">
-        <AuthLocaleToggle />
-      </div>
       <ForgotPasswordPage />
     </div>
   );

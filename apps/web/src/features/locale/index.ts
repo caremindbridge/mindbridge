@@ -1,2 +1,1 @@
-export * from './auth-locale-toggle';
-export * from './language-switcher';
+export * from './ru-redirect-banner';

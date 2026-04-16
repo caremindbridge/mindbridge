@@ -294,15 +294,15 @@
       "forTherapists": "For Therapists",
       "pricing": "Pricing",
       "login": "Log in",
-      "register": "Start free",
+      "register": "Sign up",
       "dashboard": "Go to Dashboard"
     },
     "hero": {
       "line1": "Anxiety doesn't wait for your next session.",
       "line2": "Neither does Mira.",
       "subtitle": "Talk to Mira when it's hard. She'll listen, help you untangle your thoughts, and won't say \"just don't think about it.\"",
-      "cta": "Try free",
-      "note": "No credit card. 7 days. 50 messages.",
+      "cta": "Talk to Mira",
+      "note": "",
       "founderQuote": "A year ago I was lying on the floor of an empty apartment in Ireland, unable to breathe. Divorce, panic attacks, antidepressants. Therapy helped — once a week. The other 6 days I'd open an AI chat just to get the thoughts out of my head. It didn't replace my therapist — but it filled the void between sessions. I built MindBridge so that void wouldn't be so unbearable for anyone.",
       "founderName": "Alex, Founder"
     },
@@ -464,7 +464,7 @@
     },
     "cta": {
       "title": "You don't have to handle this alone.",
-      "subtitle": "Free. No credit card. 50 messages on us.",
+      "subtitle": "Mira is here whenever you need her.",
       "button": "Talk to Mira",
       "disclaimer": "Mira is an AI companion trained in CBT techniques. She's here to support you between sessions — not to diagnose or treat. If you're in crisis, please call a crisis line or go to your nearest emergency room."
     },

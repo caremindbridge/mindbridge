@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { useUser } from '@/entities/user/model';
-import { AuthLocaleToggle } from '@/features/locale';
 import { ThemeToggle } from '@/features/theme';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
@@ -44,14 +43,13 @@ export function LandingHeader() {
           <Link href="#therapists" className="transition-colors hover:text-foreground">
             {t('forTherapists')}
           </Link>
-          <Link href="#pricing" className="transition-colors hover:text-foreground">
+          {/* <Link href="#pricing" className="transition-colors hover:text-foreground">
             {t('pricing')}
-          </Link>
+          </Link> */}
         </nav>
 
         {/* Desktop right actions */}
         <div className="hidden items-center gap-2 md:flex">
-          <AuthLocaleToggle />
           <ThemeToggle />
           {!isLoading && (
             <>
@@ -75,9 +73,8 @@ export function LandingHeader() {
           )}
         </div>
 
-        {/* Mobile: locale toggle + hamburger */}
+        {/* Mobile: hamburger */}
         <div className="flex items-center gap-1 md:hidden">
-          <AuthLocaleToggle />
           <button
             className="rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setOpen((v) => !v)}

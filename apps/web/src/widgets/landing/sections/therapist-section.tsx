@@ -1,11 +1,11 @@
 'use client';
 
 import { Check } from 'lucide-react';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 import { useFadeIn } from '@/shared/hooks/use-fade-in';
-import { Button } from '@/shared/ui/button';
+// import { Button } from '@/shared/ui/button';
 
 export function TherapistSection() {
   const t = useTranslations('landing.therapists');
@@ -13,38 +13,38 @@ export function TherapistSection() {
 
   const bullets = [t('b1'), t('b2'), t('b3'), t('b4')];
 
-  const plans = [
-    {
-      name: t('t1Name'),
-      price: t('t1Price'),
-      period: t('t1Period'),
-      desc: t('t1Desc'),
-      features: [t('t1F1'), t('t1F2'), t('t1F3'), t('t1F4')],
-      cta: t('t1Cta'),
-      href: '/register?role=therapist',
-      highlight: false,
-    },
-    {
-      name: t('t2Name'),
-      price: t('t2Price'),
-      period: t('t2Period'),
-      desc: t('t2Desc'),
-      features: [t('t2F1'), t('t2F2'), t('t2F3'), t('t2F4')],
-      cta: t('t2Cta'),
-      href: '/register?role=therapist',
-      highlight: true,
-    },
-    {
-      name: t('t3Name'),
-      price: t('t3Price'),
-      period: t('t3Period'),
-      desc: t('t3Desc'),
-      features: [t('t3F1'), t('t3F2'), t('t3F3'), t('t3F4')],
-      cta: t('t3Cta'),
-      href: 'mailto:hello@mindbridge.app',
-      highlight: false,
-    },
-  ];
+  // const plans = [
+  //   {
+  //     name: t('t1Name'),
+  //     price: t('t1Price'),
+  //     period: t('t1Period'),
+  //     desc: t('t1Desc'),
+  //     features: [t('t1F1'), t('t1F2'), t('t1F3'), t('t1F4')],
+  //     cta: t('t1Cta'),
+  //     href: '/register?role=therapist',
+  //     highlight: false,
+  //   },
+  //   {
+  //     name: t('t2Name'),
+  //     price: t('t2Price'),
+  //     period: t('t2Period'),
+  //     desc: t('t2Desc'),
+  //     features: [t('t2F1'), t('t2F2'), t('t2F3'), t('t2F4')],
+  //     cta: t('t2Cta'),
+  //     href: '/register?role=therapist',
+  //     highlight: true,
+  //   },
+  //   {
+  //     name: t('t3Name'),
+  //     price: t('t3Price'),
+  //     period: t('t3Period'),
+  //     desc: t('t3Desc'),
+  //     features: [t('t3F1'), t('t3F2'), t('t3F3'), t('t3F4')],
+  //     cta: t('t3Cta'),
+  //     href: 'mailto:hello@mindbridge.app',
+  //     highlight: false,
+  //   },
+  // ];
 
   return (
     <section
@@ -74,7 +74,7 @@ export function TherapistSection() {
           </ul>
         </div>
 
-        <h3 className="mb-8 text-xl font-semibold text-foreground">{t('pricingTitle')}</h3>
+        {/* <h3 className="mb-8 text-xl font-semibold text-foreground">{t('pricingTitle')}</h3>
         <div className="grid gap-5 md:grid-cols-3">
           {plans.map((plan) => (
             <div
@@ -108,7 +108,7 @@ export function TherapistSection() {
               </Button>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

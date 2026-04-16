@@ -6,7 +6,7 @@ import { DemoDialoguesSection } from '@/widgets/landing/sections/demo-dialogues-
 import { FounderSection } from '@/widgets/landing/sections/founder-section';
 import { HeroSection } from '@/widgets/landing/sections/hero-section';
 import { HowItWorksSection } from '@/widgets/landing/sections/how-it-works-section';
-import { PricingSection } from '@/widgets/landing/sections/pricing-section';
+// import { PricingSection } from '@/widgets/landing/sections/pricing-section';
 import { StatsSection } from '@/widgets/landing/sections/stats-section';
 import { TwoPathsSection } from '@/widgets/landing/sections/two-paths-section';
 
@@ -22,7 +22,7 @@ export function LandingPage() {
         <TwoPathsSection />
         <HowItWorksSection />
         <FounderSection />
-        <PricingSection />
+        {/* <PricingSection /> */}
         <CtaSection />
       </main>
       <LandingFooter />
