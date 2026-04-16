@@ -2,7 +2,7 @@
 
 import { Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 
 import type { ChatMessage } from '@/features/chat';
 import { cn } from '@/shared/lib/utils';
@@ -33,10 +33,10 @@ function MiraAvatar() {
   );
 }
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+const MessageBubble = memo(function MessageBubble({ message }: { message: ChatMessage }) {
   if (message.role === 'user') {
     return (
-      <div className="message-bubble flex justify-end">
+      <div className="message-bubble flex justify-end" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 80px' }}>
         <div
           data-ph-mask
           className="user-bubble-gradient max-w-[260px] rounded-2xl rounded-tr-none px-3.5 py-3.5 text-sm shadow-[0_2px_6px_#C4856F20]"
@@ -48,7 +48,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   }
 
   return (
-    <div className="message-bubble flex gap-2.5">
+    <div className="message-bubble flex gap-2.5" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 80px' }}>
       <MiraAvatar />
       <div
         data-ph-mask
@@ -61,7 +61,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       </div>
     </div>
   );
-}
+});
 
 function TypingIndicator() {
   return (
