@@ -243,6 +243,7 @@
 }
 
 /* Prevent iOS input zoom (inputs must be ≥16px to avoid auto-zoom) */
+/* !important needed because Tailwind utilities (text-sm etc.) come later in the cascade */
 @media (max-width: 767px) {
   input[type='text'],
   input[type='email'],
@@ -251,7 +252,7 @@
   input[type='tel'],
   textarea,
   select {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }
 

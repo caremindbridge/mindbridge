@@ -75,7 +75,7 @@ export function SendMessageForm({ onSend, disabled }: SendMessageFormProps) {
   };
 
   return (
-    <div className="shrink-0 border-t border-[#EDE8E4] bg-white px-4 pb-2 pt-3 dark:border-[#2E2824] dark:bg-[#221E1B]">
+    <div className="shrink-0 border-t border-[#EDE8E4] bg-white px-5 pt-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] dark:border-[#2E2824] dark:bg-[#221E1B]">
       <div className="mx-auto flex max-w-3xl items-end gap-2.5">
         {/* Attach button — always visible */}
         <button
