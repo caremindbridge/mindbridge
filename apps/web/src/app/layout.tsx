@@ -8,7 +8,6 @@ import { Toaster } from 'sonner';
 
 import './globals.css';
 
-import { RuRedirectBanner } from '@/features/locale/ru-redirect-banner';
 import { QueryProvider } from '@/providers/query-provider';
 import { PostHogProvider } from '@/shared/lib/posthog-provider';
 import { siteConfig } from '@/shared/lib/site-config';
@@ -107,7 +106,6 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${jakarta.variable} ${fraunces.variable} font-sans`}>
-        <RuRedirectBanner />
         <PostHogProvider>
           <NextIntlClientProvider messages={messages}>
             <QueryProvider>{children}</QueryProvider>

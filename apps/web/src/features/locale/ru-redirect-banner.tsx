@@ -1,52 +1,35 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
-import { siteConfig } from '@/shared/lib/site-config';
-
-const DISMISS_KEY = 'ru_redirect_dismissed';
-const RU_SITE_URL = 'https://ru.mindbridge.me';
+import { useRuRedirectEligible, RU_SITE_URL } from '@/shared/hooks/use-ru-redirect-eligible';
 
 export function RuRedirectBanner() {
-  const [visible, setVisible] = useState(false);
+  const { eligible, dismiss } = useRuRedirectEligible();
 
-  useEffect(() => {
-    // Only show on international (EN) deploy
-    if (siteConfig.isRussia) return;
-    // Only show if locale is forced (i.e., we're a single-locale deploy)
-    if (!siteConfig.isLocaleForced) return;
-    // Only show to Russian-language browsers
-    const lang = navigator.language || '';
-    if (!lang.toLowerCase().startsWith('ru')) return;
-    // Respect dismiss
-    if (localStorage.getItem(DISMISS_KEY)) return;
-    setVisible(true);
-  }, []);
-
-  if (!visible) return null;
-
-  const handleDismiss = () => {
-    localStorage.setItem(DISMISS_KEY, '1');
-    setVisible(false);
-  };
+  if (!eligible) return null;
 
   return (
-    <div className="fixed left-0 right-0 top-14 z-40 flex items-center justify-between gap-3 bg-primary px-4 py-2 text-sm text-primary-foreground md:top-16">
-      <span>
-        Есть русскоязычная версия MindBridge —{' '}
-        <a href={RU_SITE_URL} className="font-semibold underline underline-offset-2">
-          ru.mindbridge.me
-        </a>
-      </span>
-      <button
-        type="button"
-        onClick={handleDismiss}
-        aria-label="Закрыть"
-        className="shrink-0 opacity-80 hover:opacity-100"
-      >
-        <X className="h-4 w-4" />
-      </button>
+    <div className="fixed left-0 right-0 top-0 z-[60] border-b border-border/60 bg-muted/95 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 text-xs text-muted-foreground sm:text-sm">
+        <span className="leading-snug">
+          Доступна русская версия —{' '}
+          <a
+            href={RU_SITE_URL}
+            className="font-medium text-foreground underline underline-offset-2 hover:text-primary"
+          >
+            ru.mindbridge.me
+          </a>
+        </span>
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Закрыть"
+          className="shrink-0 rounded-md p-1 text-muted-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
     </div>
   );
 }

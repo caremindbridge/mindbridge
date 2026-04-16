@@ -1,3 +1,4 @@
+import { RuRedirectBanner } from '@/features/locale/ru-redirect-banner';
 import { LandingFooter } from '@/widgets/landing/landing-footer';
 import { LandingHeader } from '@/widgets/landing/landing-header';
 import { BridgeSection } from '@/widgets/landing/sections/bridge-section';
@@ -13,6 +14,7 @@ import { TwoPathsSection } from '@/widgets/landing/sections/two-paths-section';
 export function LandingPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
+      <RuRedirectBanner />
       <LandingHeader />
       <main>
         <HeroSection />

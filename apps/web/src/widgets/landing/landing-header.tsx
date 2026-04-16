@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { useUser } from '@/entities/user/model';
 import { ThemeToggle } from '@/features/theme';
+import { useRuRedirectEligible } from '@/shared/hooks/use-ru-redirect-eligible';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Logo } from '@/shared/ui/logo';
@@ -14,6 +15,7 @@ import { Logo } from '@/shared/ui/logo';
 export function LandingHeader() {
   const t = useTranslations('landing.nav');
   const { user, isLoading } = useUser();
+  const { eligible: bannerVisible } = useRuRedirectEligible();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -27,7 +29,9 @@ export function LandingHeader() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+        bannerVisible ? 'top-9' : 'top-0'
+      } ${
         solid
           ? 'border-b border-border/60 bg-background/90 backdrop-blur-md shadow-soft'
           : 'bg-transparent'

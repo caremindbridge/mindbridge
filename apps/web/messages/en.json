@@ -852,6 +852,15 @@
     "lockedRecommendations": "Recommendations available in Standard",
     "lockedRecommendationsDesc": "Upgrade to get personalised tips after every session"
   },
+  "notifications": {
+    "empty": "No new notifications",
+    "dismiss": "Dismiss",
+    "ariaLabel": "Notifications",
+    "ruRedirect": {
+      "title": "Russian version available",
+      "description": "Switch to"
+    }
+  },
   "mobile": {
     "title": "Mobile app is coming soon",
     "description": "We're building native iOS and Android apps to bring MindBridge to your pocket. For now, please use MindBridge on a desktop or tablet.",

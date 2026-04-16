@@ -852,6 +852,15 @@
     "lockedRecommendations": "Рекомендации доступны в Standard",
     "lockedRecommendationsDesc": "Обновите тариф, чтобы получать советы после каждой сессии"
   },
+  "notifications": {
+    "empty": "Нет новых уведомлений",
+    "dismiss": "Скрыть",
+    "ariaLabel": "Уведомления",
+    "ruRedirect": {
+      "title": "Доступна русская версия",
+      "description": "Перейти на"
+    }
+  },
   "mobile": {
     "title": "Мобильное приложение скоро",
     "description": "Мы разрабатываем нативные приложения для iOS и Android. Пока что MindBridge лучше всего работает на компьютере или планшете.",

@@ -24,6 +24,7 @@ import { useMoodMetrics } from '@/entities/dashboard';
 import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
 import { useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
+import { NotificationsBell } from '@/features/notifications';
 import { createSession } from '@/shared/api/client';
 import { analytics } from '@/shared/lib/analytics';
 import { cn } from '@/shared/lib/utils';
@@ -138,7 +139,6 @@ export function DashboardPage() {
     localMoodValue ?? (todayMoodFromApi ? nearestMoodEmoji(todayMoodFromApi.value) : null);
 
   const firstName = user?.name?.split(' ')[0] ?? null;
-  const initials = (user?.name?.charAt(0) ?? user?.email?.charAt(0) ?? '?').toUpperCase();
 
   const weekStart = format(subDays(new Date(), 6), 'MMM d');
   const weekEnd = format(new Date(), 'd');
@@ -184,9 +184,7 @@ export function DashboardPage() {
                 <Sun className="h-[18px] w-[18px] text-muted-foreground" />
               )}
             </button>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-avatar-bg">
-              <span className="text-sm font-bold text-blush-700">{initials}</span>
-            </div>
+            <NotificationsBell />
           </div>
         </div>
 
