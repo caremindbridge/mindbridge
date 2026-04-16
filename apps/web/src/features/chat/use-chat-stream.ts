@@ -27,14 +27,11 @@ interface UseChatStreamReturn {
 }
 
 const TEMP_ID = '__streaming__';
-// Typewriter drain: runs every DRAIN_MS, emits CHARS_PER_TICK characters.
-// Adaptive: drains faster when queue is large so we never lag far behind.
-const DRAIN_MS = 16; // ~60fps
 
+// Capped at 8 chars/frame so bursts never produce visible jumps.
+// At 60fps: 8 chars/frame = 480 chars/sec, enough to keep up with Claude.
 function charsPerTick(pendingLength: number): number {
-  // Always drain the queue in ~300ms regardless of size.
-  // Floor at 2, no hard cap — large bursts drain quickly, small trickles drain smoothly.
-  return Math.max(2, Math.ceil(pendingLength / 18));
+  return Math.min(8, Math.max(2, Math.ceil(pendingLength / 20)));
 }
 
 export function useChatStream({
@@ -53,16 +50,16 @@ export function useChatStream({
   const streamingKeyRef = useRef<string | null>(null);
   // Final message id to apply once the queue is fully drained
   const finalIdRef = useRef<string | null>(null);
-  // The drain interval handle
-  const drainRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // requestAnimationFrame handle for the drain loop
+  const drainRef = useRef<number | null>(null);
 
   useEffect(() => {
     setMessages(initialMessages);
   }, [initialMessages]);
 
   const stopDrain = useCallback(() => {
-    if (drainRef.current) {
-      clearInterval(drainRef.current);
+    if (drainRef.current !== null) {
+      cancelAnimationFrame(drainRef.current);
       drainRef.current = null;
     }
     pendingRef.current = '';
@@ -71,14 +68,16 @@ export function useChatStream({
   }, []);
 
   const startDrain = useCallback(() => {
-    if (drainRef.current) return;
+    if (drainRef.current !== null) return;
 
-    drainRef.current = setInterval(() => {
+    // Use rAF instead of setInterval: fires once per rendered frame, synchronized
+    // with the display. Unlike setInterval, rAF never "catches up" missed ticks —
+    // so a slow React render can't cause back-to-back drain calls that produce jumps.
+    const tick = () => {
       const pending = pendingRef.current;
       const finalId = finalIdRef.current;
 
       if (!pending.length) {
-        // Queue empty — if message_complete arrived, finalize now
         if (finalId !== null) {
           setMessages((prev) => {
             const last = prev[prev.length - 1];
@@ -91,11 +90,12 @@ export function useChatStream({
           });
           setIsStreaming(false);
           stopDrain();
+          return;
         }
+        drainRef.current = requestAnimationFrame(tick);
         return;
       }
 
-      // Drain a chunk
       const n = charsPerTick(pending.length);
       const chunk = pending.slice(0, n);
       pendingRef.current = pending.slice(n);
@@ -107,7 +107,6 @@ export function useChatStream({
           updated[updated.length - 1] = { ...last, content: last.content + chunk };
           return updated;
         }
-        // First chunk — create the streaming bubble with a stable key
         const key = streamingKeyRef.current ?? (streamingKeyRef.current = crypto.randomUUID());
         return [
           ...prev,
@@ -123,7 +122,11 @@ export function useChatStream({
           },
         ];
       });
-    }, DRAIN_MS);
+
+      drainRef.current = requestAnimationFrame(tick);
+    };
+
+    drainRef.current = requestAnimationFrame(tick);
   }, [sessionId, stopDrain]);
 
   useEffect(() => {
