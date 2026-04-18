@@ -28,11 +28,9 @@ export function BottomSheet({ open, onOpenChange, title, children }: BottomSheet
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
-          {title && (
-            <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
-            </DialogHeader>
-          )}
+          <DialogHeader>
+            <DialogTitle className={title ? undefined : 'sr-only'}>{title ?? ' '}</DialogTitle>
+          </DialogHeader>
           {children}
         </DialogContent>
       </Dialog>
@@ -46,10 +44,12 @@ export function BottomSheet({ open, onOpenChange, title, children }: BottomSheet
         className="max-h-[85vh] rounded-t-2xl p-0 pb-[env(safe-area-inset-bottom,16px)]"
       >
         <div className="mx-auto mt-2 mb-3 h-1 w-10 rounded-full bg-muted-foreground/20" />
-        {title && (
+        {title ? (
           <SheetHeader className="px-4 pb-2 text-left">
             <SheetTitle>{title}</SheetTitle>
           </SheetHeader>
+        ) : (
+          <SheetTitle className="sr-only">{' '}</SheetTitle>
         )}
         <div className="overflow-y-auto px-4 pb-4" style={{ maxHeight: 'calc(85vh - 80px)' }}>
           {children}

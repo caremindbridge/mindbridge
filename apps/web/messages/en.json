@@ -106,7 +106,14 @@
     "micDenied": "Microphone access denied. Enable it in browser settings.",
     "micUnavailable": "Microphone is not available in this browser.",
     "tooShort": "Recording too short, try again.",
-    "transcribeError": "Couldn't transcribe audio. Please try again."
+    "transcribeError": "Couldn't transcribe audio. Please try again.",
+    "endSheetTitle": "End this session?",
+    "endSheetSubtitle": "Mira can save your progress and prepare a summary of today's conversation.",
+    "endSheetEndSummary": "End & Get Summary",
+    "endSheetEndSummaryDesc": "Mira will summarize key insights and suggest next steps",
+    "endSheetPause": "Pause for Later",
+    "endSheetPauseDesc": "Save your progress and come back when you're ready",
+    "endSheetKeepTalking": "Keep Talking"
   },
   "sessions": {
     "title": "Sessions",

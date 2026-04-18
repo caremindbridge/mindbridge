@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 
 import { useSession } from '@/entities/session';
 // import { useUsageStatus } from '@/entities/subscription'; // TODO: Re-enable when monetization is ready
-import { EndSessionButton, SendMessageForm, useChatStream } from '@/features/chat';
+import { EndSessionButton, EndSessionSheet, SendMessageForm, useChatStream } from '@/features/chat';
 import { MoodCheckIn } from '@/features/mood';
 // import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription'; // TODO: Re-enable when monetization is ready
 import { ApiError, createSession, endSession, sendMessage } from '@/shared/api/client';
@@ -32,6 +32,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
   // const t = useTranslations('subscription'); // TODO: Re-enable when monetization is ready
   const tc = useTranslations('chat');
   const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
+  const [showEndSheet, setShowEndSheet] = useState(false);
   // TODO: Re-enable when monetization is ready
   // const [showSessionLimitModal, setShowSessionLimitModal] = useState(false);
   // const [showMonthlyLimitModal, setShowMonthlyLimitModal] = useState(false);
@@ -165,7 +166,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         <div className="flex items-center justify-between px-5 py-3">
           {/* Left: back + info */}
           <div className="flex items-center gap-3">
-            <button onClick={() => router.back()} className="text-[#2B2320] dark:text-[#E8E0D8]">
+            <button onClick={() => isActive ? setShowEndSheet(true) : router.back()} className="text-[#2B2320] dark:text-[#E8E0D8]">
               <ChevronLeft className="h-6 w-6" />
             </button>
             <div className="flex flex-col gap-px">
@@ -282,6 +283,13 @@ export function ChatPage({ sessionId }: ChatPageProps) {
 
       {/* Input */}
       {isActive && <SendMessageForm onSend={handleSend} disabled={isStreaming} />}
+
+      <EndSessionSheet
+        open={showEndSheet}
+        onOpenChange={setShowEndSheet}
+        onEndAndSummary={() => { setShowEndSheet(false); handleEnd(); }}
+        onPause={() => { setShowEndSheet(false); router.back(); }}
+      />
 
       <MoodCheckIn
         sessionId={sessionId}

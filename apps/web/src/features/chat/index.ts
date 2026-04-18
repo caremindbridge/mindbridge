@@ -1,4 +1,5 @@
 export { EndSessionButton } from './end-session-button';
+export { EndSessionSheet } from './end-session-sheet';
 export { SendMessageForm } from './send-message-form';
 export { StartSessionButton } from './start-session-button';
 export type { ChatMessage } from './use-chat-stream';
