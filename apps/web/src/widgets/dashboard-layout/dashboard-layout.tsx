@@ -3,7 +3,7 @@
 // TODO: Re-enable when monetization is ready
 // import { useQueryClient } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
-// import { useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 // import { toast } from 'sonner';
 
@@ -42,6 +42,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, isLoading, error } = useUser();
+  const t = useTranslations('common');
   const router = useRouter();
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
@@ -59,7 +60,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{t('loading')}</div>
       </div>
     );
   }
@@ -67,7 +68,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{t('loading')}</div>
       </div>
     );
   }

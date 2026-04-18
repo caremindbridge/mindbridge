@@ -3342,39 +3342,6 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "oSdNn",
-                      "name": "timerPill",
-                      "fill": "#FFF8F0",
-                      "cornerRadius": 12,
-                      "gap": 6,
-                      "padding": [
-                        6,
-                        12
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon_font",
-                          "id": "QewWm",
-                          "width": 14,
-                          "height": 14,
-                          "iconFontName": "timer",
-                          "iconFontFamily": "lucide",
-                          "fill": "#C4856F"
-                        },
-                        {
-                          "type": "text",
-                          "id": "CwEU4",
-                          "fill": "#C4856F",
-                          "content": "18:24",
-                          "fontFamily": "Plus Jakarta Sans",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        }
-                      ]
-                    },
-                    {
                       "type": "icon_font",
                       "id": "aloBH",
                       "width": 20,
@@ -4075,17 +4042,6 @@
                       "fontWeight": "normal"
                     }
                   ]
-                },
-                {
-                  "type": "icon_font",
-                  "id": "51leH",
-                  "x": 326,
-                  "y": 8,
-                  "width": 24,
-                  "height": 24,
-                  "iconFontName": "x",
-                  "iconFontFamily": "lucide",
-                  "fill": "#9A8880"
                 }
               ]
             },
@@ -5522,17 +5478,6 @@
                       "fontWeight": "normal"
                     }
                   ]
-                },
-                {
-                  "type": "icon_font",
-                  "id": "72E31",
-                  "x": 326,
-                  "y": 8,
-                  "width": 24,
-                  "height": 24,
-                  "iconFontName": "x",
-                  "iconFontFamily": "lucide",
-                  "fill": "#9A8880"
                 }
               ]
             },
@@ -6253,17 +6198,6 @@
                       "fontWeight": "normal"
                     }
                   ]
-                },
-                {
-                  "type": "icon_font",
-                  "id": "uh6wq",
-                  "x": 326,
-                  "y": 8,
-                  "width": 24,
-                  "height": 24,
-                  "iconFontName": "x",
-                  "iconFontFamily": "lucide",
-                  "fill": "#9A8880"
                 }
               ]
             },
