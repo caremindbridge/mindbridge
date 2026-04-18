@@ -258,7 +258,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
   const moodOutcome = session.analysis?.moodOutcome;
   const MoodIcon = moodOutcome ? MOOD_ICON[moodOutcome] : null;
   const shortSummary = session.analysis?.shortSummary;
-  const href = isAnalyzing ? `/dashboard/chat/${session.id}` : `/dashboard/chat/${session.id}/analysis`;
+  const href = isAnalyzing ? `/dashboard/chat/${session.id}` : `/dashboard/chat/${session.id}/analysis?direct=true`;
 
   // ── Compact layout (Earlier section) ────────────────────────────────────────
   if (compact) {

@@ -294,8 +294,8 @@ export function ChatPage({ sessionId }: ChatPageProps) {
       <MoodCheckIn
         sessionId={sessionId}
         open={showMoodCheckIn}
-        onComplete={() => { setShowMoodCheckIn(false); router.push('/dashboard'); }}
-        onSkip={() => { setShowMoodCheckIn(false); router.push('/dashboard'); }}
+        onComplete={() => { setShowMoodCheckIn(false); router.push(`/dashboard/chat/${sessionId}/analysis`); }}
+        onSkip={() => { setShowMoodCheckIn(false); router.push(`/dashboard/chat/${sessionId}/analysis`); }}
       />
 
       {/* TODO: Re-enable modals when monetization is ready */}

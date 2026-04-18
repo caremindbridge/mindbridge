@@ -47,9 +47,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
-  // Hide tab bar and use full-height layout inside active chat sessions
-  const inChat =
-    /^\/dashboard\/chat\/[^/]+$/.test(pathname) && !pathname.endsWith('/analysis');
+  // Hide tab bar and use full-height layout inside chat sessions and analysis page
+  const inChat = /^\/dashboard\/chat\/[^/]+/.test(pathname);
 
   useEffect(() => {
     if (!isLoading && !user && error) {

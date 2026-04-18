@@ -113,7 +113,22 @@
     "endSheetEndSummaryDesc": "Mira will summarize key insights and suggest next steps",
     "endSheetPause": "Pause for Later",
     "endSheetPauseDesc": "Save your progress and come back when you're ready",
-    "endSheetKeepTalking": "Keep Talking"
+    "endSheetKeepTalking": "Keep Talking",
+    "analysisLoadingTitle": "Session Complete",
+    "analysisLoadingSubtitle": "Great work today ✨",
+    "analysisLoadingDuration": "Duration",
+    "analysisLoadingTopic": "Topic",
+    "analysisLoadingMinutes": "{count} min",
+    "analysisLoadingPreparing": "Preparing your analysis",
+    "analysisLoadingPreparingDesc": "Mira is reviewing your conversation to extract key insights and suggestions",
+    "analysisLoadingStep1": "Conversation analyzed",
+    "analysisLoadingStep2": "Key themes identified",
+    "analysisLoadingStep3": "Generating exercises...",
+    "analysisLoadingStartNew": "Start New Session",
+    "analysisLoadingBackHome": "Back to Home",
+    "analysisReadyTitle": "Analysis ready",
+    "analysisReadyDesc": "Mira has identified key patterns and prepared personalized recommendations",
+    "analysisReadyBtn": "View Analysis"
   },
   "sessions": {
     "title": "Sessions",

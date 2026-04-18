@@ -113,7 +113,22 @@
     "endSheetEndSummaryDesc": "Мира выделит ключевые идеи и предложит следующие шаги",
     "endSheetPause": "Пауза",
     "endSheetPauseDesc": "Сохраните прогресс и вернитесь, когда будете готовы",
-    "endSheetKeepTalking": "Продолжить общение"
+    "endSheetKeepTalking": "Продолжить общение",
+    "analysisLoadingTitle": "Сессия завершена",
+    "analysisLoadingSubtitle": "Отличная работа сегодня ✨",
+    "analysisLoadingDuration": "Длительность",
+    "analysisLoadingTopic": "Тема",
+    "analysisLoadingMinutes": "{count} мин",
+    "analysisLoadingPreparing": "Готовим ваш анализ",
+    "analysisLoadingPreparingDesc": "Мира изучает ваш разговор, чтобы выделить ключевые моменты и рекомендации",
+    "analysisLoadingStep1": "Разговор проанализирован",
+    "analysisLoadingStep2": "Ключевые темы определены",
+    "analysisLoadingStep3": "Создаём упражнения...",
+    "analysisLoadingStartNew": "Начать новую сессию",
+    "analysisLoadingBackHome": "На главную",
+    "analysisReadyTitle": "Анализ готов",
+    "analysisReadyDesc": "Мира выявила ключевые паттерны и подготовила персонализированные рекомендации",
+    "analysisReadyBtn": "Смотреть анализ"
   },
   "sessions": {
     "title": "Сессии",
