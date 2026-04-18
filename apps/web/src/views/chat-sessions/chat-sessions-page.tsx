@@ -24,7 +24,7 @@ import { useMemo, useState } from 'react';
 import { useSessions } from '@/entities/session';
 import { createSession } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
-import { Skeleton } from '@/shared/ui';
+import { Button, Skeleton } from '@/shared/ui';
 
 // ── Category config ──────────────────────────────────────────────────────────
 
@@ -456,10 +456,12 @@ function EmptyState({ filter }: { filter: FilterTab }) {
       </div>
       <p className="text-center text-[15px] font-bold">{message}</p>
       <p className="text-center text-[13px] leading-[1.5] text-muted-foreground">{subtitle}</p>
-      <button
+      <Button
+        variant="cta"
+        size="cta"
         onClick={handleStart}
         disabled={loading}
-        className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-primary text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="w-full gap-2"
       >
         {loading ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -467,7 +469,7 @@ function EmptyState({ filter }: { filter: FilterTab }) {
           <Sparkles className="h-3.5 w-3.5" />
         )}
         {t('startSession')}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -532,11 +534,7 @@ export function ChatSessionsPage() {
         <button
           onClick={handleStartSession}
           disabled={fabLoading}
-          className="flex h-14 items-center gap-3 rounded-2xl px-5 transition-opacity hover:opacity-90 disabled:opacity-50"
-          style={{
-            background: 'linear-gradient(270deg, #D4A08C 0%, #C4856F 100%)',
-            boxShadow: '0 4px 12px rgba(196,133,111,0.25)',
-          }}
+          className="send-button-gradient flex h-14 items-center gap-3 rounded-2xl px-5 shadow-[0_4px_12px_#C4856F30] transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {fabLoading ? (
             <Loader2 className="h-[22px] w-[22px] animate-spin text-white" />
@@ -554,14 +552,16 @@ export function ChatSessionsPage() {
       <div className="hidden px-6 pb-4 pt-2 lg:block">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-          <button
+          <Button
+            variant="cta"
+            size="sm"
             onClick={handleStartSession}
             disabled={fabLoading}
-            className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="gap-2 rounded-xl"
           >
             <Plus className="h-4 w-4" />
             {t('startNewSession')}
-          </button>
+          </Button>
         </div>
       </div>
 

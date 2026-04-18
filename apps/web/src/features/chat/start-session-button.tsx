@@ -26,7 +26,7 @@ export function StartSessionButton() {
   };
 
   return (
-    <Button onClick={handleStart} disabled={loading}>
+    <Button variant="cta" size="cta" onClick={handleStart} disabled={loading}>
       <Plus className="mr-2 h-4 w-4" />
       {loading ? t('creating') : t('newSession')}
     </Button>

@@ -18,12 +18,14 @@ const buttonVariants = cva(
         ghost: 'hover:bg-blush-50 hover:text-foreground',
         soft: 'bg-blush-100 text-blush-600 hover:bg-blush-200',
         link: 'text-primary underline-offset-4 hover:underline',
+        cta: 'send-button-gradient text-white shadow-[0_4px_12px_#C4856F30] hover:opacity-90',
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10',
+        cta: 'h-[52px] rounded-2xl px-6 text-[15px] font-bold',
       },
     },
     defaultVariants: {

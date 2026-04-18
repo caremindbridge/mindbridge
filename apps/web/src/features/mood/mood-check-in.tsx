@@ -65,8 +65,25 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
     }
   };
 
+  const footer = (
+    <div className="flex flex-col gap-3">
+      <Button
+        variant="cta"
+        size="cta"
+        className="w-full"
+        onClick={handleSave}
+        disabled={createMood.isPending}
+      >
+        {createMood.isPending ? t('saving') : t('submit')}
+      </Button>
+      <Button variant="ghost" className="w-full" onClick={onSkip} disabled={createMood.isPending}>
+        {t('skip')}
+      </Button>
+    </div>
+  );
+
   return (
-    <BottomSheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onSkip(); }} title={t('title')}>
+    <BottomSheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onSkip(); }} title={t('title')} footer={footer}>
       <div className="space-y-5">
         {/* Mood Scale */}
         <div className="space-y-2">
@@ -122,20 +139,6 @@ export function MoodCheckIn({ sessionId, open, onComplete, onSkip }: MoodCheckIn
           className="resize-none"
           rows={3}
         />
-
-        {/* Actions */}
-        <div className="flex flex-col gap-3">
-          <Button
-            className="w-full"
-            onClick={handleSave}
-            disabled={createMood.isPending}
-          >
-            {createMood.isPending ? t('saving') : t('submit')}
-          </Button>
-          <Button variant="ghost" className="w-full" onClick={onSkip} disabled={createMood.isPending}>
-            {t('skip')}
-          </Button>
-        </div>
       </div>
     </BottomSheet>
   );

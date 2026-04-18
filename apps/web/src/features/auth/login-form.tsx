@@ -127,7 +127,7 @@ export function LoginForm() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" variant="cta" size="cta" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? t('signingIn') : t('login')}
           </Button>
           <p className="text-center text-sm text-muted-foreground">

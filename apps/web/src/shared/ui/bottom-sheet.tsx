@@ -19,19 +19,21 @@ interface BottomSheetProps {
   onOpenChange: (open: boolean) => void;
   title?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
-export function BottomSheet({ open, onOpenChange, title, children }: BottomSheetProps) {
+export function BottomSheet({ open, onOpenChange, title, children, footer }: BottomSheetProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent className="flex max-h-[90vh] flex-col">
           <DialogHeader>
             <DialogTitle className={title ? undefined : 'sr-only'}>{title ?? ' '}</DialogTitle>
           </DialogHeader>
-          {children}
+          <div className="flex-1 overflow-y-auto">{children}</div>
+          {footer && <div className="shrink-0 pt-2">{footer}</div>}
         </DialogContent>
       </Dialog>
     );
@@ -41,19 +43,24 @@ export function BottomSheet({ open, onOpenChange, title, children }: BottomSheet
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="max-h-[85vh] rounded-t-2xl p-0 pb-[env(safe-area-inset-bottom,16px)]"
+        className="flex max-h-[92vh] flex-col rounded-t-2xl p-0"
       >
-        <div className="mx-auto mt-2 mb-3 h-1 w-10 rounded-full bg-muted-foreground/20" />
+        <div className="mx-auto mt-2 mb-3 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/20" />
         {title ? (
-          <SheetHeader className="px-4 pb-2 text-left">
+          <SheetHeader className="shrink-0 px-4 pb-2 text-left">
             <SheetTitle>{title}</SheetTitle>
           </SheetHeader>
         ) : (
           <SheetTitle className="sr-only">{' '}</SheetTitle>
         )}
-        <div className="overflow-y-auto px-4 pb-4" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+        <div className="flex-1 overflow-y-auto px-4 pb-4">
           {children}
         </div>
+        {footer && (
+          <div className="shrink-0 border-t border-border/60 px-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] pt-4">
+            {footer}
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
