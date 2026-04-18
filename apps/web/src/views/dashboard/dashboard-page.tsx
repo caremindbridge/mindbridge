@@ -533,10 +533,10 @@ function RecentSessionCard({
         </div>
       ) : (
         <Link
-          href={`/dashboard/chat/${session.id}/analysis`}
-          className="flex h-11 items-center justify-center gap-2 rounded-[14px] bg-primary text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
+          href={`/dashboard/chat/${session.id}/analysis?direct=true`}
+          className="send-button-gradient flex h-12 items-center justify-center gap-2 rounded-[14px] text-sm font-bold text-white shadow-[0_4px_12px_#C4856F30]"
         >
-          <BarChart3 className="h-3.5 w-3.5" />
+          <Sparkles className="h-4 w-4" />
           {t('viewAnalysis')}
         </Link>
       )}

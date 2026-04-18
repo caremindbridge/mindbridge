@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ClaudeModule } from '../claude';
+import { Mood } from '../mood/mood.entity';
 import { ProfileModule } from '../profile/profile.module';
 import { SubscriptionModule } from '../subscription/subscription.module';
 
@@ -14,7 +15,7 @@ import { Session } from './entities/session.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Session, Message, SessionAnalysis]),
+    TypeOrmModule.forFeature([Session, Message, SessionAnalysis, Mood]),
     ClaudeModule,
     ProfileModule,
     SubscriptionModule,

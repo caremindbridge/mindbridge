@@ -24,6 +24,8 @@ import { ProfileService } from '../profile/profile.service';
 import { RedisService } from '../redis';
 import { UsageService } from '../subscription/usage.service';
 
+import { Mood } from '../mood/mood.entity';
+
 import { Message, MessageRoleEnum } from './entities/message.entity';
 import { SessionAnalysis } from './entities/session-analysis.entity';
 import { Session, SessionCategoryEnum, SessionStatusEnum } from './entities/session.entity';
@@ -39,6 +41,8 @@ export class ChatService {
     private readonly messageRepo: Repository<Message>,
     @InjectRepository(SessionAnalysis)
     private readonly analysisRepo: Repository<SessionAnalysis>,
+    @InjectRepository(Mood)
+    private readonly moodRepo: Repository<Mood>,
     private readonly claudeService: ClaudeService,
     private readonly redisService: RedisService,
     private readonly eventEmitter: EventEmitter2,
@@ -298,6 +302,9 @@ export class ChatService {
   private async generateAnalysis(sessionId: string): Promise<void> {
     await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Analyzing });
 
+    const session = await this.sessionRepo.findOne({ where: { id: sessionId } });
+    if (!session) return;
+
     const messages = await this.messageRepo.find({
       where: { sessionId },
       order: { orderIndex: 'ASC' },
@@ -309,6 +316,22 @@ export class ChatService {
         role: m.role as 'user' | 'assistant',
         content: m.content,
       }));
+
+    // Fetch mood before/after and session number in parallel
+    const [moodBeforeRecord, moodAfterRecord, sessionNumber] = await Promise.all([
+      this.moodRepo.findOne({
+        where: { userId: session.userId },
+        order: { createdAt: 'DESC' },
+        // Most recent mood logged before this session started
+      }).then((m) => (m && m.createdAt < session.createdAt ? m : null)),
+      this.moodRepo.findOne({
+        where: { sessionId },
+        order: { createdAt: 'DESC' },
+      }),
+      this.sessionRepo.count({
+        where: { userId: session.userId },
+      }),
+    ]);
 
     try {
       const locale = detectLocale(claudeMessages.map((m) => m.content));
@@ -325,6 +348,27 @@ export class ChatService {
         if (typeof v !== 'number' || isNaN(v)) return null;
         return Math.min(10, Math.max(0, Math.round(v)));
       };
+
+      const clamp100 = (v: unknown): number | null => {
+        if (typeof v !== 'number' || isNaN(v)) return null;
+        return Math.min(100, Math.max(0, Math.round(v)));
+      };
+
+      const validProgressMetrics =
+        Array.isArray(parsed.progressMetrics)
+          ? parsed.progressMetrics
+              .filter(
+                (m: unknown) =>
+                  m !== null &&
+                  typeof m === 'object' &&
+                  typeof (m as Record<string, unknown>).label === 'string' &&
+                  typeof (m as Record<string, unknown>).value === 'number',
+              )
+              .map((m: { label: string; value: number }) => ({
+                label: m.label,
+                value: Math.min(100, Math.max(0, Math.round(m.value))),
+              }))
+          : null;
 
       const analysis = this.analysisRepo.create({
         sessionId,
@@ -349,6 +393,12 @@ export class ChatService {
         category: typeof parsed.category === 'string' ? parsed.category : null,
         moodOutcome: typeof parsed.moodOutcome === 'string' ? parsed.moodOutcome : null,
         shortSummary: typeof parsed.shortSummary === 'string' ? parsed.shortSummary.slice(0, 120) : null,
+        // New patient-facing fields
+        positiveObservations: Array.isArray(parsed.positiveObservations) ? parsed.positiveObservations : [],
+        progressMetrics: validProgressMetrics,
+        moodBefore: moodBeforeRecord ? clamp(moodBeforeRecord.value) : null,
+        moodAfter: moodAfterRecord ? clamp(moodAfterRecord.value) : null,
+        sessionNumber,
       });
       await this.analysisRepo.save(analysis);
 

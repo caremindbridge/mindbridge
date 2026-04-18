@@ -29,7 +29,7 @@ function StepItem({ done, label }: { done: boolean; label: string }) {
       <div
         className={cn(
           'flex h-6 w-6 shrink-0 items-center justify-center rounded-xl',
-          done ? 'bg-[#E8F2E9]' : 'bg-[#FFF8F0]',
+          done ? 'bg-[#E8F2E9] dark:bg-[#1A2E1C]' : 'bg-[#FFF8F0] dark:bg-[#2A211B]',
         )}
       >
         {done ? (
@@ -92,36 +92,36 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
   ];
 
   return (
-    <div className="flex h-full flex-col bg-[#F7F3EE]">
+    <div className="flex h-full flex-col bg-[#F7F3EE] dark:bg-[#1A1714]">
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-5 pb-4 pt-4">
         <div className="flex flex-col gap-3">
           {/* Header */}
           <div className="flex flex-col gap-0.5">
-            <h1 className="text-xl font-bold text-[#2B2320]">{t('analysisLoadingTitle')}</h1>
-            <p className="text-sm text-[#9A8880]">{t('analysisLoadingSubtitle')}</p>
+            <h1 className="text-xl font-bold text-[#2B2320] dark:text-[#E8E0D8]">{t('analysisLoadingTitle')}</h1>
+            <p className="text-sm text-[#9A8880] dark:text-[#7A706A]">{t('analysisLoadingSubtitle')}</p>
           </div>
 
           {/* Overview card */}
-          <div className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-[0_2px_12px_#2B232009]">
+          <div className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-[0_2px_12px_#2B232009] dark:bg-[#221E1B]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Timer className="h-4 w-4 text-[#9A8880]" />
-                <span className="text-[13px] text-[#9A8880]">{t('analysisLoadingDuration')}</span>
+                <Timer className="h-4 w-4 text-[#9A8880] dark:text-[#7A706A]" />
+                <span className="text-[13px] text-[#9A8880] dark:text-[#7A706A]">{t('analysisLoadingDuration')}</span>
               </div>
-              <span className="text-[13px] font-semibold text-[#2B2320]">
+              <span className="text-[13px] font-semibold text-[#2B2320] dark:text-[#E8E0D8]">
                 {duration != null ? t('analysisLoadingMinutes', { count: duration }) : '—'}
               </span>
             </div>
             {session?.title && (
               <>
-                <div className="h-px bg-[#F0E4DE]" />
+                <div className="h-px bg-[#F0E4DE] dark:bg-[#3A332E]" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Tag className="h-4 w-4 text-[#9A8880]" />
-                    <span className="text-[13px] text-[#9A8880]">{t('analysisLoadingTopic')}</span>
+                    <Tag className="h-4 w-4 text-[#9A8880] dark:text-[#7A706A]" />
+                    <span className="text-[13px] text-[#9A8880] dark:text-[#7A706A]">{t('analysisLoadingTopic')}</span>
                   </div>
-                  <span className="max-w-[180px] truncate text-right text-[13px] font-semibold text-[#2B2320]">
+                  <span className="max-w-[180px] truncate text-right text-[13px] font-semibold text-[#2B2320] dark:text-[#E8E0D8]">
                     {session.title}
                   </span>
                 </div>
@@ -131,15 +131,15 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
 
           {/* Loading card / Ready card */}
           {isReady ? (
-            <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-6 shadow-[0_2px_12px_#2B232009]">
+            <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-6 shadow-[0_2px_12px_#2B232009] dark:bg-[#221E1B]">
               {/* Green check circle */}
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E8F2E9]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E8F2E9] dark:bg-[#1A2E1C]">
                 <Check className="h-7 w-7 text-[#7A9E7E]" />
               </div>
 
               <div className="flex flex-col items-center gap-1 text-center">
-                <p className="text-[15px] font-bold text-[#2B2320]">{t('analysisReadyTitle')}</p>
-                <p className="text-[13px] leading-relaxed text-[#9A8880]">
+                <p className="text-[15px] font-bold text-[#2B2320] dark:text-[#E8E0D8]">{t('analysisReadyTitle')}</p>
+                <p className="text-[13px] leading-relaxed text-[#9A8880] dark:text-[#7A706A]">
                   {t('analysisReadyDesc')}
                 </p>
               </div>
@@ -154,10 +154,10 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
               </button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-6 shadow-[0_2px_12px_#2B232009]">
+            <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-6 shadow-[0_2px_12px_#2B232009] dark:bg-[#221E1B]">
               {/* Spinner */}
               <div className="relative h-12 w-12">
-                <div className="absolute inset-0 rounded-full border-4 border-[#F0E4DE]" />
+                <div className="absolute inset-0 rounded-full border-4 border-[#F0E4DE] dark:border-[#3A332E]" />
                 <div
                   className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-r-[#C4856F] border-t-[#C4856F]"
                   style={{ animationDuration: '1.5s' }}
@@ -168,10 +168,10 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
               </div>
 
               <div className="flex flex-col items-center gap-1 text-center">
-                <p className="text-[15px] font-bold text-[#2B2320]">
+                <p className="text-[15px] font-bold text-[#2B2320] dark:text-[#E8E0D8]">
                   {t('analysisLoadingPreparing')}
                 </p>
-                <p className="text-[13px] leading-relaxed text-[#9A8880]">
+                <p className="text-[13px] leading-relaxed text-[#9A8880] dark:text-[#7A706A]">
                   {t('analysisLoadingPreparingDesc')}
                 </p>
               </div>
@@ -187,7 +187,7 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
       </div>
 
       {/* Buttons — always pinned to bottom */}
-      <div className="flex shrink-0 flex-col gap-2 bg-[#F7F3EE] px-5 pb-[calc(env(safe-area-inset-bottom,0px)+20px)] pt-3">
+      <div className="flex shrink-0 flex-col gap-2 bg-[#F7F3EE] px-5 pb-[calc(env(safe-area-inset-bottom,0px)+20px)] pt-3 dark:bg-[#1A1714]">
         <button
           onClick={handleNewSession}
           disabled={starting}
@@ -197,7 +197,7 @@ function AnalysisLoadingScreen({ sessionId, isReady, onViewAnalysis }: LoadingSc
         </button>
         <button
           onClick={() => router.push('/dashboard')}
-          className="flex h-11 w-full items-center justify-center rounded-[14px] border border-[#F0E4DE] bg-white text-sm font-semibold text-[#9A8880]"
+          className="flex h-11 w-full items-center justify-center rounded-[14px] border border-[#F0E4DE] bg-white text-sm font-semibold text-[#9A8880] dark:border-[#3A332E] dark:bg-[#221E1B] dark:text-[#7A706A]"
         >
           {t('analysisLoadingBackHome')}
         </button>

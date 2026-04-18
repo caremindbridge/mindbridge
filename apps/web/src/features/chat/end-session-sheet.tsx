@@ -27,7 +27,7 @@ export function EndSessionSheet({ open, onOpenChange, onEndAndSummary, onPause }
           onClick={onEndAndSummary}
           className="flex items-center gap-3.5 rounded-2xl border border-[#F0E4DE] bg-white p-4 text-left transition-colors active:bg-[#FFF8F0] dark:border-[#3A332E] dark:bg-[#221E1B]"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E8F2E9]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E8F2E9] dark:bg-[#1A2E1C]">
             <CircleCheckBig className="h-5 w-5 text-[#7A9E7E]" />
           </div>
           <div className="flex flex-col gap-0.5">
@@ -40,7 +40,7 @@ export function EndSessionSheet({ open, onOpenChange, onEndAndSummary, onPause }
           onClick={onPause}
           className="flex items-center gap-3.5 rounded-2xl border border-[#F0E4DE] bg-white p-4 text-left transition-colors active:bg-[#FFF8F0] dark:border-[#3A332E] dark:bg-[#221E1B]"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFF8F0]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFF8F0] dark:bg-[#2A211B]">
             <Pause className="h-5 w-5 text-[#C4856F]" />
           </div>
           <div className="flex flex-col gap-0.5">

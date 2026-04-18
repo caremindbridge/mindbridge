@@ -228,7 +228,14 @@ Return ONLY valid JSON with this exact structure:
   "category": "string - classify the session into exactly ONE of these categories based on what was discussed: 'cbt' (cognitive behavioral therapy techniques, thought records, cognitive distortions), 'interpersonal' (relationships, communication, social dynamics, loneliness), 'mindfulness' (meditation, breathing, grounding, present-moment awareness), 'wellness' (general wellbeing, self-care, sleep, gratitude, lifestyle). Choose the BEST fit.",
   "moodOutcome": "string - a SHORT label describing the patient's emotional state at the end of the session. MUST be exactly one of these values — pick the closest match based on where the patient actually landed emotionally, not where you wish they had landed. NEVER invent new values. Positive shift: 'Feeling better', 'Calmer', 'Hopeful', 'Motivated', 'Grateful', 'Relaxed', 'Empowered'. Processing / neutral: 'Reflected', 'Exploring', 'Processing', 'Opened up'. Hard session but continuing: 'Working through it', 'Sitting with it', 'First steps'.",
   "title": "string - 4 to 7 word title capturing the main theme of this session. Warm and specific, NOT clinical. No quotes, no punctuation at the end. Written in the SAME language as the patient. Examples (EN): 'Working through work anxiety', 'Processing a difficult breakup', 'Building boundaries with family'. Examples (RU): 'Работа с тревогой на работе', 'Принятие сложного расставания'.",
-  "shortSummary": "string - exactly 1 sentence (max 100 characters) describing what was explored in this session. Written warmly in second person (ты/you). No clinical language. Written in the SAME language as the patient. Examples (EN): 'We explored your anxiety around an upcoming job interview.', 'You shared difficult feelings about your relationship with your mother.' Examples (RU): 'Мы разобрали твою тревогу перед важным разговором с руководителем.'"
+  "shortSummary": "string - exactly 1 sentence (max 100 characters) describing what was explored in this session. Written warmly in second person (ты/you). No clinical language. Written in the SAME language as the patient. Examples (EN): 'We explored your anxiety around an upcoming job interview.', 'You shared difficult feelings about your relationship with your mother.' Examples (RU): 'Мы разобрали твою тревогу перед важным разговором с руководителем.'",
+  "positiveObservations": ["string - 1 to 3 strengths, resilience moments, or positive qualities observed in this session. Written TO the patient using 'ты'/'you'. These are genuine positives — moments of courage, insight, self-awareness, openness, or growth. NOT generic praise. Reference specific moments from the session. Written in the SAME language as the patient. Examples (EN): 'You caught yourself catastrophizing and questioned the thought — that's a real skill.', 'Even in a hard session you stayed open and kept exploring.' Examples (RU): 'Ты заметил, что катастрофизируешь, и сам поставил мысль под вопрос — это настоящий навык.', 'Ты оставался открытым даже когда было тяжело.'"],
+  "progressMetrics": [
+    {
+      "label": "string - MUST be exactly one of these English identifiers: Openness, Self-Awareness, Resilience, Emotional Clarity, Engagement",
+      "value": "number 0-100 - how strongly this quality was demonstrated in this specific session. Be honest and varied — not every session scores high on everything. 0-30 = low, 31-60 = moderate, 61-80 = good, 81-100 = strong."
+    }
+  ]
 }
 
 FIELD-SPECIFIC TONE RULES:
@@ -259,6 +266,7 @@ For therapistBrief:
 
 LANGUAGE RULES (strictly enforced):
 - keyEmotions values MUST always be from the fixed English list above — never translate them
+- progressMetrics label values MUST always be from the fixed English list above (Openness, Self-Awareness, Resilience, Emotional Clarity, Engagement) — never translate them
 - ALL other text fields MUST be in the same language as the patient's messages. Never mix languages.
 - If patient writes in Russian → use Russian for: themes, triggers, progressSummary, recommendations, homework, therapistBrief, moodInsight, patientSummary, title, shortSummary, cognitiveDistortions.description, cognitiveDistortions.example, emotionalTrack fields, keyTopics
 - moodOutcome values are ALWAYS in English regardless of session language (they are UI keys)

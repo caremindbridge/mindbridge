@@ -5,6 +5,7 @@ import { format, formatDistanceToNow, isToday, isYesterday, subDays } from 'date
 import { enUS, ru } from 'date-fns/locale';
 import {
   Brain,
+  Check,
   ChevronRight,
   Heart,
   Leaf,
@@ -14,7 +15,6 @@ import {
   Sparkles,
   Sun,
   TrendingUp,
-  Check,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
@@ -335,13 +335,13 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
   // ── Full layout (This Week section) ─────────────────────────────────────────
   return (
     <Link href={href}>
-      <div className="rounded-[20px] bg-white p-4 shadow-soft dark:bg-[#221E1B]">
-        <div className="flex flex-col gap-3">
+      <div className="rounded-[20px] bg-white p-[18px] shadow-soft dark:bg-[#221E1B]">
+        <div className="flex flex-col gap-3.5">
           {/* Top row: icon + title/sub + analyzing badge (if analyzing) */}
           <div className="flex items-center gap-3">
             <div
               className={cn(
-                'flex h-11 w-11 shrink-0 items-center justify-center rounded-full',
+                'flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px]',
                 cat.bg,
                 cat.darkBg,
               )}
@@ -404,11 +404,12 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
             </div>
           )}
 
-          {/* Action link */}
+          {/* View Analysis button */}
           {!isAnalyzing && (
-            <span className="text-[13px] font-semibold text-primary">
-              {t('viewAnalysis')} →
-            </span>
+            <div className="send-button-gradient flex h-12 w-full items-center justify-center gap-2 rounded-[14px] text-sm font-bold text-white shadow-[0_4px_12px_#C4856F30]">
+              <Sparkles className="h-4 w-4" />
+              {t('viewAnalysis')}
+            </div>
           )}
         </div>
       </div>

@@ -92,6 +92,21 @@ export class SessionAnalysis {
   @Column({ type: 'text', nullable: true })
   shortSummary!: string | null;
 
+  @Column({ type: 'jsonb', nullable: true, default: [] })
+  positiveObservations!: string[];
+
+  @Column({ type: 'jsonb', nullable: true })
+  progressMetrics!: Array<{ label: string; value: number }> | null;
+
+  @Column({ type: 'smallint', nullable: true })
+  moodBefore!: number | null;
+
+  @Column({ type: 'smallint', nullable: true })
+  moodAfter!: number | null;
+
+  @Column({ type: 'integer', nullable: true })
+  sessionNumber!: number | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

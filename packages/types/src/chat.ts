@@ -73,10 +73,22 @@ export interface SessionAnalysisDto {
   recommendations: string[];
   homework: string[] | null;
   therapistBrief: string;
+  anxietyLevel?: number | null;
+  depressionLevel?: number | null;
+  keyEmotions?: string[] | null;
+  keyTopics?: string[] | null;
+  copingStrategies?: string[] | null;
+  riskFlags?: string | null;
   moodInsight?: string | null;
   patientSummary?: string | null;
   category?: SessionCategory | null;
   moodOutcome?: string | null;
+  shortSummary?: string | null;
+  positiveObservations?: string[] | null;
+  progressMetrics?: Array<{ label: string; value: number }> | null;
+  moodBefore?: number | null;
+  moodAfter?: number | null;
+  sessionNumber?: number | null;
   createdAt: string;
 }
 
