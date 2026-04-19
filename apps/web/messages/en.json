@@ -341,13 +341,13 @@
     "sessionRhythmBuilding": "Building momentum",
     "sessionRhythmStarting": "Beginning your journey",
     "sessionRhythmStat": "{sessions} sessions · avg {minutes} min",
-    "sessionRhythmInsight": "You showed up {weeks} weeks in a row — that\u2019s momentum",
+    "sessionRhythmInsight": "You showed up {weeks} weeks in a row — that’s momentum",
     "sessionRhythmEmpty": "Start your first session to see your rhythm",
     "themesEyebrow": "RECURRING THEMES",
     "themesTitle": "What you kept coming back to",
     "themesEmpty": "Themes from your sessions will appear here",
-    "miraNoteBy": "Mira \u00b7 A note for you",
-    "miraContinue": "Continue this thread \u2192",
+    "miraNoteBy": "Mira · A note for you",
+    "miraContinue": "Continue this thread →",
     "miraLoading": "Mira is preparing your synthesis...",
     "noDataYet": "No data yet",
     "noDataDesc": "Complete sessions to see your analytics"
@@ -871,7 +871,15 @@
     "reportCopingStrategies": "Coping Strategies",
     "reportProgressNotes": "Progress Notes",
     "copingStrategiesLabel": "Coping strategies",
-    "viewFullAnalysis": "View full analysis"
+    "viewFullAnalysis": "View full analysis",
+    "emptyWelcomeTitle": "Welcome!",
+    "emptyWelcomeDesc": "Your patients will appear here. Invite the first one to get started.",
+    "howItWorks": "How it works",
+    "step1": "Click + and enter the patient’s email",
+    "step2": "Share the invite code with the patient",
+    "step3": "Track progress and patient mood",
+    "tipLabel": "Tip",
+    "tipText": "The patient will receive a code and can connect to you in the app in just a few seconds."
   },
   "analysis": {
     "distortions": "Distortions",
