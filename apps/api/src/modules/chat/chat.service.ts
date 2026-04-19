@@ -299,6 +299,10 @@ export class ChatService {
     return session;
   }
 
+  async generateAnalysisPublic(sessionId: string): Promise<void> {
+    return this.generateAnalysis(sessionId);
+  }
+
   private async generateAnalysis(sessionId: string): Promise<void> {
     await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Analyzing });
 

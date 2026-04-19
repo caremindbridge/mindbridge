@@ -16,7 +16,7 @@ import { useSession } from '@/entities/session';
 import { EndSessionButton, EndSessionSheet, SendMessageForm, useChatStream } from '@/features/chat';
 import { MoodCheckIn } from '@/features/mood';
 // import { MonthlyLimitModal, SessionLimitModal, TrialEndedModal } from '@/features/subscription'; // TODO: Re-enable when monetization is ready
-import { ApiError, createSession, endSession, sendMessage } from '@/shared/api/client';
+import { ApiError, createSession, deleteSession, endSession, sendMessage } from '@/shared/api/client';
 import { analytics } from '@/shared/lib/analytics';
 import { Button, Skeleton } from '@/shared/ui';
 import { ChatWindow } from '@/widgets/chat-window';
@@ -127,6 +127,17 @@ export function ChatPage({ sessionId }: ChatPageProps) {
     setShowMoodCheckIn(true);
   }, [sessionId, messages, session, queryClient]);
 
+  const handleBack = useCallback(async () => {
+    if (isActive && messages.length === 0) {
+      await deleteSession(sessionId).catch(() => {});
+      router.back();
+    } else if (isActive) {
+      setShowEndSheet(true);
+    } else {
+      router.back();
+    }
+  }, [isActive, messages.length, sessionId, router]);
+
   // Auto-send seed message from synthesis "Continue" flow
   const seedSentRef = useRef(false);
   const handleSendRef = useRef(handleSend);
@@ -181,7 +192,7 @@ export function ChatPage({ sessionId }: ChatPageProps) {
         <div className="flex items-center justify-between px-5 py-3">
           {/* Left: back + info */}
           <div className="flex items-center gap-3">
-            <button onClick={() => isActive ? setShowEndSheet(true) : router.back()} className="text-[#2B2320] dark:text-[#E8E0D8]">
+            <button onClick={handleBack} className="text-[#2B2320] dark:text-[#E8E0D8]">
               <ChevronLeft className="h-6 w-6" />
             </button>
             <div className="flex flex-col gap-px">
@@ -216,9 +227,9 @@ export function ChatPage({ sessionId }: ChatPageProps) {
       <div className="hidden lg:flex shrink-0 flex-col">
         <div className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-3">
-            <Link href="/dashboard/chat" className="text-[#2B2320] dark:text-[#E8E0D8]">
+            <button onClick={handleBack} className="text-[#2B2320] dark:text-[#E8E0D8]">
               <ChevronLeft className="h-6 w-6" />
-            </Link>
+            </button>
             <div className="flex flex-col gap-px">
               <span className="text-sm font-bold text-[#2B2320] dark:text-[#E8E0D8]">{tc('mira')}</span>
               {isActive ? (
