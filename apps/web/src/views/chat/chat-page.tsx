@@ -200,22 +200,10 @@ export function ChatPage({ sessionId }: ChatPageProps) {
               {isActive && (
                 <span className="text-[11px] text-[#7A9E7E]">{tc('sessionInProgress')}</span>
               )}
-              {!isActive && (
-                <span className="text-[11px] text-[#9A8880] dark:text-[#A09A93]">{tc('sessionEnded')}</span>
-              )}
             </div>
           </div>
-          {/* Right: timer + menu */}
+          {/* Right */}
           <div className="flex items-center gap-3">
-            {!isActive && (session.status === 'completed' || analysisReady) && (
-              <Link
-                href={`/dashboard/chat/${sessionId}/analysis`}
-                className="flex items-center gap-1.5 rounded-xl bg-[#FFF8F0] px-3 py-1.5 dark:bg-[#2A211B]"
-              >
-                <BarChart3 className="h-3.5 w-3.5 text-[#C4856F] dark:text-[#D4A89A]" />
-                <span className="text-[13px] font-semibold text-[#C4856F] dark:text-[#D4A89A]">{tc('viewAnalysis')}</span>
-              </Link>
-            )}
             <MoreVertical className="h-5 w-5 text-[#9A8880] dark:text-[#A09A93]" />
           </div>
         </div>
@@ -243,15 +231,6 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           </div>
           <div className="flex items-center gap-3">
             {isActive && <EndSessionButton onEnd={handleEnd} disabled={isStreaming} />}
-            {(session.status === 'completed' || analysisReady) && (
-              <Link
-                href={`/dashboard/chat/${sessionId}/analysis`}
-                className="flex items-center gap-1.5 rounded-xl bg-[#FFF8F0] px-3 py-1.5 dark:bg-[#2A211B]"
-              >
-                <BarChart3 className="h-3.5 w-3.5 text-[#C4856F] dark:text-[#D4A89A]" />
-                <span className="text-[13px] font-semibold text-[#C4856F] dark:text-[#D4A89A]">{tc('viewAnalysis')}</span>
-              </Link>
-            )}
           </div>
         </div>
         <div className="h-px bg-[#F0E4DE] dark:bg-[#3A332E]" />
@@ -275,21 +254,6 @@ export function ChatPage({ sessionId }: ChatPageProps) {
           {t('graceMessage', { remaining: usage.graceRemaining ?? 0 })}
         </div>
       )} */}
-
-      {/* Session ended banner */}
-      {!isActive && (
-        <div className="flex shrink-0 items-center justify-between border-b border-[#F0E4DE] bg-[#FFF8F0] px-5 py-2.5 dark:border-[#3A332E] dark:bg-[#2A211B]">
-          <p className="text-sm text-[#9A8880] dark:text-[#A09A93]">{tc('sessionEnded')}</p>
-          <button
-            onClick={handleNewSession}
-            disabled={startingSession}
-            className="flex items-center gap-1.5 rounded-xl bg-[#C4856F] px-3 py-1.5 text-[13px] font-semibold text-white transition-opacity disabled:opacity-50 dark:bg-[#D4A89A] dark:text-[#1A1614]"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            {startingSession ? tc('creating') : tc('newSession')}
-          </button>
-        </div>
-      )}
 
       {/* Messages */}
       <ChatWindow

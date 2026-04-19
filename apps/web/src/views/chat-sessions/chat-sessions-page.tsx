@@ -249,6 +249,7 @@ function ActiveSessionCard({ session }: { session: SessionDto }) {
 function SessionCard({ session, compact = false }: { session: SessionDto; compact?: boolean }) {
   const t = useTranslations('sessions');
   const locale = useLocale();
+  const router = useRouter();
   const title = session.title ?? t('defaultTitle');
   const cat = getCategoryConfig(session.category);
   const Icon = cat.icon;
@@ -315,9 +316,17 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
                       {dateLabel}{duration ? ` · ${duration}` : ''}
                     </span>
                   )}
-                  <span className="text-xs font-medium text-primary">
-                    {t('viewAnalysis')} →
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-primary">
+                      {t('viewAnalysis')} →
+                    </span>
+                    <button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/chat/${session.id}`); }}
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F0E4DE] text-[#9A8880] dark:bg-[#2E2824] dark:text-[#7A706A]"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
               )}
               {isAnalyzing && (
@@ -404,11 +413,19 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
             </div>
           )}
 
-          {/* View Analysis button */}
+          {/* View Analysis button + chat history icon */}
           {!isAnalyzing && (
-            <div className="send-button-gradient flex h-12 w-full items-center justify-center gap-2 rounded-[14px] text-sm font-bold text-white shadow-[0_4px_12px_#C4856F30]">
-              <Sparkles className="h-4 w-4" />
-              {t('viewAnalysis')}
+            <div className="flex items-center gap-2">
+              <div className="send-button-gradient flex h-12 flex-1 items-center justify-center gap-2 rounded-[14px] text-sm font-bold text-white shadow-[0_4px_12px_#C4856F30]">
+                <Sparkles className="h-4 w-4" />
+                {t('viewAnalysis')}
+              </div>
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/chat/${session.id}`); }}
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#F0E4DE] text-[#9A8880] transition-colors hover:bg-[#E8D4C8] dark:bg-[#2E2824] dark:text-[#7A706A]"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </button>
             </div>
           )}
         </div>
