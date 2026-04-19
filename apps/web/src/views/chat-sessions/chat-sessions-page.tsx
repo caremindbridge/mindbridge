@@ -322,7 +322,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
                     </span>
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/chat/${session.id}`); }}
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F0E4DE] text-[#9A8880] dark:bg-[#2E2824] dark:text-[#7A706A]"
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F0E4DE] text-[#9A8880] dark:bg-[#3D2E28] dark:text-[#C4856F]"
                     >
                       <MessageCircle className="h-3.5 w-3.5" />
                     </button>
@@ -422,7 +422,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
               </div>
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/chat/${session.id}`); }}
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#F0E4DE] text-[#9A8880] transition-colors hover:bg-[#E8D4C8] dark:bg-[#2E2824] dark:text-[#7A706A]"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#F0E4DE] text-[#9A8880] transition-colors hover:bg-[#E8D4C8] dark:bg-[#3D2E28] dark:text-[#C4856F]"
               >
                 <MessageCircle className="h-5 w-5" />
               </button>
