@@ -1,1 +1,1 @@
-export { useSession, useSessions } from './model';
+export { useInfiniteSessions, useSession, useSessions } from './model';

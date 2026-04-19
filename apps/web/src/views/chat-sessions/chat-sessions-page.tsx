@@ -1,6 +1,6 @@
 'use client';
 
-import type { SessionCategory, SessionDto } from '@mindbridge/types/src/chat';
+import type { PaginatedSessionsDto, SessionCategory, SessionDto } from '@mindbridge/types/src/chat';
 import { format, formatDistanceToNow, isToday, isYesterday, subDays } from 'date-fns';
 import { enUS, ru } from 'date-fns/locale';
 import {
@@ -19,9 +19,9 @@ import {
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSessions } from '@/entities/session';
+import { useInfiniteSessions } from '@/entities/session';
 import { createSession } from '@/shared/api/client';
 import { cn } from '@/shared/lib/utils';
 import { Button, Skeleton } from '@/shared/ui';
@@ -203,7 +203,7 @@ function MobileFab() {
 
 // ── Active Session Card ──────────────────────────────────────────────────────
 
-function ActiveSessionCard({ session }: { session: SessionDto }) {
+const ActiveSessionCard = memo(function ActiveSessionCard({ session }: { session: SessionDto }) {
   const t = useTranslations('sessions');
   const locale = useLocale();
   const title = session.title ?? t('defaultTitle');
@@ -242,11 +242,11 @@ function ActiveSessionCard({ session }: { session: SessionDto }) {
       </div>
     </Link>
   );
-}
+});
 
 // ── Completed / Analyzing Session Card ───────────────────────────────────────
 
-function SessionCard({ session, compact = false }: { session: SessionDto; compact?: boolean }) {
+const SessionCard = memo(function SessionCard({ session, compact = false }: { session: SessionDto; compact?: boolean }) {
   const t = useTranslations('sessions');
   const locale = useLocale();
   const router = useRouter();
@@ -432,7 +432,7 @@ function SessionCard({ session, compact = false }: { session: SessionDto; compac
       </div>
     </Link>
   );
-}
+});
 
 // ── Empty State ──────────────────────────────────────────────────────────────
 
@@ -502,9 +502,36 @@ export function ChatSessionsPage() {
 
   // Map filter to API status param
   const statusParam = filter === 'active' ? 'active' : filter === 'completed' ? 'completed' : undefined;
-  const { data, isLoading } = useSessions(1, 50, statusParam);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteSessions(statusParam);
 
-  const handleStartSession = async () => {
+  // Flatten pages into a single sessions array
+  const allSessions = useMemo(
+    () => data?.pages.flatMap((p: PaginatedSessionsDto) => p.sessions) ?? [],
+    [data?.pages],
+  );
+
+  // Intersection observer sentinel for infinite scroll
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const fetchNextPageRef = useRef(fetchNextPage);
+  fetchNextPageRef.current = fetchNextPage;
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPageRef.current();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage]);
+
+  const handleStartSession = useCallback(async () => {
     setFabLoading(true);
     try {
       const session = await createSession();
@@ -512,17 +539,17 @@ export function ChatSessionsPage() {
     } catch {
       setFabLoading(false);
     }
-  };
+  }, [router]);
 
   // Split sessions into groups
   const { activeSessions, thisWeekSessions, earlierSessions } = useMemo(() => {
-    if (!data?.sessions) return { activeSessions: [], thisWeekSessions: [], earlierSessions: [] };
+    if (!allSessions.length) return { activeSessions: [], thisWeekSessions: [], earlierSessions: [] };
 
     const active: SessionDto[] = [];
     const thisWeek: SessionDto[] = [];
     const earlier: SessionDto[] = [];
 
-    for (const s of data.sessions) {
+    for (const s of allSessions) {
       if (s.status === 'active') {
         active.push(s);
       } else if (isThisWeek(s.createdAt)) {
@@ -533,9 +560,9 @@ export function ChatSessionsPage() {
     }
 
     return { activeSessions: active, thisWeekSessions: thisWeek, earlierSessions: earlier };
-  }, [data?.sessions]);
+  }, [allSessions]);
 
-  const hasAnySessions = (data?.sessions?.length ?? 0) > 0;
+  const hasAnySessions = allSessions.length > 0;
   const filters: { key: FilterTab; label: string }[] = [
     { key: 'all', label: t('filterAll') },
     { key: 'active', label: t('filterActive') },
@@ -645,6 +672,14 @@ export function ChatSessionsPage() {
                   <SessionCard key={s.id} session={s} compact />
                 ))}
               </>
+            )}
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="h-1" />
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-3">
+                <Loader2 className="h-5 w-5 animate-spin text-primary/50" />
+              </div>
             )}
           </div>
         )}
