@@ -41,6 +41,7 @@ export function useMoodMetrics(from?: string, to?: string, refetchInterval?: num
       const data = await getMoodMetrics(from, to);
       return data as DashboardMetrics;
     },
+    staleTime: 5 * 60 * 1000,
     refetchInterval,
   });
 }

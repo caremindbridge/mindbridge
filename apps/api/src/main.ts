@@ -2,6 +2,7 @@ import { HttpExceptionFilter } from '@common/filters/http-exception.filter';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import compression = require('compression');
 
 import { AppModule } from './app.module';
 
@@ -30,6 +31,7 @@ async function bootstrap() {
     }),
   );
 
+  app.use(compression());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const port = configService.get<number>('port', 3001);

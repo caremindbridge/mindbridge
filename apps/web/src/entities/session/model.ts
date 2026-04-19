@@ -17,8 +17,7 @@ export function useSessions(
   return useQuery<PaginatedSessionsDto>({
     queryKey: ['sessions', page, limit, status, category],
     queryFn: () => getSessions(page, limit, status, category),
-    staleTime: 0,
-    refetchOnMount: 'always',
+    staleTime: 30 * 1000,
     refetchInterval: (query) => {
       const sessions = (query.state.data as PaginatedSessionsDto | undefined)?.sessions;
       if (!sessions) return false;
@@ -40,8 +39,7 @@ export function useInfiniteSessions(status?: string, category?: string) {
     initialPageParam: 1,
     getNextPageParam: (lastPage, _allPages, lastPageParam) =>
       lastPage.sessions.length === SESSIONS_PAGE_SIZE ? lastPageParam + 1 : undefined,
-    staleTime: 0,
-    refetchOnMount: 'always',
+    staleTime: 30 * 1000,
     refetchInterval: (query) => {
       const pages = (query.state.data as InfiniteData<PaginatedSessionsDto> | undefined)?.pages;
       if (!pages) return false;

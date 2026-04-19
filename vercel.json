@@ -1,4 +1,5 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "npx turbo build --filter=@mindbridge/web"
+  "buildCommand": "npx turbo build --filter=@mindbridge/web",
+  "regions": ["sin1"]
 }
