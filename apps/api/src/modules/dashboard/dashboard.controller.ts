@@ -35,4 +35,13 @@ export class DashboardController {
     const toDate = to ? new Date(to) : undefined;
     return this.dashboardService.getMoodMetrics(userId, fromDate, toDate);
   }
+
+  @Get('mira-overview')
+  async getMiraOverview(
+    @CurrentUser() user: { id: string; role: string },
+    @Query('period') period: 'week' | 'month' = 'week',
+    @Query('locale') locale: string = 'en',
+  ) {
+    return this.dashboardService.getMiraOverview(user.id, period, locale);
+  }
 }

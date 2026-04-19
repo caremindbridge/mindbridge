@@ -437,6 +437,15 @@ export class ChatService {
       this.logger.error(`Failed to update patient profile for session ${sessionId}:`, err);
     }
 
+    try {
+      const completedSession = await this.sessionRepo.findOne({ where: { id: sessionId } });
+      if (completedSession) {
+        await this.redisService.deleteMiraOverviewForUser(completedSession.userId);
+      }
+    } catch (err) {
+      this.logger.error(`Failed to invalidate Mira cache for session ${sessionId}:`, err);
+    }
+
     await this.redisService.clearSessionMessages(sessionId);
   }
 

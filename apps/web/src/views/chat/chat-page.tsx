@@ -8,7 +8,7 @@ import { BarChart3, ChevronLeft, MoreVertical, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useSession } from '@/entities/session';
@@ -126,6 +126,21 @@ export function ChatPage({ sessionId }: ChatPageProps) {
     queryClient.invalidateQueries({ queryKey: ['mood-stats'] });
     setShowMoodCheckIn(true);
   }, [sessionId, messages, session, queryClient]);
+
+  // Auto-send seed message from synthesis "Continue" flow
+  const seedSentRef = useRef(false);
+  const handleSendRef = useRef(handleSend);
+  handleSendRef.current = handleSend;
+
+  useEffect(() => {
+    if (!isActive || seedSentRef.current) return;
+    const seed = sessionStorage.getItem('chatSeedMessage');
+    if (!seed) return;
+    sessionStorage.removeItem('chatSeedMessage');
+    seedSentRef.current = true;
+    const timer = setTimeout(() => handleSendRef.current(seed), 400);
+    return () => clearTimeout(timer);
+  }, [isActive]);
 
   const [startingSession, setStartingSession] = useState(false);
   const handleNewSession = useCallback(async () => {

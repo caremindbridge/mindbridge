@@ -267,6 +267,10 @@ export function getMoodMetrics(from?: string, to?: string): Promise<unknown> {
   return apiClient.get<unknown>(`/dashboard/mood-metrics?${params}`);
 }
 
+export function getMiraOverview(period: 'week' | 'month', locale: string): Promise<{ text: string }> {
+  return apiClient.get<{ text: string }>(`/dashboard/mira-overview?period=${period}&locale=${locale}`);
+}
+
 // === THERAPIST ===
 
 export function invitePatient(email: string): Promise<{ inviteCode: string }> {

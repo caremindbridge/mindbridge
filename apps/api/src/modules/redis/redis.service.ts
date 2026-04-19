@@ -133,4 +133,19 @@ export class RedisService implements OnModuleDestroy {
   async clearActiveMode(userId: string): Promise<void> {
     await this.client.del(`user:mode:${userId}`);
   }
+
+  async getMiraOverview(userId: string, period: string, locale: string): Promise<string | null> {
+    return this.client.get(`mira_overview:${userId}:${period}:${locale}`);
+  }
+
+  async setMiraOverview(userId: string, period: string, locale: string, text: string): Promise<void> {
+    await this.client.set(`mira_overview:${userId}:${period}:${locale}`, text, 'EX', 43200);
+  }
+
+  async deleteMiraOverviewForUser(userId: string): Promise<void> {
+    const keys = await this.client.keys(`mira_overview:${userId}:*`);
+    if (keys.length > 0) {
+      await this.client.del(...keys);
+    }
+  }
 }
