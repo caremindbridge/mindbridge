@@ -1,6 +1,5 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm install && npx turbo build --filter=@mindbridge/api"
 
 [deploy]
 startCommand = "node apps/api/dist/main.js"
