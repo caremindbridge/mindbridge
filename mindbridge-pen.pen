@@ -21391,7 +21391,8 @@
                   "content": "I've noticed how often you return to self-compassion. That's not self-indulgent — it's one of the most courageous things you're practicing. Keep going.",
                   "lineHeight": 1.5,
                   "fontFamily": "Plus Jakarta Sans",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -23790,7 +23791,8 @@
                   "content": "I've noticed how often you return to self-compassion. That's not self-indulgent — it's one of the most courageous things you're practicing. Keep going.",
                   "lineHeight": 1.5,
                   "fontFamily": "Plus Jakarta Sans",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -27180,6 +27182,4863 @@
               "fontFamily": "Plus Jakarta Sans",
               "fontSize": 15,
               "fontWeight": "700"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KwHDu",
+      "x": 46,
+      "y": 7204,
+      "name": "Therapist - Patient List",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "6ecWB",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Z5x3s",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "gmij4",
+              "name": "rightIcons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "nodzU",
+                  "name": "signalIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "gJ1DV",
+                  "name": "wifiIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "STEnl",
+                  "name": "batteryIcon",
+                  "width": 22,
+                  "height": 12,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "g2hxB",
+          "name": "content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            0,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "wh9w6",
+              "name": "header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "8qTUS",
+                  "name": "titleText",
+                  "fill": "#2B2320",
+                  "content": "Мои пациенты (3)",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "s14yL",
+                  "name": "inviteBtn",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "#FCEAE4",
+                  "cornerRadius": 18,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "F19Az",
+                      "name": "inviteIcon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "user-plus",
+                      "iconFontFamily": "lucide",
+                      "fill": "#C4856F"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "abyBc",
+              "name": "statsRow",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ArBVR",
+                  "name": "stat1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4nZKi",
+                      "name": "stat1Num",
+                      "fill": "#2B2320",
+                      "content": "3",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vudKg",
+                      "name": "stat1Lbl",
+                      "fill": "#9A8880",
+                      "content": "Всего",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rIMsB",
+                  "name": "stat2",
+                  "width": "fill_container",
+                  "fill": "#FFF8F0",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "48rX0",
+                      "name": "stat2Num",
+                      "fill": "#E8973C",
+                      "content": "1",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FUPWP",
+                      "name": "stat2Lbl",
+                      "fill": "#9A8880",
+                      "content": "Внимание",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "X1Yxq",
+                  "name": "stat3",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LibvJ",
+                      "name": "stat3Num",
+                      "fill": "#E85D5D",
+                      "content": "0",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "muLGf",
+                      "name": "stat3Lbl",
+                      "fill": "#9A8880",
+                      "content": "Риск",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rEyFu",
+              "name": "searchBar",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "#FFFFFF",
+              "cornerRadius": 14,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "gap": 10,
+              "padding": [
+                0,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "owiZh",
+                  "name": "searchIcon",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "search",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9A8880"
+                },
+                {
+                  "type": "text",
+                  "id": "vd1F2",
+                  "name": "searchText",
+                  "fill": "#B5A9A1",
+                  "content": "Поиск по имени или email...",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "b2jmd",
+              "name": "cardsWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xlAOo",
+                  "name": "card1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9b9Rc",
+                      "name": "c1Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Ok1Ca",
+                          "name": "c1Left",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Oa2Xw",
+                              "name": "c1Avatar",
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#FCEAE4",
+                              "cornerRadius": 20,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "j3Mj1",
+                                  "name": "c1AvatarIcon",
+                                  "width": 20,
+                                  "height": 20,
+                                  "iconFontName": "user",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#C4856F"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "5qHuF",
+                              "name": "c1NameCol",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "zoO6v",
+                                  "name": "c1Name",
+                                  "fill": "#2B2320",
+                                  "content": "Анна Петрова",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 14,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "VOG1P",
+                                  "name": "c1Email",
+                                  "fill": "#9A8880",
+                                  "content": "anna@mail.ru",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "GpASZ",
+                          "name": "c1Right",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "122LI",
+                              "name": "c1Dot",
+                              "fill": "#4CAF50",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "WAEan",
+                              "name": "c1Chevron",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-right",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PPMiI",
+                      "name": "c1Bottom",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HyI4o",
+                          "name": "c1Pill1",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "yEFEF",
+                              "name": "c1P1Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "calendar",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            },
+                            {
+                              "type": "text",
+                              "id": "RyuAE",
+                              "name": "c1P1Text",
+                              "fill": "#9A8880",
+                              "content": "Сегодня",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dNwRN",
+                          "name": "c1Pill2",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "bejRn",
+                              "name": "c1P2Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "trending-up",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            },
+                            {
+                              "type": "text",
+                              "id": "r49DQ",
+                              "name": "c1P2Text",
+                              "fill": "#9A8880",
+                              "content": "Улучшение",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qcmyb",
+                  "name": "card2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eaggJ",
+                      "name": "c2Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Mnro0",
+                          "name": "c2Left",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "b7FGx",
+                              "name": "c2Avatar",
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#FCEAE4",
+                              "cornerRadius": 20,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "sqVae",
+                                  "name": "c2AvatarIcon",
+                                  "width": 20,
+                                  "height": 20,
+                                  "iconFontName": "user",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#C4856F"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "NP2Ju",
+                              "name": "c2NameCol",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "8c5oF",
+                                  "name": "c2Name",
+                                  "fill": "#2B2320",
+                                  "content": "Дмитрий Козлов",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 14,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Ic8vi",
+                                  "name": "c2Email",
+                                  "fill": "#9A8880",
+                                  "content": "dmitry@mail.ru",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "8TJ0x",
+                          "name": "c2Right",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "lFg3S",
+                              "name": "c2Dot",
+                              "fill": "#E8973C",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "H0Wbu",
+                              "name": "c2Chevron",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-right",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g7cxl",
+                      "name": "c2Bottom",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "gbZS1",
+                          "name": "c2Pill1",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "v0wRr",
+                              "name": "c2P1Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "calendar",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            },
+                            {
+                              "type": "text",
+                              "id": "zgNbs",
+                              "name": "c2P1Text",
+                              "fill": "#9A8880",
+                              "content": "3 дня назад",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "G6ez5",
+                          "name": "c2Pill2",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "LIX4M",
+                              "name": "c2P2Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "circle-alert",
+                              "iconFontFamily": "lucide",
+                              "fill": "#E8973C"
+                            },
+                            {
+                              "type": "text",
+                              "id": "EXwWN",
+                              "name": "c2P2Text",
+                              "fill": "#E8973C",
+                              "content": "Тревога ↑",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K6Yn8",
+                  "name": "card3",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "3MW6N",
+                      "name": "c3Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "2VAVC",
+                          "name": "c3Left",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "1MO2r",
+                              "name": "c3Avatar",
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#FCEAE4",
+                              "cornerRadius": 20,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "IgEo2",
+                                  "name": "c3AvatarIcon",
+                                  "width": 20,
+                                  "height": 20,
+                                  "iconFontName": "user",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#C4856F"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Gw8D5",
+                              "name": "c3NameCol",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Ac3X2",
+                                  "name": "c3Name",
+                                  "fill": "#2B2320",
+                                  "content": "Мария Соколова",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 14,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "z0GKq",
+                                  "name": "c3Email",
+                                  "fill": "#9A8880",
+                                  "content": "maria@mail.ru",
+                                  "fontFamily": "Plus Jakarta Sans",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Td8Cz",
+                          "name": "c3Right",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "zGBDN",
+                              "name": "c3Dot",
+                              "fill": "#4CAF50",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "AEZi9",
+                              "name": "c3Chevron",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-right",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7ydfm",
+                      "name": "c3Bottom",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "BaDwc",
+                          "name": "c3Pill1",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "sZRnF",
+                              "name": "c3P1Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "calendar",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VfbBR",
+                              "name": "c3P1Text",
+                              "fill": "#9A8880",
+                              "content": "Вчера",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "3m9KK",
+                          "name": "c3Pill2",
+                          "fill": "#F7F3EE",
+                          "cornerRadius": 8,
+                          "gap": 4,
+                          "padding": [
+                            4,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "Tb5lc",
+                              "name": "c3P2Icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "smile",
+                              "iconFontFamily": "lucide",
+                              "fill": "#9A8880"
+                            },
+                            {
+                              "type": "text",
+                              "id": "9hPMo",
+                              "name": "c3P2Text",
+                              "fill": "#9A8880",
+                              "content": "Стабильно",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x6qdZ",
+          "name": "tabContainer",
+          "width": "fill_container",
+          "padding": [
+            8,
+            20,
+            28,
+            20
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "kgrhr",
+              "name": "pill",
+              "width": "fill_container",
+              "height": 62,
+              "fill": "#FFFFFF",
+              "cornerRadius": 32,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "padding": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iSinm",
+                  "name": "tab1",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#F7F3EE",
+                  "cornerRadius": 28,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "vM5zK",
+                      "name": "tab1Icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "users",
+                      "iconFontFamily": "lucide",
+                      "fill": "#C4856F"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cmWLh",
+                      "name": "tab1Label",
+                      "fill": "#C4856F",
+                      "content": "ПАЦИЕНТЫ",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "70g3d",
+                  "name": "tab2",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "cornerRadius": 28,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "310fD",
+                      "name": "tab2Icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "settings",
+                      "iconFontFamily": "lucide",
+                      "fill": "#9A8880"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FT99D",
+                      "name": "tab2Label",
+                      "fill": "#9A8880",
+                      "content": "НАСТРОЙКИ",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 10,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "SscIt",
+      "x": -393,
+      "y": 7204,
+      "name": "Therapist - Invite Sheets",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "gap": 40,
+      "children": [
+        {
+          "type": "frame",
+          "id": "Fq0PK",
+          "name": "State 1 - Email Input",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "6txMf",
+              "name": "dimmed1",
+              "fill": "#2B232080",
+              "width": "fill_container",
+              "height": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "mtcpq",
+              "name": "sheet1",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": [
+                24,
+                24,
+                0,
+                0
+              ],
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                24,
+                24,
+                32,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NY2wW",
+                  "name": "handleWrap1",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "Tb2my",
+                      "fill": "#E0D6CF",
+                      "width": 36,
+                      "height": 4
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "sylag",
+                  "layoutPosition": "absolute",
+                  "x": 346,
+                  "y": 24,
+                  "width": 20,
+                  "height": 20,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9A8880"
+                },
+                {
+                  "type": "text",
+                  "id": "Yg5ja",
+                  "fill": "#2B2320",
+                  "content": "Пригласить пациента",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "YiXat",
+                  "fill": "#9A8880",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Введите email пациента для отправки приглашения",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "9Aoi0",
+                  "name": "emailInput",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#F7F3EE",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#F0E4DE"
+                  },
+                  "gap": 10,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "Xldbj",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "mail",
+                      "iconFontFamily": "lucide",
+                      "fill": "#9A8880"
+                    },
+                    {
+                      "type": "text",
+                      "id": "jP2NN",
+                      "fill": "#B5A9A1",
+                      "content": "patient@example.com",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FwpNl",
+                  "name": "submitBtn1",
+                  "width": "fill_container",
+                  "height": 50,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nJdov",
+                      "fill": "#FFFFFF",
+                      "content": "Отправить приглашение",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XnmwL",
+                  "name": "cancelBtn",
+                  "width": "fill_container",
+                  "height": 50,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#F0E4DE"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "8uxnr",
+                      "fill": "#2B2320",
+                      "content": "Отмена",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eIX9N",
+          "name": "State 2 - Success Code",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "VGMlg",
+              "name": "dimmed2",
+              "fill": "#2B232080",
+              "width": "fill_container",
+              "height": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "oiBGS",
+              "name": "sheet2",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": [
+                24,
+                24,
+                0,
+                0
+              ],
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                24,
+                24,
+                32,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FGWiG",
+                  "name": "handleWrap2",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "PNpk6",
+                      "fill": "#E0D6CF",
+                      "width": 36,
+                      "height": 4
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "B3OCo",
+                  "layoutPosition": "absolute",
+                  "x": 346,
+                  "y": 24,
+                  "width": 20,
+                  "height": 20,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9A8880"
+                },
+                {
+                  "type": "text",
+                  "id": "WrzW2",
+                  "fill": "#2B2320",
+                  "content": "Пригласить пациента",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "B9Qal",
+                  "fill": "#9A8880",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Поделитесь этим кодом с пациентом. Срок действия — 7 дней.",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "9YWmb",
+                  "name": "codeBox",
+                  "width": "fill_container",
+                  "fill": "#F7F3EE",
+                  "cornerRadius": 16,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#F0E4DE"
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 20,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4oLU9",
+                      "fill": "#2B2320",
+                      "content": "JCF7PRMJ",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 28,
+                      "fontWeight": "700",
+                      "letterSpacing": 4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9gtwB",
+                      "name": "copyRow",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "r47SS",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "copy",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9A8880"
+                        },
+                        {
+                          "type": "text",
+                          "id": "bTqqH",
+                          "fill": "#9A8880",
+                          "content": "Нажмите чтобы скопировать",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "G0uq9",
+                  "name": "doneBtn",
+                  "width": "fill_container",
+                  "height": 50,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "oPaV3",
+                      "fill": "#FFFFFF",
+                      "content": "Готово",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Dw1yq",
+      "x": 467,
+      "y": 7204,
+      "name": "Therapist - Empty State",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "V5IE7",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "BUgaW",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "EtKsS",
+              "name": "iconsRight",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "mKML7",
+                  "name": "sigIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "PSVsu",
+                  "name": "wifiIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "EbHaf",
+                  "name": "batIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xUY4l",
+          "name": "header",
+          "width": "fill_container",
+          "padding": [
+            4,
+            20,
+            16,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Gxnld",
+              "name": "hTitle",
+              "fill": "#2B2320",
+              "content": "Мои пациенты",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "IAF3w",
+              "name": "inviteBtn",
+              "width": 36,
+              "height": 36,
+              "fill": "#FCEAE4",
+              "cornerRadius": 18,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "lcvM6",
+                  "name": "invIcon",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "user-plus",
+                  "iconFontFamily": "lucide",
+                  "fill": "#C4856F"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JuhSO",
+          "name": "emptyContent",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            40,
+            20,
+            20,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "qYQIm",
+              "name": "illustrationCircle",
+              "width": 120,
+              "height": 120,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 150,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#FCEAE4",
+                    "position": 0
+                  },
+                  {
+                    "color": "#FFF8F0",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 60,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "l8PF5",
+                  "name": "illuIcon",
+                  "width": 48,
+                  "height": 48,
+                  "iconFontName": "users",
+                  "iconFontFamily": "lucide",
+                  "fill": "#C4856F"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DCtf1",
+              "name": "textBlock",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "2Grjc",
+                  "name": "emptyTitle",
+                  "fill": "#2B2320",
+                  "content": "Добро пожаловать!",
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "PURGu",
+                  "name": "emptyDesc",
+                  "fill": "#9A8880",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Здесь будут ваши пациенты.\nПригласите первого, чтобы начать работу.",
+                  "lineHeight": 1.5,
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "e8hVb",
+              "name": "stepsCard",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 20,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#2B232009",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 12
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                20,
+                18
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kGV1P",
+                  "name": "stepsTitle",
+                  "fill": "#2B2320",
+                  "content": "Как это работает",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "3UnQK",
+                  "name": "step1",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EfVUu",
+                      "name": "s1circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "#FCEAE4",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "AHt8Q",
+                          "name": "s1num",
+                          "fill": "#C4856F",
+                          "content": "1",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "FqZBC",
+                      "name": "s1text",
+                      "fill": "#5C4A3D",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Нажмите + и введите email пациента",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QkXTu",
+                  "name": "step2",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Kzc4X",
+                      "name": "s2circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "#FCEAE4",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hvahm",
+                          "name": "s2num",
+                          "fill": "#C4856F",
+                          "content": "2",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "JuWG3",
+                      "name": "s2text",
+                      "fill": "#5C4A3D",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Поделитесь кодом приглашения с пациентом",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "67Ae3",
+                  "name": "step3",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YuxPq",
+                      "name": "s3circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "#FCEAE4",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "AXqAA",
+                          "name": "s3num",
+                          "fill": "#C4856F",
+                          "content": "3",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "649wj",
+                      "name": "s3text",
+                      "fill": "#5C4A3D",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Отслеживайте прогресс и настроение пациентов",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Zhdfh",
+              "name": "ctaButton",
+              "width": "fill_container",
+              "height": 50,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 150,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#B56756",
+                    "position": 0
+                  },
+                  {
+                    "color": "#C4856F",
+                    "position": 0.5
+                  },
+                  {
+                    "color": "#E0A88A",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 14,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "rCuxs",
+                  "name": "ctaIcon",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "user-plus",
+                  "iconFontFamily": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "SOBbN",
+                  "name": "ctaText",
+                  "fill": "#FFFFFF",
+                  "content": "Пригласить пациента",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IGI1W",
+              "name": "tipCard",
+              "width": "fill_container",
+              "fill": "#FFF8F0",
+              "cornerRadius": 16,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                14,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JOUuG",
+                  "name": "tipRow",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "JlV5v",
+                      "name": "tipIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "lightbulb",
+                      "iconFontFamily": "lucide",
+                      "fill": "#E8973C"
+                    },
+                    {
+                      "type": "text",
+                      "id": "T3cVF",
+                      "name": "tipLabel",
+                      "fill": "#E8973C",
+                      "content": "Совет",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "pw8CE",
+                  "name": "tipText",
+                  "fill": "#5C4A3D",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Пациент получит код и сможет подключиться к вам в приложении за пару секунд.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "se8Hg",
+          "name": "tabBarSection",
+          "width": "fill_container",
+          "height": 90,
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            28,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "leaFQ",
+              "name": "tabPill",
+              "width": "fill_container",
+              "height": 62,
+              "fill": "#FFFFFF",
+              "cornerRadius": 32,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#2B23200A",
+                "offset": {
+                  "x": 0,
+                  "y": -4
+                },
+                "blur": 16
+              },
+              "padding": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AfGWl",
+                  "name": "patientsTab",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#F7F3EE",
+                  "cornerRadius": 28,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "9Fu1F",
+                      "name": "tab1icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "users",
+                      "iconFontFamily": "lucide",
+                      "fill": "#C4856F"
+                    },
+                    {
+                      "type": "text",
+                      "id": "9c79I",
+                      "name": "tab1label",
+                      "fill": "#C4856F",
+                      "content": "ПАЦИЕНТЫ",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ct69B",
+                  "name": "settingsTab",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "cornerRadius": 28,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "6M8kU",
+                      "name": "tab2icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "settings",
+                      "iconFontFamily": "lucide",
+                      "fill": "#9A8880"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7Xdkg",
+                      "name": "tab2label",
+                      "fill": "#9A8880",
+                      "content": "НАСТРОЙКИ",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 10,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wTIbr",
+      "x": -721,
+      "y": 8248,
+      "name": "PWA - Install Banner",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "17rth",
+          "x": 0,
+          "y": 0,
+          "name": "Dashboard BG",
+          "width": 390,
+          "height": 844,
+          "fill": "#F7F3EE",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            0,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "IcGwr",
+              "name": "sb",
+              "width": "fill_container",
+              "height": 62,
+              "padding": [
+                0,
+                12
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "2TnLX",
+                  "name": "tm",
+                  "fill": "#2D1B14",
+                  "content": "9:41",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J5DJh",
+              "name": "ga",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "Hnh5q",
+                  "name": "g1",
+                  "fill": "#E0D6CF",
+                  "width": 160,
+                  "height": 22
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "dnnlN",
+                  "name": "g2",
+                  "fill": "#EAE0DA",
+                  "width": 200,
+                  "height": 14
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 16,
+              "id": "4jw8k",
+              "name": "c1",
+              "fill": "#FFFFFF",
+              "width": "fill_container",
+              "height": 120
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 16,
+              "id": "sF5HV",
+              "name": "c2",
+              "fill": "#FFFFFF",
+              "width": "fill_container",
+              "height": 80
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 16,
+              "id": "oM8U4",
+              "name": "c3",
+              "fill": "#FFFFFF",
+              "width": "fill_container",
+              "height": 100
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "kFzvn",
+          "x": 0,
+          "y": 0,
+          "name": "Overlay",
+          "fill": "#2B232060",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "ngvsA",
+          "x": 0,
+          "y": 0,
+          "name": "Sheet Wrapper",
+          "width": 390,
+          "height": 844,
+          "layout": "vertical",
+          "justifyContent": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "yKx94",
+              "name": "Bottom Sheet",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": [
+                28,
+                28,
+                0,
+                0
+              ],
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#2B232020",
+                "offset": {
+                  "x": 0,
+                  "y": -4
+                },
+                "blur": 24
+              },
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                20,
+                24,
+                36,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "orsON",
+                  "name": "hr",
+                  "width": "fill_container",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "iikUx",
+                      "name": "hd",
+                      "fill": "#E0D6CF",
+                      "width": 36,
+                      "height": 4
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XMspg",
+                  "name": "ir",
+                  "width": "fill_container",
+                  "gap": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tFAnM",
+                      "name": "ai",
+                      "width": 56,
+                      "height": 56,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 210,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#B56756",
+                            "position": 0
+                          },
+                          {
+                            "color": "#C4856F",
+                            "position": 0.5
+                          },
+                          {
+                            "color": "#E0A88A",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "Xl9ED",
+                          "name": "hi",
+                          "width": 28,
+                          "height": 28,
+                          "iconFontName": "heart",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ALhtn",
+                      "name": "tc",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "FjhLh",
+                          "name": "an",
+                          "fill": "#2B2320",
+                          "content": "MindBridge",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "euiCe",
+                          "name": "ad",
+                          "fill": "#9A8880",
+                          "content": "Добавить на главный экран",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "F1Q51",
+                  "name": "Benefits",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DT3Gu",
+                      "name": "r1",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "71zCE",
+                          "name": "i1",
+                          "width": 36,
+                          "height": 36,
+                          "fill": "#FCEAE4",
+                          "cornerRadius": 18,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "diDnV",
+                              "name": "z1",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "zap",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4856F"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ANzEB",
+                          "name": "t1",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mvb2r",
+                              "name": "n1",
+                              "fill": "#2B2320",
+                              "content": "Быстрый доступ",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GhAXL",
+                              "name": "d1",
+                              "fill": "#9A8880",
+                              "content": "Один тап — и ты в приложении",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qPb9k",
+                      "name": "r2",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jVTxE",
+                          "name": "i2",
+                          "width": 36,
+                          "height": 36,
+                          "fill": "#FCEAE4",
+                          "cornerRadius": 18,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "wwZBO",
+                              "name": "z2",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "bell",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4856F"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "V8EM3",
+                          "name": "t2",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "hNQv0",
+                              "name": "n2",
+                              "fill": "#2B2320",
+                              "content": "Уведомления",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "hliCW",
+                              "name": "d2",
+                              "fill": "#9A8880",
+                              "content": "Напоминания о чек-инах и сессиях",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bPkoz",
+                      "name": "r3",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "8CG9b",
+                          "name": "i3",
+                          "width": 36,
+                          "height": 36,
+                          "fill": "#FCEAE4",
+                          "cornerRadius": 18,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "UFjVI",
+                              "name": "z3",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "wifi-off",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4856F"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UYYmZ",
+                          "name": "t3",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xGV86",
+                              "name": "n3",
+                              "fill": "#2B2320",
+                              "content": "Офлайн доступ",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "K1lVW",
+                              "name": "d3",
+                              "fill": "#9A8880",
+                              "content": "Дневник доступен без интернета",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "500R1",
+                  "name": "Install Button",
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "aBBmJ",
+                      "name": "bx",
+                      "fill": "#FFFFFF",
+                      "content": "Установить",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "PCmKy",
+                  "name": "dm",
+                  "fill": "#9A8880",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Не сейчас",
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "7XPbh",
+      "x": -291,
+      "y": 8248,
+      "name": "PWA - iOS Instructions",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vNFn3",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "BLYl9",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hXP4P",
+          "name": "header",
+          "width": "fill_container",
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "PFNtj",
+              "name": "spacerL",
+              "width": 24,
+              "height": 24
+            },
+            {
+              "type": "text",
+              "id": "As4RK",
+              "name": "titleTxt",
+              "fill": "#2B2320",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Установка приложения",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 17,
+              "fontWeight": "600"
+            },
+            {
+              "type": "icon_font",
+              "id": "f7bUb",
+              "name": "closeBtn",
+              "width": 24,
+              "height": 24,
+              "iconFontName": "x",
+              "iconFontFamily": "lucide",
+              "fill": "#9A8880"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Yt96Z",
+          "name": "badgeRow",
+          "width": "fill_container",
+          "padding": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "MHuSG",
+              "name": "badge",
+              "fill": "#FFFFFF",
+              "cornerRadius": 20,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "gap": 6,
+              "padding": [
+                6,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "tnMfc",
+                  "name": "phoneIcn",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "smartphone",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9A8880"
+                },
+                {
+                  "type": "text",
+                  "id": "xsrBw",
+                  "name": "badgeTxt",
+                  "fill": "#9A8880",
+                  "content": "iPhone / Safari",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yI5Si",
+          "name": "content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "r55Zo",
+              "name": "introTxt",
+              "fill": "#5C4A3D",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Всего 3 шага — и MindBridge будет на твоём экране",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "fU8bU",
+              "name": "cardsWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MhiwY",
+                  "name": "card1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5t2ro",
+                      "name": "hdr1",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wWyVx",
+                          "name": "circ1",
+                          "width": 32,
+                          "height": 32,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 210,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#B56756",
+                                "position": 0
+                              },
+                              {
+                                "color": "#C4856F",
+                                "position": 0.5
+                              },
+                              {
+                                "color": "#E0A88A",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 16,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "cDgKL",
+                              "name": "num1",
+                              "fill": "#FFFFFF",
+                              "content": "1",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "YQZGt",
+                          "name": "ttl1",
+                          "fill": "#2B2320",
+                          "content": "Нажми кнопку «Поделиться»",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "l1iXV",
+                      "name": "ill1",
+                      "width": "fill_container",
+                      "height": 80,
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "WA6PT",
+                          "name": "safBar",
+                          "width": "fill_container",
+                          "height": 44,
+                          "fill": "#FFFFFF",
+                          "cornerRadius": [
+                            0,
+                            0,
+                            12,
+                            12
+                          ],
+                          "gap": 20,
+                          "padding": [
+                            0,
+                            24
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "VQUQV",
+                              "name": "sIcn1",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-left",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4C4C4"
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "uky5Z",
+                              "name": "sIcn2",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-right",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4C4C4"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "gLM7v",
+                              "name": "shrWrap",
+                              "width": 36,
+                              "height": 36,
+                              "fill": "#3390EC18",
+                              "cornerRadius": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "BRl6s",
+                                  "name": "shrIcn",
+                                  "width": 20,
+                                  "height": 20,
+                                  "iconFontName": "upload",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#3390EC"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "vgjQl",
+                              "name": "sIcn3",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "book-open",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4C4C4"
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "2bpTo",
+                              "name": "sIcn4",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "copy",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4C4C4"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "zLXEw",
+                      "name": "desc1",
+                      "fill": "#9A8880",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Найди иконку в нижней панели Safari",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DybWt",
+                  "name": "card2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "B4rT2",
+                      "name": "hdr2",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "DNTBR",
+                          "name": "circ2",
+                          "width": 32,
+                          "height": 32,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 210,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#B56756",
+                                "position": 0
+                              },
+                              {
+                                "color": "#C4856F",
+                                "position": 0.5
+                              },
+                              {
+                                "color": "#E0A88A",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 16,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "NINS6",
+                              "name": "num2",
+                              "fill": "#FFFFFF",
+                              "content": "2",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "LcYiC",
+                          "name": "ttl2",
+                          "fill": "#2B2320",
+                          "content": "Выбери «На экран Домой»",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fqtwC",
+                      "name": "ill2",
+                      "width": "fill_container",
+                      "height": 80,
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MMoS8",
+                          "name": "menuItem",
+                          "width": "fill_container",
+                          "height": 44,
+                          "fill": "#FFFFFF",
+                          "cornerRadius": 10,
+                          "gap": 12,
+                          "padding": [
+                            0,
+                            14
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "r2V4X",
+                              "name": "menuIcn",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "square-plus",
+                              "iconFontFamily": "lucide",
+                              "fill": "#3390EC"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Bdlcj",
+                              "name": "menuTxt",
+                              "fill": "#2B2320",
+                              "content": "На экран «Домой»",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ls9uJ",
+                      "name": "desc2",
+                      "fill": "#9A8880",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Пролистай меню вниз и найди этот пункт",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HcpKF",
+                  "name": "card3",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": [
+                    20,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "x4iVo",
+                      "name": "hdr3",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "elQMs",
+                          "name": "circ3",
+                          "width": 32,
+                          "height": 32,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 210,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#B56756",
+                                "position": 0
+                              },
+                              {
+                                "color": "#C4856F",
+                                "position": 0.5
+                              },
+                              {
+                                "color": "#E0A88A",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 16,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "feHjb",
+                              "name": "num3",
+                              "fill": "#FFFFFF",
+                              "content": "3",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "HmEFe",
+                          "name": "ttl3",
+                          "fill": "#2B2320",
+                          "content": "Нажми «Добавить»",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EqGsa",
+                      "name": "ill3",
+                      "width": "fill_container",
+                      "height": 80,
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JMexa",
+                          "name": "addBtn",
+                          "fill": "#3390EC",
+                          "cornerRadius": 10,
+                          "padding": [
+                            10,
+                            24
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HF0Lg",
+                              "name": "addTxt",
+                              "fill": "#FFFFFF",
+                              "content": "Добавить",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 15,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "5yrMo",
+                      "name": "desc3",
+                      "fill": "#9A8880",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Иконка MindBridge появится на главном экране",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yvFjm",
+      "x": 139,
+      "y": 8248,
+      "name": "PWA - Android Instructions",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "tscqY",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "blHXh",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "7r468",
+          "name": "header",
+          "width": "fill_container",
+          "height": 48,
+          "padding": [
+            0,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "dC0it",
+              "name": "leftSpacer",
+              "width": 24,
+              "height": 24
+            },
+            {
+              "type": "text",
+              "id": "4XOzI",
+              "name": "headerTitle",
+              "fill": "#2B2320",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Установка",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 17,
+              "fontWeight": "600"
+            },
+            {
+              "type": "icon_font",
+              "id": "3JzlK",
+              "name": "closeIcon",
+              "width": 24,
+              "height": 24,
+              "iconFontName": "x",
+              "iconFontFamily": "lucide",
+              "fill": "#9A8880"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XbF9h",
+          "name": "content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZsTxl",
+              "name": "badge",
+              "fill": "#FFFFFF",
+              "cornerRadius": 20,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "gap": 8,
+              "padding": [
+                8,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "5DQog",
+                  "name": "badgeIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "smartphone",
+                  "iconFontFamily": "lucide",
+                  "fill": "#9A8880"
+                },
+                {
+                  "type": "text",
+                  "id": "S7OK8",
+                  "name": "badgeText",
+                  "fill": "#9A8880",
+                  "content": "Android / Chrome",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V7XhY",
+              "name": "dialogCard",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 20,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#2B232009",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 12
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 20,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3X0kb",
+                  "name": "appIconFrame",
+                  "width": 48,
+                  "height": 48,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "8qGEg",
+                      "name": "heartIcon",
+                      "width": 24,
+                      "height": 24,
+                      "iconFontName": "heart",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "5oHGa",
+                  "name": "dialogTitle",
+                  "fill": "#2B2320",
+                  "content": "Установить MindBridge?",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "AUq46",
+                  "name": "dialogUrl",
+                  "fill": "#9A8880",
+                  "content": "mindbridge.app",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "KbXtY",
+                  "name": "buttonsRow",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Zh1oy",
+                      "name": "cancelBtn",
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "padding": [
+                        12,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kPRyE",
+                          "name": "cancelText",
+                          "fill": "#9A8880",
+                          "content": "Отмена",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "c5f3y",
+                      "name": "installBtn",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 210,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#B56756",
+                            "position": 0
+                          },
+                          {
+                            "color": "#C4856F",
+                            "position": 0.5
+                          },
+                          {
+                            "color": "#E0A88A",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 12,
+                      "padding": [
+                        12,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pGH4Q",
+                          "name": "installText",
+                          "fill": "#FFFFFF",
+                          "content": "Установить",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "FDxBh",
+              "name": "helperText",
+              "fill": "#9A8880",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Нажмите «Установить» в появившемся окне",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "4neqS",
+              "name": "sep",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "line",
+                  "id": "uCz7i",
+                  "name": "sepLineL",
+                  "width": "fill_container",
+                  "height": 1,
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "fill": "#F0E4DE"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "3Q01T",
+                  "name": "sepText",
+                  "fill": "#9A8880",
+                  "content": "Если окно не появилось",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "line",
+                  "id": "NmWjm",
+                  "name": "sepLineR",
+                  "width": "fill_container",
+                  "height": 1,
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "fill": "#F0E4DE"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "8s0N0",
+              "name": "stepsWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PVFb0",
+                  "name": "step1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    18,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hlGbe",
+                      "name": "s1Head",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "FajmH",
+                          "name": "s1Circle",
+                          "width": 32,
+                          "height": 32,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 210,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#B56756",
+                                "position": 0
+                              },
+                              {
+                                "color": "#C4856F",
+                                "position": 0.5
+                              },
+                              {
+                                "color": "#E0A88A",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 16,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mf49k",
+                              "name": "s1Num",
+                              "fill": "#FFFFFF",
+                              "content": "1",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "oYnHV",
+                          "name": "s1Title",
+                          "fill": "#2B2320",
+                          "content": "Нажми ⋮ в Chrome",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eg7rN",
+                      "name": "s1Illust",
+                      "width": "fill_container",
+                      "height": 60,
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "s7M0H",
+                          "name": "s1Icon",
+                          "width": 24,
+                          "height": 24,
+                          "iconFontName": "ellipsis-vertical",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9A8880"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "GgJcA",
+                      "name": "s1Desc",
+                      "fill": "#9A8880",
+                      "content": "В правом верхнем углу браузера",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JCnFW",
+                  "name": "step2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 20,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    18,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QaaA0",
+                      "name": "s2Head",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "uOGVp",
+                          "name": "s2Circle",
+                          "width": 32,
+                          "height": 32,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 210,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#B56756",
+                                "position": 0
+                              },
+                              {
+                                "color": "#C4856F",
+                                "position": 0.5
+                              },
+                              {
+                                "color": "#E0A88A",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 16,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fC8BH",
+                              "name": "s2Num",
+                              "fill": "#FFFFFF",
+                              "content": "2",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "iELMl",
+                          "name": "s2Title",
+                          "fill": "#2B2320",
+                          "content": "Выбери «Добавить на гл. экран»",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VHlMK",
+                      "name": "s2Illust",
+                      "width": "fill_container",
+                      "height": 60,
+                      "fill": "#F7F3EE",
+                      "cornerRadius": 12,
+                      "gap": 10,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "wPCqF",
+                          "name": "s2PlusIcon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "square-plus",
+                          "iconFontFamily": "lucide",
+                          "fill": "#9A8880"
+                        },
+                        {
+                          "type": "text",
+                          "id": "4syn7",
+                          "name": "s2MenuText",
+                          "fill": "#9A8880",
+                          "content": "Добавить на гл. экран",
+                          "fontFamily": "Plus Jakarta Sans",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "vlisZ",
+                      "name": "s2Desc",
+                      "fill": "#9A8880",
+                      "content": "Найди этот пункт в меню браузера",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "SFbkI",
+      "x": 569,
+      "y": 8248,
+      "name": "PWA - Success",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "WUWUx",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "aR6p3",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pTLTu",
+          "name": "content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": 40,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Rt5rY",
+              "name": "circleArea",
+              "width": 160,
+              "height": 160,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mWScS",
+                  "x": 20,
+                  "y": 20,
+                  "name": "circle",
+                  "width": 120,
+                  "height": 120,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 60,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "kIYb5",
+                      "name": "checkIcon",
+                      "width": 52,
+                      "height": 52,
+                      "iconFontName": "check",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "ellipse",
+                  "id": "eW99t",
+                  "x": 140,
+                  "y": 10,
+                  "name": "conf1",
+                  "fill": "#FCEAE4",
+                  "width": 8,
+                  "height": 8
+                },
+                {
+                  "type": "ellipse",
+                  "id": "7ZldO",
+                  "x": 5,
+                  "y": 50,
+                  "name": "conf2",
+                  "fill": "#C4856F50",
+                  "width": 6,
+                  "height": 6
+                },
+                {
+                  "type": "ellipse",
+                  "id": "rvGTm",
+                  "x": 143,
+                  "y": 130,
+                  "name": "conf3",
+                  "fill": "#FFF8F0",
+                  "width": 10,
+                  "height": 10
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "mKpHL",
+              "name": "titleTxt",
+              "fill": "#2B2320",
+              "content": "Готово! 🎉",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "D0Rw9",
+              "name": "subtitleTxt",
+              "fill": "#9A8880",
+              "content": "MindBridge добавлен на главный экран",
+              "textAlign": "center",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "nu4fs",
+              "name": "hintCard",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 20,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#2B232009",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 12
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 20,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hIqNg",
+                  "name": "iconFrame",
+                  "width": 60,
+                  "height": 60,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 210,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "j1Tox",
+                      "name": "heartIcon",
+                      "width": 28,
+                      "height": 28,
+                      "iconFontName": "heart",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ZfO1k",
+                  "name": "appLabel",
+                  "fill": "#2B2320",
+                  "content": "MindBridge",
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "tsyP5",
+                  "name": "arrowUp",
+                  "width": 20,
+                  "height": 20,
+                  "iconFontName": "arrow-up",
+                  "iconFontFamily": "lucide",
+                  "fill": "#C4856F"
+                },
+                {
+                  "type": "text",
+                  "id": "AEhDO",
+                  "name": "hintTxt",
+                  "fill": "#9A8880",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Теперь открой приложение\nс главного экрана",
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MOZhr",
+              "name": "benefitsCard",
+              "width": "fill_container",
+              "fill": "#FFF8F0",
+              "cornerRadius": 16,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#F0E4DE"
+              },
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                14,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EH1DO",
+                  "name": "benefitsRow",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "67XxZ",
+                      "name": "sparkles",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "sparkles",
+                      "iconFontFamily": "lucide",
+                      "fill": "#E8973C"
+                    },
+                    {
+                      "type": "text",
+                      "id": "iU3eJ",
+                      "name": "benefitsLabel",
+                      "fill": "#E8973C",
+                      "content": "Теперь доступно:",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "RBuVR",
+                  "name": "bulletTxt",
+                  "fill": "#5C4A3D",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "• Мгновенный запуск без браузера\n• Push-уведомления о сессиях\n• Полноэкранный режим",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kofE7",
+          "name": "bottomCta",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            0,
+            20,
+            36,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "YyA3E",
+              "name": "btn",
+              "width": "fill_container",
+              "height": 52,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 210,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#B56756",
+                    "position": 0
+                  },
+                  {
+                    "color": "#C4856F",
+                    "position": 0.5
+                  },
+                  {
+                    "color": "#E0A88A",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 14,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Vzpl8",
+                  "name": "btnText2",
+                  "fill": "#FFFFFF",
+                  "content": "Отлично, понятно!",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wXuPZ",
+      "x": 999,
+      "y": 8248,
+      "name": "PWA - Standalone Welcome",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#F7F3EE",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vlKeA",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "1iRt2",
+              "name": "timeText",
+              "fill": "#2D1B14",
+              "content": "9:41",
+              "fontFamily": "Plus Jakarta Sans",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "tKKiU",
+              "name": "iconsR",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "qayY7",
+                  "name": "ic1",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "NAYoH",
+                  "name": "ic2",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "YyoHA",
+                  "name": "ic3",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "#2D1B14"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "MecCT",
+          "name": "welcomeContent",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            20,
+            24,
+            24,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZluHE",
+              "name": "topArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yEIAJ",
+                  "name": "spacer1",
+                  "width": 1,
+                  "height": 20
+                },
+                {
+                  "type": "frame",
+                  "id": "a1pQz",
+                  "name": "logoRow",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "amjMk",
+                      "name": "appIcon",
+                      "width": 80,
+                      "height": 80,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 150,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#B56756",
+                            "position": 0
+                          },
+                          {
+                            "color": "#C4856F",
+                            "position": 0.5
+                          },
+                          {
+                            "color": "#E0A88A",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 22,
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "#C4856F40",
+                        "offset": {
+                          "x": 0,
+                          "y": 8
+                        },
+                        "blur": 24
+                      },
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "pbfGN",
+                          "name": "appIconHeart",
+                          "width": 36,
+                          "height": 36,
+                          "iconFontName": "heart",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "tE2WH",
+                      "name": "appName",
+                      "fill": "#2B2320",
+                      "content": "MindBridge",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 28,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "4nVmo",
+                      "name": "appTagline",
+                      "fill": "#9A8880",
+                      "content": "Твой личный КПТ-помощник",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LhtTa",
+                  "name": "featuresCard",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 24,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#2B232009",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "JMg00",
+                      "name": "feat1",
+                      "width": "fill_container",
+                      "gap": 14,
+                      "padding": 18,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Moagh",
+                          "name": "f1icon",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "#FCEAE4",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "Nv1m8",
+                              "name": "f1ic",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "sparkles",
+                              "iconFontFamily": "lucide",
+                              "fill": "#C4856F"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "unHPx",
+                          "name": "f1text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "0W7oW",
+                              "name": "f1title",
+                              "fill": "#2B2320",
+                              "content": "Полноэкранный режим",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "sNGGP",
+                              "name": "f1desc",
+                              "fill": "#9A8880",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Никаких панелей браузера — как настоящее приложение",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "v1SYP",
+                      "name": "sep1",
+                      "fill": "#F5F0EB",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "h69qH",
+                      "name": "feat2",
+                      "width": "fill_container",
+                      "gap": 14,
+                      "padding": 18,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LCW5H",
+                          "name": "f2icon",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "#E8F5E9",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "U0IYP",
+                              "name": "f2ic",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "bell",
+                              "iconFontFamily": "lucide",
+                              "fill": "#4CAF50"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jHVs1",
+                          "name": "f2text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "bqFyr",
+                              "name": "f2title",
+                              "fill": "#2B2320",
+                              "content": "Push-уведомления",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "TDFVO",
+                              "name": "f2desc",
+                              "fill": "#9A8880",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Напоминания о чек-инах и домашних заданиях",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "nDDBF",
+                      "name": "sep2",
+                      "fill": "#F5F0EB",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "F6vl5",
+                      "name": "feat3",
+                      "width": "fill_container",
+                      "gap": 14,
+                      "padding": 18,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "sxUmB",
+                          "name": "f3icon",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "#FFF8E1",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "bT8jC",
+                              "name": "f3ic",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "zap",
+                              "iconFontFamily": "lucide",
+                              "fill": "#F59E0B"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "65E0g",
+                          "name": "f3text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "IKyyX",
+                              "name": "f3title",
+                              "fill": "#2B2320",
+                              "content": "Мгновенный запуск",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "JMwLA",
+                              "name": "f3desc",
+                              "fill": "#9A8880",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Один тап — и ты уже в сессии",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "AVFkc",
+                      "name": "sep3",
+                      "fill": "#F5F0EB",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pcHhw",
+                      "name": "feat4",
+                      "width": "fill_container",
+                      "gap": 14,
+                      "padding": 18,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "aGgPO",
+                          "name": "f4icon",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "#EDE7F6",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "ezRao",
+                              "name": "f4ic",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "wifi-off",
+                              "iconFontFamily": "lucide",
+                              "fill": "#7C6AA0"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "IiPMp",
+                          "name": "f4text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "C4TmX",
+                              "name": "f4title",
+                              "fill": "#2B2320",
+                              "content": "Офлайн-доступ",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GXRG6",
+                              "name": "f4desc",
+                              "fill": "#9A8880",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Дневник и история доступны без интернета",
+                              "fontFamily": "Plus Jakarta Sans",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "67V3Y",
+              "name": "bottomArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ebRVN",
+                  "name": "ctaButton",
+                  "width": "fill_container",
+                  "height": 54,
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 150,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#B56756",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C4856F",
+                        "position": 0.5
+                      },
+                      {
+                        "color": "#E0A88A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#C4856F30",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 16
+                  },
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D4Kw7",
+                      "name": "ctaText",
+                      "fill": "#FFFFFF",
+                      "content": "Начать",
+                      "fontFamily": "Plus Jakarta Sans",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "1E62c",
+                  "name": "skipText",
+                  "fill": "#B5A9A1",
+                  "content": "Версия 1.0 · Работает офлайн",
+                  "textAlign": "center",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "pyYyg",
+                  "name": "safeArea",
+                  "width": 1,
+                  "height": 12
+                }
+              ]
             }
           ]
         }
