@@ -43,6 +43,28 @@ export class ChatCleanupService {
     if (deleted > 0) this.logger.log(`Cleaned up ${deleted} empty session(s)`);
   }
 
+  // Recover sessions stuck in "analyzing" for >15 minutes (e.g. Claude API hung before timeout was added)
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  async recoverStuckAnalyzingSessions(): Promise<void> {
+    const cutoff = new Date(Date.now() - 15 * 60 * 1000);
+
+    const stuck = await this.sessionRepo.find({
+      where: { status: SessionStatusEnum.Analyzing, updatedAt: LessThan(cutoff) },
+    });
+
+    for (const session of stuck) {
+      this.logger.warn(`Recovering stuck analyzing session ${session.id} (user ${session.userId})`);
+      try {
+        await this.sessionRepo.update(session.id, { status: SessionStatusEnum.Ended });
+        this.chatService.generateAnalysisPublic(session.id).catch((err) => {
+          this.logger.error(`Recovery analysis failed for session ${session.id}:`, err);
+        });
+      } catch (err) {
+        this.logger.error(`Failed to recover stuck session ${session.id}:`, err);
+      }
+    }
+  }
+
   // Auto-complete active sessions older than 2 days
   @Cron(CronExpression.EVERY_6_HOURS)
   async expireOldSessions(): Promise<void> {

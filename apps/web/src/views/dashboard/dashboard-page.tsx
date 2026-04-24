@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useMoodMetrics } from '@/entities/dashboard';
 import { useCreateMood, useMoods, useMoodStats } from '@/entities/mood';
-import { useSessions } from '@/entities/session';
+import { isActivelyAnalyzing, useSessions } from '@/entities/session';
 import { useUser } from '@/entities/user';
 import { NotificationsBell } from '@/features/notifications';
 import { createSession } from '@/shared/api/client';
@@ -118,8 +118,7 @@ export function DashboardPage() {
   const { data: moods } = useMoods(from7d);
   const { mutate: logMood, isPending: logging } = useCreateMood();
 
-  const hasAnalyzing =
-    sessionsData?.sessions.some((s) => s.status === 'ended' || s.status === 'analyzing') ?? false;
+  const hasAnalyzing = sessionsData?.sessions.some(isActivelyAnalyzing) ?? false;
   const lastSession = sessionsData?.sessions[0] ?? null;
 
   const { data: metrics, isLoading: metricsLoading } = useMoodMetrics(

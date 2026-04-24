@@ -99,21 +99,32 @@ export class ClaudeService {
       .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
       .join('\n\n');
 
-    const response = await this.withRetry(() =>
-      this.client.messages.create({
-        model: this.model,
-        max_tokens: 4096,
-        system: systemPrompt,
-        messages: [
-          {
-            role: 'user',
-            content: `Analyze this CBT therapy session:\n\n${conversationText}`,
-          },
-        ],
-      }),
-    );
+    const controller = new AbortController();
+    // 5-minute hard cap for the entire analysis attempt (including retries)
+    const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
 
-    const textBlock = response.content.find((block) => block.type === 'text');
-    return textBlock ? textBlock.text : '{}';
+    try {
+      const response = await this.withRetry(() =>
+        this.client.messages.create(
+          {
+            model: this.model,
+            max_tokens: 4096,
+            system: systemPrompt,
+            messages: [
+              {
+                role: 'user',
+                content: `Analyze this CBT therapy session:\n\n${conversationText}`,
+              },
+            ],
+          },
+          { signal: controller.signal },
+        ),
+      );
+
+      const textBlock = response.content.find((block) => block.type === 'text');
+      return textBlock ? textBlock.text : '{}';
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
 }

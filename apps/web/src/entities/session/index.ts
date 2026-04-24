@@ -1,1 +1,1 @@
-export { useInfiniteSessions, useSession, useSessions } from './model';
+export { isActivelyAnalyzing, useInfiniteSessions, useSession, useSessions } from './model';
