@@ -41,5 +41,4 @@ async function bootstrap() {
   logger.log(`API running on port ${port}`);
 }
 
-
 bootstrap();
