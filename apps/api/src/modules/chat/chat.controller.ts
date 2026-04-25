@@ -108,6 +108,15 @@ export class ChatController {
     return this.chatService.getAnalysis(id, user.id);
   }
 
+  @Post('sessions/:id/retry-analysis')
+  async retryAnalysis(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    await this.chatService.retryAnalysis(id, user.id);
+    return { success: true };
+  }
+
   @Delete('sessions/:id')
   async deleteSession(
     @Param('id', ParseUUIDPipe) id: string,

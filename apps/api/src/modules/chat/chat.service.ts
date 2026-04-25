@@ -303,41 +303,75 @@ export class ChatService {
     return this.generateAnalysis(sessionId);
   }
 
+  async retryAnalysis(sessionId: string, userId: string): Promise<void> {
+    const session = await this.sessionRepo.findOne({ where: { id: sessionId, userId } });
+    if (!session) throw new NotFoundException('Session not found');
+
+    const allowedStatuses = [SessionStatusEnum.Ended, SessionStatusEnum.Analyzing];
+    if (!allowedStatuses.includes(session.status)) {
+      throw new BadRequestException(`Cannot retry analysis for session with status "${session.status}"`);
+    }
+
+    // Delete any existing analysis so a fresh one is generated
+    await this.analysisRepo.delete({ sessionId });
+    await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Ended });
+
+    this.generateAnalysis(sessionId).catch((err) => {
+      this.logger.error(`Manual retry analysis failed for session ${sessionId}:`, err);
+    });
+  }
+
   private async generateAnalysis(sessionId: string): Promise<void> {
     await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Analyzing });
 
-    const session = await this.sessionRepo.findOne({ where: { id: sessionId } });
-    if (!session) return;
-
-    const messages = await this.messageRepo.find({
-      where: { sessionId },
-      order: { orderIndex: 'ASC' },
-    });
-
-    const claudeMessages = messages
-      .filter((m) => m.role !== MessageRoleEnum.System)
-      .map((m) => ({
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-      }));
-
-    // Fetch mood before/after and session number in parallel
-    const [moodBeforeRecord, moodAfterRecord, sessionNumber] = await Promise.all([
-      this.moodRepo.findOne({
-        where: { userId: session.userId },
-        order: { createdAt: 'DESC' },
-        // Most recent mood logged before this session started
-      }).then((m) => (m && m.createdAt < session.createdAt ? m : null)),
-      this.moodRepo.findOne({
-        where: { sessionId },
-        order: { createdAt: 'DESC' },
-      }),
-      this.sessionRepo.count({
-        where: { userId: session.userId },
-      }),
-    ]);
+    let claudeMessages: Array<{ role: 'user' | 'assistant'; content: string }> = [];
 
     try {
+      // If analysis was already saved in a previous partial run, just mark as completed
+      const existingAnalysis = await this.analysisRepo.findOne({ where: { sessionId } });
+      if (existingAnalysis) {
+        this.logger.warn(`Analysis already exists for session ${sessionId}, marking completed`);
+        await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Completed });
+        this.eventEmitter.emit(`chat.${sessionId}`, {
+          type: 'analysis_ready',
+          analysisId: existingAnalysis.id,
+        });
+        return;
+      }
+
+      const session = await this.sessionRepo.findOne({ where: { id: sessionId } });
+      if (!session) return;
+
+      const messages = await this.messageRepo.find({
+        where: { sessionId },
+        order: { orderIndex: 'ASC' },
+      });
+
+      claudeMessages = messages
+        .filter((m) => m.role !== MessageRoleEnum.System)
+        .map((m) => ({
+          role: m.role as 'user' | 'assistant',
+          content: m.content,
+        }));
+
+      // Fetch mood before/after and session number in parallel
+      const [moodBeforeRecord, moodAfterRecord, sessionNumber] = await Promise.all([
+        this.moodRepo
+          .findOne({
+            where: { userId: session.userId },
+            order: { createdAt: 'DESC' },
+            // Most recent mood logged before this session started
+          })
+          .then((m) => (m && m.createdAt < session.createdAt ? m : null)),
+        this.moodRepo.findOne({
+          where: { sessionId },
+          order: { createdAt: 'DESC' },
+        }),
+        this.sessionRepo.count({
+          where: { userId: session.userId },
+        }),
+      ]);
+
       const locale = detectLocale(claudeMessages.map((m) => m.content));
       const analysisPrompt = CBT_ANALYSIS_SYSTEM_PROMPT + buildLangInstruction(locale);
 
@@ -427,7 +461,7 @@ export class ChatService {
         analysisId: analysis.id,
       });
     } catch (err) {
-      this.logger.error(`Failed to parse analysis for session ${sessionId}:`, err);
+      this.logger.error(`Analysis failed for session ${sessionId}:`, err);
       await this.sessionRepo.update(sessionId, { status: SessionStatusEnum.Ended });
     }
 
