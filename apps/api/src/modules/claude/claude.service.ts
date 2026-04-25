@@ -91,17 +91,33 @@ export class ClaudeService {
     return textBlock ? textBlock.text : '';
   }
 
+  // TODO (Option 2 — proactive summarization): instead of compressing at analysis time,
+  // create rolling interim summaries in Redis as the session grows (e.g. every 50 messages
+  // in sendMessage()). At analysis time, use [interim_summaries] + [last LAST_KEEP messages].
+  // This avoids the extra API call at the end and gives richer coverage of long sessions.
+  // See: ChatService.sendMessage() — a good place to trigger background summarization.
   async generateAnalysis(
     systemPrompt: string,
     messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   ): Promise<string> {
-    const conversationText = messages
-      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
-      .join('\n\n');
+    const FIRST_KEEP = 15; // always include session opening (how the patient entered)
+    const LAST_KEEP = 40;  // always include session closing (resolution, homework, current state)
+    // Only compress if there's a meaningful middle section to summarize
+    const COMPRESS_THRESHOLD = FIRST_KEEP + LAST_KEEP + 10;
+    // Cap middle sent to summarizer — if session is extremely long, sample first+last halves
+    const MAX_MIDDLE_FOR_SUMMARY = 200;
+
+    const contextText = await this.buildAnalysisContext(
+      messages,
+      FIRST_KEEP,
+      LAST_KEEP,
+      COMPRESS_THRESHOLD,
+      MAX_MIDDLE_FOR_SUMMARY,
+    );
 
     const controller = new AbortController();
-    // 5-minute hard cap for the entire analysis attempt (including retries)
-    const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+    // 10-minute hard cap — two-pass analysis needs more time than single-pass
+    const timeoutId = setTimeout(() => controller.abort(), 10 * 60 * 1000);
 
     try {
       const response = await this.withRetry(() =>
@@ -110,12 +126,7 @@ export class ClaudeService {
             model: this.model,
             max_tokens: 4096,
             system: systemPrompt,
-            messages: [
-              {
-                role: 'user',
-                content: `Analyze this CBT therapy session:\n\n${conversationText}`,
-              },
-            ],
+            messages: [{ role: 'user', content: `Analyze this CBT therapy session:\n\n${contextText}` }],
           },
           { signal: controller.signal },
         ),
@@ -126,5 +137,61 @@ export class ClaudeService {
     } finally {
       clearTimeout(timeoutId);
     }
+  }
+
+  private async buildAnalysisContext(
+    messages: Array<{ role: 'user' | 'assistant'; content: string }>,
+    firstKeep: number,
+    lastKeep: number,
+    compressThreshold: number,
+    maxMiddleForSummary: number,
+  ): Promise<string> {
+    const toText = (msgs: Array<{ role: string; content: string }>) =>
+      msgs.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
+
+    if (messages.length <= compressThreshold) {
+      return toText(messages);
+    }
+
+    const first = messages.slice(0, firstKeep);
+    const middle = messages.slice(firstKeep, -lastKeep);
+    const last = messages.slice(-lastKeep);
+
+    // If the middle is itself huge, sample first + last halves so the summary call stays under limits
+    const middleForSummary =
+      middle.length > maxMiddleForSummary
+        ? [
+            ...middle.slice(0, maxMiddleForSummary / 2),
+            ...middle.slice(-(maxMiddleForSummary / 2)),
+          ]
+        : middle;
+
+    this.logger.warn(
+      `Long session: ${messages.length} messages. Summarizing middle (${middle.length} msgs, ` +
+        `sending ${middleForSummary.length} to summarizer). First: ${firstKeep}, Last: ${lastKeep}.`,
+    );
+
+    const summaryResponse = await this.withRetry(() =>
+      this.client.messages.create({
+        model: this.model,
+        max_tokens: 1500,
+        system:
+          'You are a clinical CBT session analyst. Compress the provided therapy session excerpt into a detailed narrative summary (600–900 words). ' +
+          'Preserve: key themes, cognitive distortions identified (with examples), emotional peaks and turning points, ' +
+          'any risk indicators or crisis moments, patient resistance or breakthroughs, and coping strategies discussed. ' +
+          'Write in past tense as a clinical narrative. Do not omit safety-relevant content.',
+        messages: [{ role: 'user', content: toText(middleForSummary) }],
+      }),
+    );
+
+    const summary =
+      summaryResponse.content.find((b) => b.type === 'text')?.text ??
+      '(middle section unavailable)';
+
+    return [
+      toText(first),
+      `\n\n[SESSION MIDDLE — SUMMARIZED (${middle.length} messages)]\n${summary}\n[END OF SUMMARY]\n`,
+      toText(last),
+    ].join('\n\n');
   }
 }

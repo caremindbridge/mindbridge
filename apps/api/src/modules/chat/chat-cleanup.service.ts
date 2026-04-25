@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Repository } from 'typeorm';
+import { IsNull, LessThan, Repository } from 'typeorm';
 
 import { RedisService } from '../redis';
 
 import { Message } from './entities/message.entity';
+import { SessionAnalysis } from './entities/session-analysis.entity';
 import { Session, SessionStatusEnum } from './entities/session.entity';
 import { ChatService } from './chat.service';
 
@@ -16,6 +17,7 @@ export class ChatCleanupService {
   constructor(
     @InjectRepository(Session) private readonly sessionRepo: Repository<Session>,
     @InjectRepository(Message) private readonly messageRepo: Repository<Message>,
+    @InjectRepository(SessionAnalysis) private readonly analysisRepo: Repository<SessionAnalysis>,
     private readonly chatService: ChatService,
     private readonly redisService: RedisService,
   ) {}
@@ -62,6 +64,28 @@ export class ChatCleanupService {
       } catch (err) {
         this.logger.error(`Failed to recover stuck session ${session.id}:`, err);
       }
+    }
+  }
+
+  // Retry ended sessions that never got an analysis (e.g. token limit error, previous crash)
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  async retryEndedSessionsWithoutAnalysis(): Promise<void> {
+    const cutoff = new Date(Date.now() - 15 * 60 * 1000);
+
+    const endedWithoutAnalysis = await this.sessionRepo
+      .createQueryBuilder('session')
+      .leftJoin('session.analysis', 'analysis')
+      .where('session.status = :status', { status: SessionStatusEnum.Ended })
+      .andWhere('session.endedAt < :cutoff', { cutoff })
+      .andWhere('analysis.id IS NULL')
+      .select(['session.id', 'session.userId'])
+      .getMany();
+
+    for (const session of endedWithoutAnalysis) {
+      this.logger.warn(`Retrying analysis for ended session ${session.id} (no analysis found)`);
+      this.chatService.generateAnalysisPublic(session.id).catch((err) => {
+        this.logger.error(`Retry analysis failed for ended session ${session.id}:`, err);
+      });
     }
   }
 
