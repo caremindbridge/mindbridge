@@ -297,26 +297,28 @@ const SessionCard = memo(function SessionCard({ session, compact = false }: { se
               </div>
               {/* Mood pill + View analysis */}
               {!isAnalyzing && (
-                <div className="mt-1.5 flex items-center justify-between">
-                  {MoodIcon && moodOutcome ? (
-                    <div
-                      className={cn(
-                        'flex h-[22px] items-center gap-1 rounded-lg px-2',
-                        cat.tagBg,
-                        'dark:bg-[#2E2824]',
-                      )}
-                    >
-                      <MoodIcon className={cn('h-3 w-3', cat.moodText, cat.darkMoodText)} />
-                      <span className={cn('text-[11px] font-medium', cat.moodText, cat.darkMoodText)}>
-                        {(t as (k: string) => string)(`moodOutcomes.${moodOutcome}`)}
+                <div className="mt-1.5 flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    {MoodIcon && moodOutcome ? (
+                      <div
+                        className={cn(
+                          'inline-flex h-[22px] max-w-full items-center gap-1 rounded-lg px-2',
+                          cat.tagBg,
+                          'dark:bg-[#2E2824]',
+                        )}
+                      >
+                        <MoodIcon className={cn('h-3 w-3 shrink-0', cat.moodText, cat.darkMoodText)} />
+                        <span className={cn('truncate text-[11px] font-medium', cat.moodText, cat.darkMoodText)}>
+                          {(t as (k: string) => string)(`moodOutcomes.${moodOutcome}`)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="truncate text-xs text-[#9A8880] dark:text-[#A09A93]">
+                        {dateLabel}{duration ? ` · ${duration}` : ''}
                       </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs text-[#9A8880] dark:text-[#A09A93]">
-                      {dateLabel}{duration ? ` · ${duration}` : ''}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-2">
+                    )}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
                     <span className="text-xs font-medium text-primary">
                       {t('viewAnalysis')} →
                     </span>

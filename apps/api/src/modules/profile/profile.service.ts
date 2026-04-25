@@ -169,7 +169,8 @@ export class ProfileService {
         { model: HAIKU_MODEL, maxTokens: 500 },
       );
 
-      const extracted: Partial<PatientContextData> = JSON.parse(response);
+      const cleaned = response.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');
+      const extracted: Partial<PatientContextData> = JSON.parse(cleaned);
       const current: PatientContextData = profile.patientContext ?? {};
       const merged: PatientContextData = { ...current };
 
